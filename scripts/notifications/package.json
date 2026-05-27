@@ -1,0 +1,17 @@
+{
+  "name": "@locol/notifications",
+  "version": "0.1.0",
+  "description": "Email notifications for LOCOL Workspace — stale, cold, reminder, birthday alerts via Resend.",
+  "type": "module",
+  "scripts": {
+    "send": "node run.mjs",
+    "dry-run": "DRY_RUN=true node run.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "resend": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

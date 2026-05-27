@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#101010" rx="54" ry="54"/>
+  <!-- LOCOL "L" mark scaled up -->
+  <rect x="123" y="59" width="106" height="325" fill="#99CE24"/>
+  <rect x="123" y="320" width="320" height="106" fill="#99CE24"/>
+</svg>
