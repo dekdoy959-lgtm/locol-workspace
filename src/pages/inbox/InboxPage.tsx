@@ -6,12 +6,19 @@ import { useTeamMembers, teamMemberInitials } from '../../hooks/useTeamMembers';
 import { useTrackSettings, getStaleThreshold } from '../../hooks/useTrackSettings';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { usePullToRefresh } from '../../hooks/usePullToRefresh';
+import { useAuth } from '../../contexts/AuthContext';
 import { TRACKS, findTrack, formatDueRelative, isStale, type TrackKey, type OpportunityRow } from '../../types/opportunity';
 import { LCard, LBtn, LIcon, LPri, LAvatar, LH, LNote, LSelect } from '../../components/primitives';
 import { PullToRefreshIndicator } from '../../components/layout/PullToRefreshIndicator';
 import { colors } from '../../styles/tokens';
 
-type Tab = 'all' | TrackKey;
+type Tab = 'focus' | 'all' | TrackKey;
+type Density = 'spacious' | 'compact' | 'dense';
+
+// Stages that are considered "done" — auto-collapsed in single-track view
+const DONE_STAGES = new Set(['Won', 'Lost', 'Closed', 'Filed', 'End', 'Archived']);
+
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 type SortKey = 'newest' | 'oldest' | 'due-soon' | 'priority' | 'stale-first' | 'title';
 
@@ -59,6 +66,7 @@ export function InboxPage() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const qc = useQueryClient();
+  const { user } = useAuth();
   const { data: opps = [], isLoading } = useOpportunities();
   const { data: team = [] } = useTeamMembers();
   const { data: trackSettings = [] } = useTrackSettings();
@@ -67,6 +75,12 @@ export function InboxPage() {
   const [dragOverTrack, setDragOverTrack] = useState<TrackKey | null>(null);
   const [sort, setSort] = useState<SortKey>('newest');
   const [groupByStage, setGroupByStage] = useState(true);
+  // Card density (A)
+  const [density, setDensity] = useState<Density>('compact');
+  // Quick filters (D)
+  const [filterPriority, setFilterPriority] = useState(false);
+  const [filterStale, setFilterStale] = useState(false);
+  const [filterMine, setFilterMine] = useState(false);
 
   // Pull-to-refresh on mobile
   const ptr = usePullToRefresh(
@@ -95,6 +109,19 @@ export function InboxPage() {
     return m;
   }, [team]);
 
+  // Apply quick filters across all views
+  const filteredOpps = useMemo(() => {
+    let result = opps;
+    if (filterPriority) result = result.filter((o) => o.priority === 'High');
+    if (filterStale)
+      result = result.filter((o) =>
+        isStale(o, getStaleThreshold(trackSettings, o.track as TrackKey)),
+      );
+    if (filterMine && user?.id)
+      result = result.filter((o) => o.owner_id === user.id || o.reviewer_id === user.id);
+    return result;
+  }, [opps, filterPriority, filterStale, filterMine, user, trackSettings]);
+
   const oppsByTrack = useMemo(() => {
     const m: Record<TrackKey, OpportunityRow[]> = {
       apply: [],
@@ -103,19 +130,51 @@ export function InboxPage() {
       contract: [],
       event: [],
     };
-    for (const o of opps) m[o.track as TrackKey]?.push(o);
+    for (const o of filteredOpps) m[o.track as TrackKey]?.push(o);
     // Apply sort to each track
     for (const k of Object.keys(m) as TrackKey[]) {
       m[k] = sortOpps(m[k], sort, trackSettings);
     }
     return m;
-  }, [opps, sort, trackSettings]);
+  }, [filteredOpps, sort, trackSettings]);
 
-  const filtered = tab === 'all' ? sortOpps(opps, sort, trackSettings) : oppsByTrack[tab];
+  // Focus mode: my items that need attention
+  const focusItems = useMemo(() => {
+    if (!user?.id) return [];
+    const todayMs = Date.now();
+    const sevenDaysMs = todayMs + 7 * MS_PER_DAY;
+    const mine = opps.filter((o) => o.owner_id === user.id || o.reviewer_id === user.id);
+    const needsAttention = mine.filter((o) => {
+      const stale = isStale(o, getStaleThreshold(trackSettings, o.track as TrackKey));
+      const dueSoon =
+        o.due_date && new Date(o.due_date).getTime() <= sevenDaysMs && new Date(o.due_date).getTime() >= todayMs - MS_PER_DAY;
+      const highPri = o.priority === 'High';
+      return stale || dueSoon || highPri;
+    });
+    // Sort: stale first, then high priority, then due soon
+    return needsAttention.sort((a, b) => {
+      const aStale = isStale(a, getStaleThreshold(trackSettings, a.track as TrackKey)) ? 1 : 0;
+      const bStale = isStale(b, getStaleThreshold(trackSettings, b.track as TrackKey)) ? 1 : 0;
+      if (aStale !== bStale) return bStale - aStale;
+      const aPri = PRIORITY_RANK[a.priority ?? 'Low'] ?? 0;
+      const bPri = PRIORITY_RANK[b.priority ?? 'Low'] ?? 0;
+      if (aPri !== bPri) return bPri - aPri;
+      return (a.due_date ?? 'zzz').localeCompare(b.due_date ?? 'zzz');
+    });
+  }, [opps, user, trackSettings]);
+
+  const filtered =
+    tab === 'all'
+      ? sortOpps(filteredOpps, sort, trackSettings)
+      : tab === 'focus'
+        ? focusItems
+        : oppsByTrack[tab];
+
+  const activeFilterCount = (filterPriority ? 1 : 0) + (filterStale ? 1 : 0) + (filterMine ? 1 : 0);
 
   // For single-track view: group by stage
   const stagedGroups = useMemo(() => {
-    if (tab === 'all' || !groupByStage) return null;
+    if (tab === 'all' || tab === 'focus' || !groupByStage) return null;
     const track = findTrack(tab);
     const groups: { stage: string; items: OpportunityRow[] }[] = track.stages.map((stage) => ({
       stage,
@@ -159,7 +218,7 @@ export function InboxPage() {
           display: 'flex',
           alignItems: 'stretch',
           borderBottom: `1px solid ${colors.line}`,
-          marginBottom: 18,
+          marginBottom: 14,
           overflowX: 'auto',
           scrollbarWidth: 'none',
           WebkitOverflowScrolling: 'touch',
@@ -167,8 +226,16 @@ export function InboxPage() {
         className="l-tabs-row"
       >
         <TabBtn
+          label="🎯 Focus"
+          count={focusItems.length}
+          active={tab === 'focus'}
+          onClick={() => setTab('focus')}
+          color="#d96a66"
+          dotColor={focusItems.length > 0 ? '#d96a66' : colors.dim}
+        />
+        <TabBtn
           label="ALL"
-          count={opps.length}
+          count={filteredOpps.length}
           active={tab === 'all'}
           onClick={() => setTab('all')}
           color={colors.green}
@@ -186,38 +253,111 @@ export function InboxPage() {
         <span style={{ flex: 1 }} />
       </div>
 
-      {/* Sort + group controls */}
+      {/* Toolbar: sort + density + filters + group */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 12,
+          gap: 14,
           marginBottom: 14,
           flexWrap: 'wrap',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span
+        {/* Sort */}
+        <ToolGroup label="Sort">
+          <div style={{ minWidth: 150 }}>
+            <LSelect value={sort} onChange={(v) => setSort(v as SortKey)} options={SORT_OPTIONS} />
+          </div>
+        </ToolGroup>
+
+        {/* Density toggle (A) */}
+        <ToolGroup label="Density">
+          <div
             style={{
-              fontSize: 10,
-              color: colors.dim,
-              letterSpacing: 1,
-              textTransform: 'uppercase',
-              fontWeight: 600,
+              display: 'inline-flex',
+              background: colors.bgSoft,
+              border: `1px solid ${colors.lineHi}`,
+              borderRadius: '8px 0 8px 0',
+              padding: 2,
             }}
           >
-            <LIcon kind="arrow-down" size={10} color={colors.dim} /> Sort
-          </span>
-          <div style={{ minWidth: 160 }}>
-            <LSelect
-              value={sort}
-              onChange={(v) => setSort(v as SortKey)}
-              options={SORT_OPTIONS}
-            />
+            <DensityBtn
+              active={density === 'spacious'}
+              onClick={() => setDensity('spacious')}
+              title="Spacious — รายการใหญ่ ดูสบายตา"
+            >
+              ▦
+            </DensityBtn>
+            <DensityBtn
+              active={density === 'compact'}
+              onClick={() => setDensity('compact')}
+              title="Compact — รายการเล็กลง"
+            >
+              ▤
+            </DensityBtn>
+            <DensityBtn
+              active={density === 'dense'}
+              onClick={() => setDensity('dense')}
+              title="Dense — รายการแบบ list"
+            >
+              ≡
+            </DensityBtn>
           </div>
-        </div>
+        </ToolGroup>
 
-        {tab !== 'all' && (
+        {/* Quick filters (D) */}
+        <ToolGroup label={`Filters${activeFilterCount > 0 ? ` · ${activeFilterCount}` : ''}`}>
+          <div style={{ display: 'inline-flex', gap: 4 }}>
+            <FilterChip
+              active={filterPriority}
+              onClick={() => setFilterPriority((v) => !v)}
+              color="#d96a66"
+            >
+              🔥 High
+            </FilterChip>
+            <FilterChip
+              active={filterStale}
+              onClick={() => setFilterStale((v) => !v)}
+              color="#d99a66"
+            >
+              ⚠ Stale
+            </FilterChip>
+            <FilterChip
+              active={filterMine}
+              onClick={() => setFilterMine((v) => !v)}
+              color={colors.green}
+            >
+              👤 Mine
+            </FilterChip>
+            {activeFilterCount > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setFilterPriority(false);
+                  setFilterStale(false);
+                  setFilterMine(false);
+                }}
+                style={{
+                  padding: '5px 8px',
+                  background: 'transparent',
+                  border: 'none',
+                  color: colors.dim,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  fontSize: 10.5,
+                  letterSpacing: 0.4,
+                  textTransform: 'uppercase',
+                }}
+                title="ล้าง filter ทั้งหมด"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        </ToolGroup>
+
+        {/* Group by stage — only on single-track */}
+        {tab !== 'all' && tab !== 'focus' && (
           <label
             style={{
               display: 'inline-flex',
@@ -245,12 +385,21 @@ export function InboxPage() {
           className="l-hide-mobile"
           style={{ color: colors.dim, fontSize: 11, letterSpacing: 0.5, whiteSpace: 'nowrap' }}
         >
-          {filtered.length} items · BI-WEEKLY REVIEW · NEXT TUE
+          {filtered.length} items
         </span>
       </div>
 
       {isLoading ? (
         <div style={{ padding: 40, textAlign: 'center', color: colors.dim }}>กำลังโหลด…</div>
+      ) : tab === 'focus' ? (
+        /* Focus mode (F): items needing my attention */
+        <FocusView
+          items={focusItems}
+          teamById={teamById}
+          trackSettings={trackSettings}
+          density={density}
+          onCardClick={(id) => navigate(`/inbox/${id}`)}
+        />
       ) : tab === 'all' ? (
         /* All-tracks kanban: 5-col grid on desktop, horizontal snap-scroll on mobile */
         <div
@@ -287,6 +436,8 @@ export function InboxPage() {
                 opps={oppsByTrack[t.key]}
                 teamById={teamById}
                 staleThreshold={getStaleThreshold(trackSettings, t.key)}
+                density={density}
+                isMobile={isMobile}
                 onCardClick={(id) => navigate(`/inbox/${id}`)}
                 onAddClick={() => navigate(`/inbox/new?track=${t.key}`)}
                 isDragOver={dragOverTrack === t.key}
@@ -333,18 +484,21 @@ export function InboxPage() {
                   items={g.items}
                   teamById={teamById}
                   staleThreshold={getStaleThreshold(trackSettings, tab as TrackKey)}
+                  density={density}
+                  defaultCollapsed={DONE_STAGES.has(g.stage)}
                   onCardClick={(id) => navigate(`/inbox/${id}`)}
                 />
               ))
           ) : (
             // Flat list
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: density === 'dense' ? 4 : density === 'compact' ? 6 : 12 }}>
               {filtered.map((o) => (
                 <OpportunityCard
                   key={o.id}
                   opp={o}
                   teamById={teamById}
                   staleThreshold={getStaleThreshold(trackSettings, o.track as TrackKey)}
+                  density={density}
                   onClick={() => navigate(`/inbox/${o.id}`)}
                   wide
                 />
@@ -364,6 +518,8 @@ function StageSection({
   items,
   teamById,
   staleThreshold,
+  density,
+  defaultCollapsed = false,
   onCardClick,
 }: {
   stage: string;
@@ -372,9 +528,11 @@ function StageSection({
   items: OpportunityRow[];
   teamById: Record<string, ReturnType<typeof useTeamMembers>['data'] extends (infer T)[] | undefined ? T : never>;
   staleThreshold: number | null;
+  density: Density;
+  defaultCollapsed?: boolean;
   onCardClick: (id: string) => void;
 }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(defaultCollapsed);
   return (
     <div>
       <button
@@ -392,7 +550,7 @@ function StageSection({
           cursor: 'pointer',
           fontFamily: 'inherit',
           textAlign: 'left',
-          marginBottom: 8,
+          marginBottom: collapsed ? 0 : 8,
         }}
       >
         <span style={{ width: 8, height: 8, background: trackInk, borderRadius: 99 }} />
@@ -410,19 +568,35 @@ function StageSection({
         <span style={{ fontSize: 11, color: colors.dimSoft, fontFamily: "'IBM Plex Mono', monospace" }}>
           · {items.length}
         </span>
+        {defaultCollapsed && (
+          <span
+            style={{
+              fontSize: 9,
+              color: colors.dim,
+              letterSpacing: 0.5,
+              textTransform: 'uppercase',
+              fontWeight: 500,
+              marginLeft: 6,
+              opacity: 0.7,
+            }}
+          >
+            (DONE)
+          </span>
+        )}
         <span style={{ flex: 1 }} />
         <span style={{ color: colors.dim, transition: 'transform 150ms', transform: collapsed ? 'rotate(-90deg)' : 'none' }}>
           <LIcon kind="arrow-down" size={11} color={colors.dim} />
         </span>
       </button>
       {!collapsed && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: density === 'dense' ? 4 : density === 'compact' ? 6 : 10 }}>
           {items.map((o) => (
             <OpportunityCard
               key={o.id}
               opp={o}
               teamById={teamById}
               staleThreshold={staleThreshold}
+              density={density}
               onClick={() => onCardClick(o.id)}
               wide
             />
@@ -439,12 +613,14 @@ function TabBtn({
   active,
   onClick,
   color,
+  dotColor,
 }: {
   label: string;
   count: number;
   active: boolean;
   onClick: () => void;
   color: string;
+  dotColor?: string;
 }) {
   return (
     <button
@@ -465,12 +641,174 @@ function TabBtn({
         display: 'inline-flex',
         alignItems: 'center',
         gap: 8,
+        whiteSpace: 'nowrap',
       }}
     >
-      <span style={{ width: 7, height: 7, background: color, borderRadius: 99 }} />
+      <span style={{ width: 7, height: 7, background: dotColor ?? color, borderRadius: 99 }} />
       {label}
       <span style={{ fontSize: 10.5, color: colors.dim, fontFamily: "'IBM Plex Mono', monospace" }}>{count}</span>
     </button>
+  );
+}
+
+// Toolbar group with label + control
+function ToolGroup({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+      <span
+        style={{
+          fontSize: 10,
+          color: colors.dim,
+          letterSpacing: 1,
+          textTransform: 'uppercase',
+          fontWeight: 600,
+        }}
+      >
+        {label}
+      </span>
+      {children}
+    </div>
+  );
+}
+
+function DensityBtn({
+  active,
+  onClick,
+  title,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      style={{
+        width: 28,
+        height: 24,
+        padding: 0,
+        background: active ? colors.green : 'transparent',
+        color: active ? colors.bg : colors.dimSoft,
+        border: 'none',
+        borderRadius: '6px 0 6px 0',
+        cursor: 'pointer',
+        fontFamily: 'inherit',
+        fontSize: 14,
+        lineHeight: 1,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+function FilterChip({
+  active,
+  onClick,
+  color,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  color: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        padding: '5px 10px',
+        background: active ? color : 'transparent',
+        color: active ? colors.bg : colors.dimSoft,
+        border: `1px solid ${active ? color : colors.lineHi}`,
+        borderRadius: '6px 0 6px 0',
+        cursor: 'pointer',
+        fontFamily: 'inherit',
+        fontSize: 11,
+        fontWeight: 600,
+        letterSpacing: 0.3,
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 4,
+        transition: 'background 100ms, color 100ms',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Focus view (F)
+function FocusView({
+  items,
+  teamById,
+  trackSettings,
+  density,
+  onCardClick,
+}: {
+  items: OpportunityRow[];
+  teamById: Record<string, ReturnType<typeof useTeamMembers>['data'] extends (infer T)[] | undefined ? T : never>;
+  trackSettings: ReturnType<typeof useTrackSettings>['data'] extends infer T ? T : never;
+  density: Density;
+  onCardClick: (id: string) => void;
+}) {
+  if (items.length === 0) {
+    return (
+      <LCard padding={40}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 36, marginBottom: 12 }}>🎉</div>
+          <div style={{ fontSize: 14, color: colors.text, marginBottom: 6, fontWeight: 500 }}>
+            ไม่มีอะไรที่ต้อง action วันนี้!
+          </div>
+          <div style={{ fontSize: 12, color: colors.dim, lineHeight: 1.5 }}>
+            Focus mode แสดงเฉพาะ opportunity ที่คุณ own และ:
+            <br />
+            <b>stale</b> · หรือ <b>due ใน 7 วัน</b> · หรือ <b>priority สูง</b>
+          </div>
+        </div>
+      </LCard>
+    );
+  }
+  return (
+    <div>
+      <div
+        style={{
+          padding: '10px 14px',
+          background: '#241010',
+          border: '1px solid #5a1a18',
+          borderRadius: '12px 0 12px 0',
+          marginBottom: 12,
+          fontSize: 12,
+          color: '#d96a66',
+          lineHeight: 1.5,
+        }}
+      >
+        🎯 <b>FOCUS MODE</b> · แสดง {items.length} รายการที่ต้องการความสนใจของคุณวันนี้ ·
+        จัดเรียง: stale ก่อน → priority สูง → due ใกล้
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: density === 'dense' ? 4 : density === 'compact' ? 6 : 10 }}>
+        {items.map((o) => (
+          <OpportunityCard
+            key={o.id}
+            opp={o}
+            teamById={teamById}
+            staleThreshold={getStaleThreshold(trackSettings ?? [], o.track as TrackKey)}
+            density={density}
+            onClick={() => onCardClick(o.id)}
+            wide
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -479,6 +817,8 @@ function TrackColumn({
   opps,
   teamById,
   staleThreshold,
+  density,
+  isMobile,
   onCardClick,
   onAddClick,
   isDragOver,
@@ -490,6 +830,8 @@ function TrackColumn({
   opps: OpportunityRow[];
   teamById: Record<string, ReturnType<typeof useTeamMembers>['data'] extends (infer T)[] | undefined ? T : never>;
   staleThreshold: number | null;
+  density: Density;
+  isMobile: boolean;
   onCardClick: (id: string) => void;
   onAddClick: () => void;
   isDragOver?: boolean;
@@ -565,10 +907,30 @@ function TrackColumn({
         })}
       </div>
 
-      {/* Cards */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minHeight: 200 }}>
+      {/* Cards — with column-scoped scroll on desktop (B) */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: density === 'dense' ? 4 : density === 'compact' ? 6 : 8,
+          minHeight: 200,
+          // Column scroll on desktop only — mobile keeps page-level scroll
+          maxHeight: isMobile ? undefined : 'calc(100vh - 320px)',
+          overflowY: isMobile ? undefined : 'auto',
+          // Hide ugly scrollbar but allow scroll
+          scrollbarWidth: 'thin',
+          paddingRight: isMobile ? 0 : 2,
+        }}
+      >
         {opps.map((o) => (
-          <OpportunityCard key={o.id} opp={o} teamById={teamById} staleThreshold={staleThreshold} onClick={() => onCardClick(o.id)} />
+          <OpportunityCard
+            key={o.id}
+            opp={o}
+            teamById={teamById}
+            staleThreshold={staleThreshold}
+            density={density}
+            onClick={() => onCardClick(o.id)}
+          />
         ))}
         <button
           type="button"
@@ -611,12 +973,14 @@ function OpportunityCard({
   opp,
   teamById,
   staleThreshold,
+  density = 'spacious',
   onClick,
   wide = false,
 }: {
   opp: OpportunityRow;
   teamById: Record<string, ReturnType<typeof useTeamMembers>['data'] extends (infer T)[] | undefined ? T : never>;
   staleThreshold: number | null;
+  density?: Density;
   onClick: () => void;
   wide?: boolean;
 }) {
@@ -625,7 +989,172 @@ function OpportunityCard({
   const reviewer = opp.reviewer_id ? teamById[opp.reviewer_id] : null;
   const stale = isStale(opp, staleThreshold);
   const pri = opp.priority === 'High' ? 'hi' : opp.priority === 'Medium' ? 'med' : 'low';
+  const trackIcon: 'cal' | 'money' | 'doc' | 'clock' =
+    opp.track === 'event' ? 'cal' : opp.track === 'contract' ? 'money' : opp.track === 'apply' ? 'doc' : 'clock';
 
+  // ─── Dense mode: single-line row ──────────────────────────────────
+  if (density === 'dense') {
+    return (
+      <div
+        onClick={onClick}
+        draggable
+        onDragStart={(e) => {
+          e.dataTransfer.setData('text/opportunity-id', opp.id);
+          e.dataTransfer.effectAllowed = 'move';
+        }}
+        title={opp.title}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '6px 10px',
+          background: colors.bgCard,
+          border: `1px solid ${stale ? '#5a1a18' : colors.lineHi}`,
+          borderLeft: `3px solid ${stale ? '#d96a66' : meta.color.ink}`,
+          borderRadius: '6px 0 6px 0',
+          cursor: 'grab',
+          transition: 'border-color 150ms',
+          fontSize: 12,
+          minWidth: 0,
+        }}
+        onMouseEnter={(e) => {
+          if (!stale) e.currentTarget.style.borderColor = meta.color.chip;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = stale ? '#5a1a18' : colors.lineHi;
+        }}
+      >
+        <LPri level={pri as 'hi' | 'med' | 'low'} />
+        <span
+          style={{
+            flex: 1,
+            color: colors.text,
+            fontWeight: 500,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            minWidth: 0,
+          }}
+        >
+          {opp.title}
+        </span>
+        <span style={{ fontSize: 10, color: meta.color.ink, fontWeight: 600, letterSpacing: 0.4, flexShrink: 0 }}>
+          {opp.stage}
+        </span>
+        {stale && (
+          <span
+            style={{
+              fontSize: 9,
+              color: '#d96a66',
+              fontWeight: 700,
+              letterSpacing: 0.5,
+              flexShrink: 0,
+            }}
+          >
+            STALE
+          </span>
+        )}
+        <span style={{ fontSize: 10.5, color: colors.dimSoft, flexShrink: 0, minWidth: 50, textAlign: 'right' }}>
+          {formatDueRelative(opp.due_date)}
+        </span>
+        {owner && <LAvatar initials={teamMemberInitials(owner)} size={16} />}
+      </div>
+    );
+  }
+
+  // ─── Compact mode: tighter card ───────────────────────────────────
+  if (density === 'compact') {
+    return (
+      <div
+        onClick={onClick}
+        draggable
+        onDragStart={(e) => {
+          e.dataTransfer.setData('text/opportunity-id', opp.id);
+          e.dataTransfer.effectAllowed = 'move';
+        }}
+        style={{
+          padding: '8px 10px',
+          background: colors.bgCard,
+          border: `1px solid ${stale ? '#5a1a18' : colors.lineHi}`,
+          borderRadius: '10px 0 10px 0',
+          cursor: 'grab',
+          transition: 'border-color 150ms',
+          minWidth: 0,
+        }}
+        onMouseEnter={(e) => {
+          if (!stale) e.currentTarget.style.borderColor = meta.color.chip;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = stale ? '#5a1a18' : colors.lineHi;
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+          <LPri level={pri as 'hi' | 'med' | 'low'} />
+          <span
+            style={{
+              fontSize: 9.5,
+              color: meta.color.ink,
+              letterSpacing: 0.5,
+              textTransform: 'uppercase',
+              fontWeight: 700,
+            }}
+          >
+            {opp.stage}
+          </span>
+          {stale && (
+            <span
+              style={{
+                marginLeft: 'auto',
+                fontSize: 9,
+                color: '#d96a66',
+                letterSpacing: 0.5,
+                textTransform: 'uppercase',
+                fontWeight: 700,
+              }}
+            >
+              STALE
+            </span>
+          )}
+        </div>
+        <div
+          style={{
+            fontSize: 12.5,
+            lineHeight: 1.3,
+            color: colors.text,
+            marginBottom: 6,
+            fontWeight: 500,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {opp.title}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
+          <span
+            style={{
+              fontSize: 10.5,
+              color: colors.dimSoft,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 3,
+            }}
+          >
+            <LIcon kind={trackIcon} size={10} color={colors.dimSoft} />
+            {formatDueRelative(opp.due_date)}
+          </span>
+          <span style={{ display: 'inline-flex', gap: 3 }}>
+            {owner && <LAvatar initials={teamMemberInitials(owner)} size={16} />}
+            {reviewer && opp.track !== 'watch' && (
+              <LAvatar initials={teamMemberInitials(reviewer)} size={16} color={meta.color.ink} />
+            )}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Spacious mode: original full card ────────────────────────────
   return (
     <div
       onClick={onClick}
@@ -703,11 +1232,7 @@ function OpportunityCard({
             gap: 4,
           }}
         >
-          <LIcon
-            kind={opp.track === 'event' ? 'cal' : opp.track === 'contract' ? 'money' : opp.track === 'apply' ? 'doc' : 'clock'}
-            size={11}
-            color={colors.dimSoft}
-          />
+          <LIcon kind={trackIcon} size={11} color={colors.dimSoft} />
           {formatDueRelative(opp.due_date)}
         </span>
         <span style={{ display: 'inline-flex', gap: 3 }}>
