@@ -86,5 +86,3 @@ Want Claude Desktop to manage LOCOL data directly?
 - ⚠️ `SUPABASE_SERVICE_KEY` (sb_secret_…) **bypasses RLS** — never commit · only in Vercel env vars + local Claude MCP config
 - ⚠️ `RESEND_API_KEY` — never commit · only in cron environment
 - RLS policies on all tables · auth required for everything except login
-
-test
