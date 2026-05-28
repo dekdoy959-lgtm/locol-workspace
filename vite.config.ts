@@ -42,6 +42,8 @@ export default defineConfig({
         ],
       },
       workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
         // Cache app shell + assets aggressively
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         // Don't cache Supabase / Google API calls (they need to be fresh)
