@@ -292,6 +292,35 @@ export type Database = {
         };
         Update: Partial<Database['public']['Tables']['milestones']['Row']>;
       };
+      discord_inbox: {
+        Row: {
+          id: string;
+          discord_message_id: string;
+          channel_id: string;
+          author_id: string;
+          author_name: string;
+          original_text: string | null;
+          attachment_paths: { filename: string; storage_path: string; content_type: string }[];
+          extracted_links: { url: string; title: string }[];
+          qr_codes_found: { url: string }[];
+          detected_category: 'apply' | 'watch' | 'event' | 'contact' | null;
+          ai_summary: string | null;
+          ai_extracted_data: Record<string, unknown>;
+          processing_status: 'pending' | 'processing' | 'done' | 'failed' | 'review_needed';
+          error_message: string | null;
+          created_opportunity_id: string | null;
+          created_contact_id: string | null;
+          created_at: string;
+          processed_at: string | null;
+        };
+        Insert: Partial<Database['public']['Tables']['discord_inbox']['Row']> & {
+          discord_message_id: string;
+          channel_id: string;
+          author_id: string;
+          author_name: string;
+        };
+        Update: Partial<Database['public']['Tables']['discord_inbox']['Row']>;
+      };
       track_settings: {
         Row: {
           track: 'apply' | 'act' | 'watch' | 'contract' | 'event';

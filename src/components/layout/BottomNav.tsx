@@ -20,6 +20,7 @@ const PRIMARY_TABS: NavTab[] = [
 ];
 
 const MORE_ITEMS: NavTab[] = [
+  { to: '/discord-inbox', label: 'Discord Inbox', icon: 'inbox' },
   { to: '/organizations', label: 'Organizations', icon: 'building' },
   { to: '/groups', label: 'Groups', icon: 'folder' },
   { to: '/relationships', label: 'Network', icon: 'graph' },

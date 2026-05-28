@@ -28,9 +28,9 @@ export interface TrackMeta {
 export const TRACKS: TrackMeta[] = [
   {
     key: 'apply',
-    name: 'ขอทุน',
-    nameEn: 'Grants',
-    sub: 'สมัครทุน · เข้าร่วมโครงการ · ประกวด',
+    name: 'ขอทุน/งานแข่ง',
+    nameEn: 'Grants & Competitions',
+    sub: 'สมัครทุน · งานประกวด · เข้าร่วมโครงการ',
     cadence: 'ตาม deadline',
     stages: ['Spotted', 'Fit check', 'Drafting', 'Submitted', 'Won', 'Lost'],
     defaultStage: 'Spotted',

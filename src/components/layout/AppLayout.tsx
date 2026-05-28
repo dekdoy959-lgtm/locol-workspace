@@ -15,6 +15,7 @@ import { NotificationBell } from './NotificationBell';
 const navItems = [
   { to: '/briefing', label: 'Briefing' },
   { to: '/inbox', label: 'Inbox' },
+  { to: '/discord-inbox', label: 'Discord' },
   { to: '/contacts', label: 'Contacts' },
   { to: '/organizations', label: 'Orgs' },
   { to: '/groups', label: 'Groups' },
