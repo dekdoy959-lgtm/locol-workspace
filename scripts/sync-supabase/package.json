@@ -1,0 +1,16 @@
+{
+  "name": "@locol/sync-supabase",
+  "version": "0.1.0",
+  "description": "One-way data sync from one Supabase project to another. TRUNCATE target then copy all DB tables, mapping user_ids by email.",
+  "type": "module",
+  "scripts": {
+    "sync": "node sync.mjs",
+    "dry-run": "DRY_RUN=true node sync.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
