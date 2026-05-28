@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { LPage, LCard, LChip, LH, LNote, LBtn } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
@@ -92,32 +92,16 @@ export function DiscordInboxPage() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {items.map((item) => (
-          <InboxCard key={item.id} item={item} activeCategory={activeCategory} />
+          <InboxCard key={item.id} item={item} />
         ))}
       </div>
     </LPage>
   );
 }
 
-function InboxCard({ item, activeCategory }: { item: InboxRow; activeCategory: string | null }) {
+function InboxCard({ item }: { item: InboxRow }) {
   const [expanded, setExpanded] = useState(false);
-  const queryClient = useQueryClient();
   const catMeta = item.detected_category ? CATEGORY_LABELS[item.detected_category] : null;
-
-  const deleteMutation = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase.from('discord_inbox').delete().eq('id', item.id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['discord-inbox', activeCategory] });
-    },
-  });
-
-  const handleDelete = () => {
-    if (!window.confirm('ลบ inbox record นี้? ไม่สามารถกู้คืนได้')) return;
-    deleteMutation.mutate();
-  };
 
   const opmsLink = item.created_opportunity_id
     ? `/inbox/${item.created_opportunity_id}`
@@ -208,37 +192,14 @@ function InboxCard({ item, activeCategory }: { item: InboxRow; activeCategory: s
           )}
         </div>
 
-        {/* Actions */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flexShrink: 0 }}>
-          {opmsLink && (
-            <Link to={opmsLink}>
-              <LBtn style={{ whiteSpace: 'nowrap', width: '100%' }}>
-                ดูใน OPMS →
-              </LBtn>
-            </Link>
-          )}
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={deleteMutation.isPending}
-            style={{
-              background: 'transparent',
-              border: `1px solid #5a1a18`,
-              color: '#d96a66',
-              borderRadius: '8px 0 8px 0',
-              padding: '5px 12px',
-              fontSize: 11.5,
-              fontWeight: 600,
-              cursor: deleteMutation.isPending ? 'not-allowed' : 'pointer',
-              fontFamily: 'inherit',
-              letterSpacing: 0.5,
-              opacity: deleteMutation.isPending ? 0.5 : 1,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {deleteMutation.isPending ? '…' : 'ลบ'}
-          </button>
-        </div>
+        {/* Action: link to created record */}
+        {opmsLink && (
+          <Link to={opmsLink}>
+            <LBtn style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>
+              ดูใน OPMS →
+            </LBtn>
+          </Link>
+        )}
       </div>
     </LCard>
   );

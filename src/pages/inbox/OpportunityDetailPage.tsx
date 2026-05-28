@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useOpportunity, useUpdateOpportunity } from '../../hooks/useOpportunities';
 import { useTeamMembers, teamMemberDisplayName, teamMemberInitials } from '../../hooks/useTeamMembers';
 import { useTrackSettings, getStaleThreshold } from '../../hooks/useTrackSettings';
@@ -15,6 +17,8 @@ import { NoteComposer } from '../../components/notes/NoteComposer';
 import { Timeline } from '../../components/notes/Timeline';
 import { OpportunityPeopleSection } from '../../components/opportunities/OpportunityPeopleSection';
 import { OpportunityDetailsView } from '../../components/opportunities/OpportunityDetailsView';
+import { ConfirmModal } from '../../components/modals/ConfirmModal';
+import { supabase } from '../../lib/supabase';
 import { colors } from '../../styles/tokens';
 
 export function OpportunityDetailPage() {
@@ -26,6 +30,19 @@ export function OpportunityDetailPage() {
   const { data: discordSource } = useDiscordInboxForOpportunity(id);
   const { user } = useAuth();
   const update = useUpdateOpportunity();
+  const queryClient = useQueryClient();
+  const [showDeleteDiscord, setShowDeleteDiscord] = useState(false);
+
+  const deleteDiscordMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from('discord_inbox').delete().eq('id', discordSource!.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['discord-inbox-opp', id] });
+      setShowDeleteDiscord(false);
+    },
+  });
 
   if (isLoading) {
     return <div style={{ padding: 40, textAlign: 'center', color: colors.dim }}>กำลังโหลด…</div>;
@@ -203,12 +220,29 @@ export function OpportunityDetailPage() {
                     @{discordSource.author_name} · {new Date(discordSource.created_at).toLocaleDateString('th-TH')}
                   </span>
                 </div>
-                <a
-                  href={`/discord-inbox`}
-                  style={{ fontSize: 11, color: '#5865F2', textDecoration: 'none' }}
-                >
-                  ดู inbox →
-                </a>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <a href="/discord-inbox" style={{ fontSize: 11, color: '#5865F2', textDecoration: 'none' }}>
+                    ดู inbox →
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setShowDeleteDiscord(true)}
+                    style={{
+                      background: 'transparent',
+                      border: `1px solid #5a1a18`,
+                      color: '#d96a66',
+                      borderRadius: '6px 0 6px 0',
+                      padding: '3px 10px',
+                      fontSize: 11,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      fontFamily: 'inherit',
+                      letterSpacing: 0.4,
+                    }}
+                  >
+                    ลบ
+                  </button>
+                </div>
               </div>
               {discordSource.original_text && (
                 <div
@@ -380,6 +414,18 @@ export function OpportunityDetailPage() {
           </LCard>
         </div>
       </div>
+
+      {showDeleteDiscord && (
+        <ConfirmModal
+          title="ลบ Discord Source?"
+          body="ลบบันทึก Discord Inbox นี้ออก ข้อความต้นฉบับและรูปภาพจะหายไป ไม่สามารถกู้คืนได้"
+          confirmLabel="ลบถาวร"
+          danger
+          isLoading={deleteDiscordMutation.isPending}
+          onConfirm={() => deleteDiscordMutation.mutate()}
+          onCancel={() => setShowDeleteDiscord(false)}
+        />
+      )}
     </div>
   );
 }
