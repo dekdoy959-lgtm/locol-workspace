@@ -1,7 +1,14 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNotes, useDeleteNote } from '../../hooks/useNotes';
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 import { useGmailMessages } from '../../hooks/useGmailMessages';
+import {
+  useSharedExternalIds,
+  usePromoteGmail,
+  usePromoteCalendar,
+  usePromoteBulk,
+} from '../../hooks/useInteractions';
+import { useTeamMembers } from '../../hooks/useTeamMembers';
 import { useAuth } from '../../contexts/AuthContext';
 import type { NoteRow, NoteScope } from '../../types/note';
 import {
@@ -78,8 +85,49 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
     isLoading: gmailLoading,
   } = useGmailMessages(calendarEmails);
 
+  // Share-to-team — only meaningful when scope is a contact (interactions are contact-scoped)
+  const isContactScope = scope === 'contact';
+  const contactId = isContactScope ? targetId : undefined;
+  const { sharedKeys, sharedByMap } = useSharedExternalIds(contactId);
+  const promoteGmail = usePromoteGmail();
+  const promoteCalendar = usePromoteCalendar();
+  const promoteBulk = usePromoteBulk();
+  const { data: team = [] } = useTeamMembers();
+  const teamById = useMemo(() => Object.fromEntries(team.map((t) => [t.id, t])), [team]);
+  const [bulkConfirmOpen, setBulkConfirmOpen] = useState(false);
+
   const deleteNote = useDeleteNote();
   const today = todayISO();
+
+  // Count items the team doesn't see yet
+  const unsharedCounts = useMemo(() => {
+    if (!isContactScope) return { gmail: 0, calendar: 0 };
+    let gmail = 0;
+    let calendar = 0;
+    for (const m of messages) if (!sharedKeys.has(`gmail:${m.id}`)) gmail++;
+    for (const e of events) {
+      if (!sharedKeys.has(`calendar:${e.id}`)) {
+        const d = eventDate(e);
+        if (d && d <= today) calendar++; // only count past events (no point sharing future-tense)
+      }
+    }
+    return { gmail, calendar };
+  }, [messages, events, sharedKeys, isContactScope, today]);
+  const totalUnshared = unsharedCounts.gmail + unsharedCounts.calendar;
+
+  const handleShareAll = () => {
+    if (!contactId) return;
+    const gmailToShare = messages.filter((m) => !sharedKeys.has(`gmail:${m.id}`));
+    const calendarToShare = events.filter((e) => {
+      if (sharedKeys.has(`calendar:${e.id}`)) return false;
+      const d = eventDate(e);
+      return d != null && d <= today;
+    });
+    promoteBulk.mutate(
+      { gmailMessages: gmailToShare, calendarEvents: calendarToShare, contactId },
+      { onSettled: () => setBulkConfirmOpen(false) },
+    );
+  };
 
   const feed: FeedItem[] = useMemo(() => {
     const items: FeedItem[] = [];
@@ -181,6 +229,67 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
         </div>
       )}
 
+      {/* Share-to-team banner */}
+      {isContactScope && totalUnshared > 0 && (
+        <div
+          style={{
+            marginBottom: 12,
+            padding: '10px 14px',
+            background: '#19250a',
+            border: `1px solid ${colors.greenDk}`,
+            borderRadius: '10px 0 10px 0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            flexWrap: 'wrap',
+          }}
+        >
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <div style={{ fontSize: 12, color: colors.green, fontWeight: 700, letterSpacing: 0.5, marginBottom: 2 }}>
+              💎 มี {totalUnshared} รายการที่ทีมยังมองไม่เห็น
+            </div>
+            <div style={{ fontSize: 11, color: colors.dimSoft, lineHeight: 1.4 }}>
+              {unsharedCounts.gmail > 0 && <>✉ {unsharedCounts.gmail} emails </>}
+              {unsharedCounts.gmail > 0 && unsharedCounts.calendar > 0 && '· '}
+              {unsharedCounts.calendar > 0 && <>📅 {unsharedCounts.calendar} meetings </>}
+              · Share เพื่อให้ทีมเห็นใน Interactions
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setBulkConfirmOpen(true)}
+            disabled={promoteBulk.isPending}
+            style={{
+              padding: '7px 14px',
+              background: colors.green,
+              color: colors.bg,
+              border: 'none',
+              borderRadius: '8px 0 8px 0',
+              cursor: promoteBulk.isPending ? 'not-allowed' : 'pointer',
+              fontFamily: 'inherit',
+              fontSize: 11.5,
+              fontWeight: 700,
+              letterSpacing: 0.5,
+              textTransform: 'uppercase',
+              opacity: promoteBulk.isPending ? 0.6 : 1,
+            }}
+          >
+            📤 Share all
+          </button>
+        </div>
+      )}
+
+      {/* Bulk confirm modal */}
+      {bulkConfirmOpen && (
+        <BulkConfirmModal
+          gmailCount={unsharedCounts.gmail}
+          calendarCount={unsharedCounts.calendar}
+          isPending={promoteBulk.isPending}
+          onConfirm={handleShareAll}
+          onCancel={() => setBulkConfirmOpen(false)}
+        />
+      )}
+
       <div style={{ position: 'relative' }}>
         <div
           style={{
@@ -199,6 +308,15 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
               key={feedKey(item)}
               item={item}
               myEmail={myEmail}
+              contactId={contactId}
+              sharedKeys={sharedKeys}
+              sharedByMap={sharedByMap}
+              teamById={teamById}
+              currentUserId={user?.id ?? null}
+              onShareGmail={(m) => contactId && promoteGmail.mutate({ message: m, contactId })}
+              onShareCalendar={(e) => contactId && promoteCalendar.mutate({ event: e, contactId })}
+              gmailPending={promoteGmail.isPending}
+              calendarPending={promoteCalendar.isPending}
               onDeleteNote={(noteId) => deleteNote.mutate({ id: noteId, scope, targetId })}
               onOpenOpportunity={(oid) => navigate(`/inbox/${oid}`)}
             />
@@ -230,6 +348,15 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
               key={feedKey(item)}
               item={item}
               myEmail={myEmail}
+              contactId={contactId}
+              sharedKeys={sharedKeys}
+              sharedByMap={sharedByMap}
+              teamById={teamById}
+              currentUserId={user?.id ?? null}
+              onShareGmail={(m) => contactId && promoteGmail.mutate({ message: m, contactId })}
+              onShareCalendar={(e) => contactId && promoteCalendar.mutate({ event: e, contactId })}
+              gmailPending={promoteGmail.isPending}
+              calendarPending={promoteCalendar.isPending}
               onDeleteNote={(noteId) => deleteNote.mutate({ id: noteId, scope, targetId })}
               onOpenOpportunity={(oid) => navigate(`/inbox/${oid}`)}
             />
@@ -247,22 +374,184 @@ function feedKey(item: FeedItem): string {
   return `opp-${item.opp.id}-${item.opp.link_role}`;
 }
 
+interface FeedRowProps {
+  item: FeedItem;
+  myEmail: string;
+  contactId: string | undefined;
+  sharedKeys: Set<string>;
+  sharedByMap: Map<string, string | null>;
+  teamById: Record<string, { id: string; email: string; full_name: string | null } | undefined>;
+  currentUserId: string | null;
+  onShareGmail: (message: GmailMessageMeta) => void;
+  onShareCalendar: (event: CalendarEvent) => void;
+  gmailPending: boolean;
+  calendarPending: boolean;
+  onDeleteNote: (id: string) => void;
+  onOpenOpportunity: (id: string) => void;
+}
+
 function FeedRow({
   item,
   myEmail,
+  contactId,
+  sharedKeys,
+  sharedByMap,
+  teamById,
+  currentUserId,
+  onShareGmail,
+  onShareCalendar,
+  gmailPending,
+  calendarPending,
   onDeleteNote,
   onOpenOpportunity,
-}: {
-  item: FeedItem;
-  myEmail: string;
-  onDeleteNote: (id: string) => void;
-  onOpenOpportunity: (id: string) => void;
-}) {
-  if (item.kind === 'meeting') return <MeetingRow event={item.event} isFuture={item.isFuture} />;
-  if (item.kind === 'email') return <EmailRow message={item.message} myEmail={myEmail} />;
+}: FeedRowProps) {
+  if (item.kind === 'meeting') {
+    const key = `calendar:${item.event.id}`;
+    const isShared = sharedKeys.has(key);
+    const sharedById = isShared ? sharedByMap.get(key) ?? null : null;
+    const sharedByName = sharedById
+      ? sharedById === currentUserId
+        ? 'you'
+        : teamById[sharedById]?.full_name?.split(' ')[0] ?? teamById[sharedById]?.email?.split('@')[0] ?? 'team'
+      : null;
+    return (
+      <MeetingRow
+        event={item.event}
+        isFuture={item.isFuture}
+        canShare={!!contactId && !item.isFuture}
+        isShared={isShared}
+        sharedByName={sharedByName}
+        sharePending={calendarPending}
+        onShare={() => onShareCalendar(item.event)}
+      />
+    );
+  }
+  if (item.kind === 'email') {
+    const key = `gmail:${item.message.id}`;
+    const isShared = sharedKeys.has(key);
+    const sharedById = isShared ? sharedByMap.get(key) ?? null : null;
+    const sharedByName = sharedById
+      ? sharedById === currentUserId
+        ? 'you'
+        : teamById[sharedById]?.full_name?.split(' ')[0] ?? teamById[sharedById]?.email?.split('@')[0] ?? 'team'
+      : null;
+    return (
+      <EmailRow
+        message={item.message}
+        myEmail={myEmail}
+        canShare={!!contactId}
+        isShared={isShared}
+        sharedByName={sharedByName}
+        sharePending={gmailPending}
+        onShare={() => onShareGmail(item.message)}
+      />
+    );
+  }
   if (item.kind === 'opportunity')
     return <OpportunityRow opp={item.opp} isFuture={item.isFuture} onOpen={() => onOpenOpportunity(item.opp.id)} />;
   return <NoteRowItem note={item.note} isFuture={item.isFuture} onDelete={() => onDeleteNote(item.note.id)} />;
+}
+
+// Bulk-share confirmation modal
+function BulkConfirmModal({
+  gmailCount,
+  calendarCount,
+  isPending,
+  onConfirm,
+  onCancel,
+}: {
+  gmailCount: number;
+  calendarCount: number;
+  isPending: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div
+      onClick={onCancel}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(0,0,0,0.7)',
+        zIndex: 500,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 14,
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: colors.bgCard,
+          border: `1px solid ${colors.lineHi}`,
+          borderRadius: '14px 0 14px 0',
+          padding: 24,
+          maxWidth: 460,
+          width: '100%',
+        }}
+      >
+        <div style={{ fontSize: 16, color: colors.text, fontWeight: 600, marginBottom: 10 }}>
+          📤 Share {gmailCount + calendarCount} รายการกับทีม?
+        </div>
+        <div style={{ fontSize: 13, color: colors.dimSoft, lineHeight: 1.6, marginBottom: 18 }}>
+          ทีมจะเห็น <b style={{ color: colors.text }}>subject + snippet + เวลา</b> ของ:
+          {gmailCount > 0 && (
+            <div style={{ marginTop: 6 }}>· ✉ <b>{gmailCount}</b> Gmail messages</div>
+          )}
+          {calendarCount > 0 && (
+            <div style={{ marginTop: 2 }}>· 📅 <b>{calendarCount}</b> Calendar meetings</div>
+          )}
+          <div style={{ marginTop: 10, fontSize: 12, color: colors.dim, fontStyle: 'italic' }}>
+            💡 รายการที่ share แล้วจะอยู่ใน <b>Interactions</b> ของ contact นี้ · ลบทีหลังได้
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isPending}
+            style={{
+              padding: '8px 16px',
+              background: 'transparent',
+              border: `1px solid ${colors.lineHi}`,
+              color: colors.dimSoft,
+              borderRadius: '8px 0 8px 0',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              fontSize: 12,
+              letterSpacing: 0.5,
+              textTransform: 'uppercase',
+              fontWeight: 600,
+            }}
+          >
+            ยกเลิก
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={isPending}
+            style={{
+              padding: '8px 16px',
+              background: colors.green,
+              border: 'none',
+              color: colors.bg,
+              borderRadius: '8px 0 8px 0',
+              cursor: isPending ? 'not-allowed' : 'pointer',
+              fontFamily: 'inherit',
+              fontSize: 12,
+              letterSpacing: 0.5,
+              textTransform: 'uppercase',
+              fontWeight: 700,
+              opacity: isPending ? 0.6 : 1,
+            }}
+          >
+            {isPending ? 'กำลังแชร์…' : '📤 Share all'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function ExternalAuthNotice() {
@@ -370,7 +659,23 @@ function NoteRowItem({
   );
 }
 
-function MeetingRow({ event, isFuture }: { event: CalendarEvent; isFuture: boolean }) {
+function MeetingRow({
+  event,
+  isFuture,
+  canShare,
+  isShared,
+  sharedByName,
+  sharePending,
+  onShare,
+}: {
+  event: CalendarEvent;
+  isFuture: boolean;
+  canShare: boolean;
+  isShared: boolean;
+  sharedByName: string | null;
+  sharePending: boolean;
+  onShare: () => void;
+}) {
   const time = eventTime(event);
   const meetLink = eventMeetLink(event);
   const opacity = isFuture ? 0.85 : 1;
@@ -405,6 +710,9 @@ function MeetingRow({ event, isFuture }: { event: CalendarEvent; isFuture: boole
             </KindChip>
           )}
           <span style={{ flex: 1 }} />
+          {canShare && (
+            <ShareButton isShared={isShared} sharedByName={sharedByName} pending={sharePending} onShare={onShare} />
+          )}
           {event.htmlLink && (
             <a
               href={event.htmlLink}
@@ -509,7 +817,23 @@ function MeetingRow({ event, isFuture }: { event: CalendarEvent; isFuture: boole
   );
 }
 
-function EmailRow({ message, myEmail }: { message: GmailMessageMeta; myEmail: string }) {
+function EmailRow({
+  message,
+  myEmail,
+  canShare,
+  isShared,
+  sharedByName,
+  sharePending,
+  onShare,
+}: {
+  message: GmailMessageMeta;
+  myEmail: string;
+  canShare: boolean;
+  isShared: boolean;
+  sharedByName: string | null;
+  sharePending: boolean;
+  onShare: () => void;
+}) {
   const accent = '#9aa56a'; // olive — matches Contract track
   const outgoing = myEmail && isOutgoing(message, myEmail);
 
@@ -555,6 +879,9 @@ function EmailRow({ message, myEmail }: { message: GmailMessageMeta; myEmail: st
             </span>
           )}
           <span style={{ flex: 1 }} />
+          {canShare && (
+            <ShareButton isShared={isShared} sharedByName={sharedByName} pending={sharePending} onShare={onShare} />
+          )}
           <a
             href={gmailMessageUrl(message)}
             target="_blank"
@@ -728,6 +1055,76 @@ function KindChip({
     >
       {children}
     </span>
+  );
+}
+
+function ShareButton({
+  isShared,
+  sharedByName,
+  pending,
+  onShare,
+}: {
+  isShared: boolean;
+  sharedByName: string | null;
+  pending: boolean;
+  onShare: () => void;
+}) {
+  if (isShared) {
+    return (
+      <span
+        title={sharedByName ? `Shared by ${sharedByName}` : 'Shared with team'}
+        style={{
+          fontSize: 10.5,
+          color: colors.green,
+          letterSpacing: 0.4,
+          textTransform: 'uppercase',
+          fontWeight: 600,
+          padding: '2px 6px',
+          background: '#19250a',
+          border: `1px solid ${colors.greenDk}`,
+          borderRadius: '4px 0 4px 0',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        ✓ SHARED{sharedByName ? ` · ${sharedByName}` : ''}
+      </span>
+    );
+  }
+  return (
+    <button
+      type="button"
+      onClick={onShare}
+      disabled={pending}
+      title="Share with team — saves to interactions"
+      style={{
+        fontSize: 10.5,
+        color: colors.dimSoft,
+        letterSpacing: 0.4,
+        textTransform: 'uppercase',
+        fontWeight: 600,
+        padding: '2px 7px',
+        background: 'transparent',
+        border: `1px dashed ${colors.lineHi}`,
+        borderRadius: '4px 0 4px 0',
+        cursor: pending ? 'not-allowed' : 'pointer',
+        fontFamily: 'inherit',
+        whiteSpace: 'nowrap',
+        opacity: pending ? 0.5 : 1,
+        transition: 'color 100ms, border-color 100ms',
+      }}
+      onMouseEnter={(e) => {
+        if (!pending) {
+          e.currentTarget.style.color = colors.green;
+          e.currentTarget.style.borderColor = colors.greenDk;
+        }
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.color = colors.dimSoft;
+        e.currentTarget.style.borderColor = colors.lineHi;
+      }}
+    >
+      {pending ? '…' : '📤 SHARE'}
+    </button>
   );
 }
 

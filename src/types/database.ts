@@ -133,6 +133,11 @@ export type Database = {
           outcome: string | null;
           logged_by: string | null;
           created_at: string;
+          source: 'manual' | 'gmail' | 'calendar';
+          external_id: string | null;
+          external_url: string | null;
+          subject: string | null;
+          metadata: Record<string, unknown>;
         };
         Insert: Partial<Database['public']['Tables']['interactions']['Row']> & {
           contact_id: string;
