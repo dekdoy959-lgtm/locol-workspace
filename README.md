@@ -87,4 +87,4 @@ Want Claude Desktop to manage LOCOL data directly?
 - ⚠️ `RESEND_API_KEY` — never commit · only in cron environment
 - RLS policies on all tables · auth required for everything except login
 
-test
+tesasdbugt
