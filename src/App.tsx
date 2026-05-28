@@ -25,6 +25,7 @@ import { OpportunityFormPage } from './pages/inbox/OpportunityFormPage';
 import { MilestonesPage } from './pages/milestones/MilestonesPage';
 import { BriefingPage } from './pages/briefing/BriefingPage';
 import { SettingsPage } from './pages/settings/SettingsPage';
+import { PrivacyPage } from './pages/PrivacyPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -72,6 +73,7 @@ export function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
             <Route
               path="/"
               element={
