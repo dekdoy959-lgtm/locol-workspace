@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useOpportunity, useUpdateOpportunity } from '../../hooks/useOpportunities';
 import { useTeamMembers, teamMemberDisplayName, teamMemberInitials } from '../../hooks/useTeamMembers';
 import { useTrackSettings, getStaleThreshold } from '../../hooks/useTrackSettings';
@@ -18,7 +17,6 @@ import { Timeline } from '../../components/notes/Timeline';
 import { OpportunityPeopleSection } from '../../components/opportunities/OpportunityPeopleSection';
 import { OpportunityDetailsView } from '../../components/opportunities/OpportunityDetailsView';
 import { ConfirmModal } from '../../components/modals/ConfirmModal';
-import { supabase } from '../../lib/supabase';
 import { colors } from '../../styles/tokens';
 
 export function OpportunityDetailPage() {
@@ -30,19 +28,8 @@ export function OpportunityDetailPage() {
   const { data: discordSource } = useDiscordInboxForOpportunity(id);
   const { user } = useAuth();
   const update = useUpdateOpportunity();
-  const queryClient = useQueryClient();
-  const [showDeleteDiscord, setShowDeleteDiscord] = useState(false);
-
-  const deleteDiscordMutation = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase.from('discord_inbox').delete().eq('id', discordSource!.id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['discord-inbox-opp', id] });
-      setShowDeleteDiscord(false);
-    },
-  });
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [showArchiveConfirm, setShowArchiveConfirm] = useState(false);
 
   if (isLoading) {
     return <div style={{ padding: 40, textAlign: 'center', color: colors.dim }}>กำลังโหลด…</div>;
@@ -72,13 +59,18 @@ export function OpportunityDetailPage() {
     update.mutate({ id: opp.id, patch: { stage: newStage } });
   };
 
+  const handleCancel = () => {
+    update.mutate(
+      { id: opp.id, patch: { archived_at: new Date().toISOString(), archived_reason: 'Cancelled', status: 'Cancelled' } },
+      { onSuccess: () => navigate('/inbox') },
+    );
+  };
+
   const handleArchive = () => {
-    if (!confirm('Archive opportunity นี้?')) return;
-    update.mutate({
-      id: opp.id,
-      patch: { archived_at: new Date().toISOString(), archived_reason: 'Archived from detail' },
-    });
-    navigate('/inbox');
+    update.mutate(
+      { id: opp.id, patch: { archived_at: new Date().toISOString(), archived_reason: 'Archived from detail' } },
+      { onSuccess: () => navigate('/inbox') },
+    );
   };
 
   return (
@@ -178,13 +170,31 @@ export function OpportunityDetailPage() {
               </div>
             )}
 
-            <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+            <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
               <LBtn primary onClick={() => navigate(`/inbox/${opp.id}/edit`)}>
                 แก้ไข
               </LBtn>
-              <LBtn ghost onClick={handleArchive}>
+              <LBtn ghost onClick={() => setShowArchiveConfirm(true)}>
                 ARCHIVE
               </LBtn>
+              <button
+                type="button"
+                onClick={() => setShowCancelConfirm(true)}
+                style={{
+                  padding: '7px 16px',
+                  borderRadius: '8px 0 8px 0',
+                  border: '1px solid #5a1a18',
+                  background: '#1e0a0a',
+                  color: '#d96a66',
+                  fontSize: 12.5,
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  letterSpacing: 0.5,
+                }}
+              >
+                ยกเลิก / DELETE
+              </button>
             </div>
           </LCard>
 
@@ -220,29 +230,9 @@ export function OpportunityDetailPage() {
                     @{discordSource.author_name} · {new Date(discordSource.created_at).toLocaleDateString('th-TH')}
                   </span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <a href="/discord-inbox" style={{ fontSize: 11, color: '#5865F2', textDecoration: 'none' }}>
-                    ดู inbox →
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => setShowDeleteDiscord(true)}
-                    style={{
-                      background: 'transparent',
-                      border: `1px solid #5a1a18`,
-                      color: '#d96a66',
-                      borderRadius: '6px 0 6px 0',
-                      padding: '3px 10px',
-                      fontSize: 11,
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      fontFamily: 'inherit',
-                      letterSpacing: 0.4,
-                    }}
-                  >
-                    ลบ
-                  </button>
-                </div>
+                <a href="/discord-inbox" style={{ fontSize: 11, color: '#5865F2', textDecoration: 'none' }}>
+                  ดู inbox →
+                </a>
               </div>
               {discordSource.original_text && (
                 <div
@@ -415,15 +405,26 @@ export function OpportunityDetailPage() {
         </div>
       </div>
 
-      {showDeleteDiscord && (
+      {showCancelConfirm && (
         <ConfirmModal
-          title="ลบ Discord Source?"
-          body="ลบบันทึก Discord Inbox นี้ออก ข้อความต้นฉบับและรูปภาพจะหายไป ไม่สามารถกู้คืนได้"
-          confirmLabel="ลบถาวร"
+          title="ยกเลิก opportunity นี้?"
+          body="Opportunity จะถูก archive และตั้งสถานะเป็น Cancelled ไม่แสดงใน inbox อีกต่อไป"
+          confirmLabel="ยืนยันยกเลิก"
           danger
-          isLoading={deleteDiscordMutation.isPending}
-          onConfirm={() => deleteDiscordMutation.mutate()}
-          onCancel={() => setShowDeleteDiscord(false)}
+          isLoading={update.isPending}
+          onConfirm={handleCancel}
+          onCancel={() => setShowCancelConfirm(false)}
+        />
+      )}
+
+      {showArchiveConfirm && (
+        <ConfirmModal
+          title="Archive opportunity นี้?"
+          body="Opportunity จะถูกย้ายไปที่ archive สามารถดูได้ในภายหลัง"
+          confirmLabel="Archive"
+          isLoading={update.isPending}
+          onConfirm={handleArchive}
+          onCancel={() => setShowArchiveConfirm(false)}
         />
       )}
     </div>
