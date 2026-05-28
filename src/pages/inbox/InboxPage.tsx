@@ -991,6 +991,7 @@ function OpportunityCard({
   const pri = opp.priority === 'High' ? 'hi' : opp.priority === 'Medium' ? 'med' : 'low';
   const trackIcon: 'cal' | 'money' | 'doc' | 'clock' =
     opp.track === 'event' ? 'cal' : opp.track === 'contract' ? 'money' : opp.track === 'apply' ? 'doc' : 'clock';
+  const fromDiscord = !!(opp.details as Record<string, unknown>)?.discord_message_id;
 
   // ─── Dense mode: single-line row ──────────────────────────────────
   if (density === 'dense') {
@@ -1041,6 +1042,9 @@ function OpportunityCard({
         <span style={{ fontSize: 10, color: meta.color.ink, fontWeight: 600, letterSpacing: 0.4, flexShrink: 0 }}>
           {opp.stage}
         </span>
+        {fromDiscord && (
+          <span style={{ fontSize: 9, color: '#5865F2', fontWeight: 700, letterSpacing: 0.3, flexShrink: 0 }}>DC</span>
+        )}
         {stale && (
           <span
             style={{
@@ -1054,7 +1058,7 @@ function OpportunityCard({
             STALE
           </span>
         )}
-        <span style={{ fontSize: 10.5, color: colors.dimSoft, flexShrink: 0, minWidth: 50, textAlign: 'right' }}>
+        <span style={{ fontSize: 10.5, color: opp.due_date ? colors.text : colors.dimSoft, flexShrink: 0, minWidth: 50, textAlign: 'right', fontWeight: opp.due_date ? 600 : 400 }}>
           {formatDueRelative(opp.due_date)}
         </span>
         {owner && <LAvatar initials={teamMemberInitials(owner)} size={16} />}
@@ -1101,6 +1105,9 @@ function OpportunityCard({
           >
             {opp.stage}
           </span>
+          {fromDiscord && (
+            <span style={{ fontSize: 9, color: '#5865F2', fontWeight: 700, letterSpacing: 0.3 }}>DC</span>
+          )}
           {stale && (
             <span
               style={{
@@ -1134,13 +1141,14 @@ function OpportunityCard({
           <span
             style={{
               fontSize: 10.5,
-              color: colors.dimSoft,
+              color: opp.due_date ? colors.text : colors.dimSoft,
+              fontWeight: opp.due_date ? 600 : 400,
               display: 'inline-flex',
               alignItems: 'center',
               gap: 3,
             }}
           >
-            <LIcon kind={trackIcon} size={10} color={colors.dimSoft} />
+            <LIcon kind={trackIcon} size={10} color={opp.due_date ? colors.text : colors.dimSoft} />
             {formatDueRelative(opp.due_date)}
           </span>
           <span style={{ display: 'inline-flex', gap: 3 }}>
@@ -1192,6 +1200,22 @@ function OpportunityCard({
         >
           {opp.stage}
         </span>
+        {fromDiscord && (
+          <span
+            style={{
+              fontSize: 9,
+              color: '#5865F2',
+              fontWeight: 700,
+              letterSpacing: 0.3,
+              background: '#5865F215',
+              border: '1px solid #5865F240',
+              borderRadius: 3,
+              padding: '1px 4px',
+            }}
+          >
+            DC
+          </span>
+        )}
         {stale && (
           <span
             style={{
@@ -1226,13 +1250,14 @@ function OpportunityCard({
         <span
           style={{
             fontSize: 11,
-            color: colors.dimSoft,
+            color: opp.due_date ? colors.text : colors.dimSoft,
+            fontWeight: opp.due_date ? 600 : 400,
             display: 'inline-flex',
             alignItems: 'center',
             gap: 4,
           }}
         >
-          <LIcon kind={trackIcon} size={11} color={colors.dimSoft} />
+          <LIcon kind={trackIcon} size={11} color={opp.due_date ? colors.text : colors.dimSoft} />
           {formatDueRelative(opp.due_date)}
         </span>
         <span style={{ display: 'inline-flex', gap: 3 }}>

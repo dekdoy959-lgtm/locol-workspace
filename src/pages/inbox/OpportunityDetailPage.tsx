@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useOpportunity, useUpdateOpportunity } from '../../hooks/useOpportunities';
 import { useTeamMembers, teamMemberDisplayName, teamMemberInitials } from '../../hooks/useTeamMembers';
 import { useTrackSettings, getStaleThreshold } from '../../hooks/useTrackSettings';
+import { useDiscordInboxForOpportunity } from '../../hooks/useDiscordInbox';
 import { useAuth } from '../../contexts/AuthContext';
 import {
   findTrack,
@@ -22,6 +23,7 @@ export function OpportunityDetailPage() {
   const { data: opp, isLoading } = useOpportunity(id);
   const { data: team = [] } = useTeamMembers();
   const { data: trackSettings = [] } = useTrackSettings();
+  const { data: discordSource } = useDiscordInboxForOpportunity(id);
   const { user } = useAuth();
   const update = useUpdateOpportunity();
 
@@ -95,6 +97,16 @@ export function OpportunityDetailPage() {
                 {meta.name.toUpperCase()}
               </LChip>
               <LChip ink={colors.surface}>{opp.status}</LChip>
+              {opp.due_date && (
+                <LChip
+                  ink={colors.text}
+                  bg={colors.bgSoft}
+                  border={colors.lineHi}
+                >
+                  <LIcon kind="cal" size={10} color={colors.text} />
+                  {opp.due_date} · {formatDueRelative(opp.due_date)}
+                </LChip>
+              )}
               {opp.priority && (
                 <LChip
                   ink={opp.priority === 'High' ? '#d96a66' : colors.dimSoft}
@@ -107,6 +119,11 @@ export function OpportunityDetailPage() {
                     color={opp.priority === 'High' ? '#d96a66' : colors.dimSoft}
                   />
                   {opp.priority.toUpperCase()}
+                </LChip>
+              )}
+              {discordSource && (
+                <LChip ink="#5865F2" bg="#5865F215" border="#5865F240">
+                  DISCORD
                 </LChip>
               )}
               {stale && (
@@ -171,6 +188,70 @@ export function OpportunityDetailPage() {
               <p style={{ margin: 0, fontSize: 13.5, color: colors.surface, lineHeight: 1.55 }}>
                 {opp.ai_summary}
               </p>
+            </LCard>
+          )}
+
+          {/* Discord source */}
+          {discordSource && (
+            <LCard padding={20} style={{ borderLeft: '3px solid #5865F2' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 10, letterSpacing: 1.2, color: '#5865F2', fontWeight: 700 }}>
+                    DISCORD SOURCE
+                  </span>
+                  <span style={{ fontSize: 11, color: colors.dim }}>
+                    @{discordSource.author_name} · {new Date(discordSource.created_at).toLocaleDateString('th-TH')}
+                  </span>
+                </div>
+                <a
+                  href={`/discord-inbox`}
+                  style={{ fontSize: 11, color: '#5865F2', textDecoration: 'none' }}
+                >
+                  ดู inbox →
+                </a>
+              </div>
+              {discordSource.original_text && (
+                <div
+                  style={{
+                    fontSize: 13,
+                    color: colors.surface,
+                    lineHeight: 1.55,
+                    background: colors.bgSoft,
+                    border: `1px solid ${colors.lineHi}`,
+                    borderRadius: '8px 0 8px 0',
+                    padding: '10px 14px',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
+                    maxHeight: 200,
+                    overflowY: 'auto',
+                  }}
+                >
+                  {discordSource.original_text}
+                </div>
+              )}
+              {discordSource.attachment_paths.length > 0 && (
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
+                  {discordSource.attachment_paths.map((a, i) => {
+                    const src = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/discord-attachments/${a.storage_path}`;
+                    return (
+                      <a key={i} href={src} target="_blank" rel="noreferrer">
+                        <img
+                          src={src}
+                          alt={a.filename}
+                          style={{
+                            width: 100,
+                            height: 72,
+                            objectFit: 'cover',
+                            borderRadius: '6px 0 6px 0',
+                            border: `1px solid ${colors.lineHi}`,
+                          }}
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
             </LCard>
           )}
 
