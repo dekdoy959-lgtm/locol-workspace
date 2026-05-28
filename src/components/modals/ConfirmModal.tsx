@@ -3,7 +3,7 @@ import { colors } from '../../styles/tokens';
 
 interface ConfirmModalProps {
   title: string;
-  body: string;
+  body: string | JSX.Element;
   confirmLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;

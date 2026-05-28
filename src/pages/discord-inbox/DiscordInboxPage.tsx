@@ -134,9 +134,10 @@ function InboxCard({
 }) {
   const [expanded, setExpanded] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const queryClient = useQueryClient();
   const catMeta = item.detected_category ? CATEGORY_LABELS[item.detected_category] : null;
-  const isCancelled = item.processing_status === 'cancelled' || item.processing_status === 'dismissed';
+  const isCancelled = item.processing_status === 'cancelled';
 
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: ['discord-inbox', activeCategory, showCancelled] });
@@ -152,16 +153,59 @@ function InboxCard({
     },
   });
 
-  const dismissMutation = useMutation({
+  // Cancels (archives) the linked opportunity or contact, then marks inbox as cancelled.
+  // Undoes by un-archiving and restoring status to 'done'.
+  const cancelMutation = useMutation({
     mutationFn: async () => {
-      const newStatus = isCancelled ? 'done' : 'cancelled';
-      const { error } = await supabase
-        .from('discord_inbox')
-        .update({ processing_status: newStatus })
-        .eq('id', item.id);
-      if (error) throw error;
+      const now = new Date().toISOString();
+      if (isCancelled) {
+        // Restore
+        if (item.created_opportunity_id) {
+          const { error } = await supabase
+            .from('opportunities')
+            .update({ archived_at: null, archived_reason: null })
+            .eq('id', item.created_opportunity_id);
+          if (error) throw error;
+        }
+        if (item.created_contact_id) {
+          const { error } = await supabase
+            .from('contacts')
+            .update({ relationship_status: 'known' })
+            .eq('id', item.created_contact_id);
+          if (error) throw error;
+        }
+        const { error } = await supabase
+          .from('discord_inbox')
+          .update({ processing_status: 'done' })
+          .eq('id', item.id);
+        if (error) throw error;
+      } else {
+        // Cancel
+        if (item.created_opportunity_id) {
+          const { error } = await supabase
+            .from('opportunities')
+            .update({ archived_at: now, archived_reason: 'ยกเลิกจาก Discord Inbox' })
+            .eq('id', item.created_opportunity_id);
+          if (error) throw error;
+        }
+        if (item.created_contact_id) {
+          const { error } = await supabase
+            .from('contacts')
+            .update({ relationship_status: 'inactive' })
+            .eq('id', item.created_contact_id);
+          if (error) throw error;
+        }
+        const { error } = await supabase
+          .from('discord_inbox')
+          .update({ processing_status: 'cancelled' })
+          .eq('id', item.id);
+        if (error) throw error;
+      }
     },
-    onSuccess: invalidate,
+    onSuccess: () => {
+      setShowCancelConfirm(false);
+      invalidate();
+    },
   });
 
   const opmsLink = item.created_opportunity_id
@@ -263,24 +307,24 @@ function InboxCard({
             )}
             <button
               type="button"
-              onClick={() => dismissMutation.mutate()}
-              disabled={dismissMutation.isPending}
+              onClick={() => isCancelled ? cancelMutation.mutate() : setShowCancelConfirm(true)}
+              disabled={cancelMutation.isPending}
               style={{
                 background: 'transparent',
-                border: `1px solid ${colors.lineHi}`,
+                border: `1px solid ${isCancelled ? colors.greenDk : colors.lineHi}`,
                 color: isCancelled ? colors.green : colors.dim,
                 borderRadius: '8px 0 8px 0',
                 padding: '5px 12px',
                 fontSize: 11.5,
                 fontWeight: 600,
-                cursor: dismissMutation.isPending ? 'not-allowed' : 'pointer',
+                cursor: cancelMutation.isPending ? 'not-allowed' : 'pointer',
                 fontFamily: 'inherit',
                 letterSpacing: 0.4,
-                opacity: dismissMutation.isPending ? 0.5 : 1,
+                opacity: cancelMutation.isPending ? 0.5 : 1,
                 whiteSpace: 'nowrap',
               }}
             >
-              {dismissMutation.isPending ? '…' : isCancelled ? 'คืนสถานะ' : 'ยกเลิก'}
+              {cancelMutation.isPending ? '…' : isCancelled ? 'คืนสถานะ' : 'ยกเลิก'}
             </button>
             <button
               type="button"
@@ -304,6 +348,23 @@ function InboxCard({
           </div>
         </div>
       </LCard>
+
+      {showCancelConfirm && (
+        <ConfirmModal
+          title="ยกเลิก inbox นี้?"
+          body={
+            item.created_opportunity_id
+              ? 'Archive opportunity นี้ออกจาก inbox และทำเครื่องหมายว่ายกเลิกแล้ว สามารถกู้คืนได้ภายหลัง'
+              : item.created_contact_id
+              ? 'ตั้งสถานะ contact เป็น inactive และทำเครื่องหมายว่ายกเลิกแล้ว'
+              : 'ทำเครื่องหมาย inbox นี้ว่าถูกยกเลิกแล้ว'
+          }
+          confirmLabel="ยืนยันยกเลิก"
+          isLoading={cancelMutation.isPending}
+          onConfirm={() => cancelMutation.mutate()}
+          onCancel={() => setShowCancelConfirm(false)}
+        />
+      )}
 
       {showDeleteConfirm && (
         <ConfirmModal
