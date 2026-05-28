@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { LPage, LCard, LChip, LH, LNote, LBtn } from '../../components/primitives';
+import { ConfirmModal } from '../../components/modals/ConfirmModal';
 import { colors } from '../../styles/tokens';
 import type { Database } from '../../types/database';
 
@@ -21,11 +22,13 @@ const STATUS_COLORS: Record<string, string> = {
   processing:    '#57a0d3',
   failed:        '#d96a66',
   review_needed: '#E8B923',
+  cancelled:     colors.dim,
+  dismissed:     colors.dim,
 };
 
-function useDiscordInbox(category: string | null) {
+function useDiscordInbox(category: string | null, showCancelled: boolean) {
   return useQuery({
-    queryKey: ['discord-inbox', category],
+    queryKey: ['discord-inbox', category, showCancelled],
     queryFn: async () => {
       let q = supabase
         .from('discord_inbox')
@@ -33,6 +36,7 @@ function useDiscordInbox(category: string | null) {
         .order('created_at', { ascending: false })
         .limit(100);
       if (category) q = q.eq('detected_category', category);
+      if (!showCancelled) q = q.not('processing_status', 'in', '("cancelled","dismissed")');
       const { data, error } = await q;
       if (error) throw error;
       return data as InboxRow[];
@@ -43,7 +47,8 @@ function useDiscordInbox(category: string | null) {
 
 export function DiscordInboxPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const { data: items = [], isLoading, error } = useDiscordInbox(activeCategory);
+  const [showCancelled, setShowCancelled] = useState(false);
+  const { data: items = [], isLoading, error } = useDiscordInbox(activeCategory, showCancelled);
 
   const categories = [
     { key: null, label: 'ทั้งหมด' },
@@ -56,8 +61,9 @@ export function DiscordInboxPage() {
   return (
     <LPage>
       <LH level={3} sub="ข้อความที่ส่งมาใน #bot-inbox-opms">Discord Inbox</LH>
+
       {/* Category filter tabs */}
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
         {categories.map((c) => (
           <button
             key={String(c.key)}
@@ -79,6 +85,24 @@ export function DiscordInboxPage() {
             {c.label}
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => setShowCancelled(v => !v)}
+          style={{
+            marginLeft: 'auto',
+            padding: '5px 14px',
+            borderRadius: '8px 0 8px 0',
+            border: `1px solid ${showCancelled ? colors.dim : colors.line}`,
+            background: 'transparent',
+            color: showCancelled ? colors.surface : colors.dim,
+            fontSize: 11.5,
+            fontWeight: 500,
+            cursor: 'pointer',
+            fontFamily: 'inherit',
+          }}
+        >
+          {showCancelled ? 'ซ่อน cancelled' : 'แสดง cancelled'}
+        </button>
       </div>
 
       {isLoading && <LNote>กำลังโหลด...</LNote>}
@@ -92,16 +116,53 @@ export function DiscordInboxPage() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {items.map((item) => (
-          <InboxCard key={item.id} item={item} />
+          <InboxCard key={item.id} item={item} activeCategory={activeCategory} showCancelled={showCancelled} />
         ))}
       </div>
     </LPage>
   );
 }
 
-function InboxCard({ item }: { item: InboxRow }) {
+function InboxCard({
+  item,
+  activeCategory,
+  showCancelled,
+}: {
+  item: InboxRow;
+  activeCategory: string | null;
+  showCancelled: boolean;
+}) {
   const [expanded, setExpanded] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const queryClient = useQueryClient();
   const catMeta = item.detected_category ? CATEGORY_LABELS[item.detected_category] : null;
+  const isCancelled = item.processing_status === 'cancelled' || item.processing_status === 'dismissed';
+
+  const invalidate = () =>
+    queryClient.invalidateQueries({ queryKey: ['discord-inbox', activeCategory, showCancelled] });
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from('discord_inbox').delete().eq('id', item.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      setShowDeleteConfirm(false);
+      invalidate();
+    },
+  });
+
+  const dismissMutation = useMutation({
+    mutationFn: async () => {
+      const newStatus = isCancelled ? 'done' : 'cancelled';
+      const { error } = await supabase
+        .from('discord_inbox')
+        .update({ processing_status: newStatus })
+        .eq('id', item.id);
+      if (error) throw error;
+    },
+    onSuccess: invalidate,
+  });
 
   const opmsLink = item.created_opportunity_id
     ? `/inbox/${item.created_opportunity_id}`
@@ -112,95 +173,149 @@ function InboxCard({ item }: { item: InboxRow }) {
   const storageBase = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/discord-attachments/`;
 
   return (
-    <LCard>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Header row */}
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', marginBottom: 6 }}>
-            {catMeta && (
-              <LChip style={{ background: catMeta.color + '22', color: catMeta.color, border: `1px solid ${catMeta.color}44` }}>
-                {catMeta.label}
-              </LChip>
+    <>
+      <LCard style={{ opacity: isCancelled ? 0.55 : 1 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            {/* Header row */}
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', marginBottom: 6 }}>
+              {catMeta && (
+                <LChip style={{ background: catMeta.color + '22', color: catMeta.color, border: `1px solid ${catMeta.color}44` }}>
+                  {catMeta.label}
+                </LChip>
+              )}
+              <span style={{ fontSize: 11, color: STATUS_COLORS[item.processing_status] ?? colors.dim, fontWeight: 600 }}>
+                {item.processing_status}
+              </span>
+              <span style={{ fontSize: 11, color: colors.dim }}>
+                @{item.author_name} · {new Date(item.created_at).toLocaleDateString('th-TH')}
+              </span>
+            </div>
+
+            {/* AI summary */}
+            {item.ai_summary && (
+              <p style={{ margin: '0 0 6px', fontSize: 13, color: colors.text, lineHeight: 1.5 }}>
+                {item.ai_summary.slice(0, 200)}{item.ai_summary.length > 200 ? '…' : ''}
+              </p>
             )}
-            <span style={{ fontSize: 11, color: STATUS_COLORS[item.processing_status] ?? colors.dim, fontWeight: 600 }}>
-              {item.processing_status}
-            </span>
-            <span style={{ fontSize: 11, color: colors.dim }}>
-              @{item.author_name} · {new Date(item.created_at).toLocaleDateString('th-TH')}
-            </span>
+
+            {/* Original text preview */}
+            {item.original_text && (
+              <div
+                style={{
+                  fontSize: 12,
+                  color: colors.dim,
+                  background: colors.bgSoft,
+                  border: `1px solid ${colors.line}`,
+                  borderRadius: '6px 0 6px 0',
+                  padding: '6px 10px',
+                  marginBottom: 8,
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                  maxHeight: expanded ? 'none' : 80,
+                  overflow: 'hidden',
+                }}
+              >
+                {item.original_text}
+              </div>
+            )}
+
+            {/* Image thumbnails */}
+            {item.attachment_paths.length > 0 && (
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
+                {item.attachment_paths.map((a, i) => (
+                  <a key={i} href={storageBase + a.storage_path} target="_blank" rel="noreferrer">
+                    <img
+                      src={storageBase + a.storage_path}
+                      alt={a.filename}
+                      style={{
+                        width: 80,
+                        height: 60,
+                        objectFit: 'cover',
+                        borderRadius: '6px 0 6px 0',
+                        border: `1px solid ${colors.lineHi}`,
+                      }}
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                    />
+                  </a>
+                ))}
+              </div>
+            )}
+
+            {/* Expand / collapse */}
+            {(item.original_text?.length ?? 0) > 200 && (
+              <button
+                type="button"
+                onClick={() => setExpanded(v => !v)}
+                style={{ background: 'none', border: 'none', color: colors.green, cursor: 'pointer', fontSize: 12, padding: 0, fontFamily: 'inherit' }}
+              >
+                {expanded ? 'แสดงน้อยลง' : 'แสดงทั้งหมด'}
+              </button>
+            )}
           </div>
 
-          {/* AI summary */}
-          {item.ai_summary && (
-            <p style={{ margin: '0 0 6px', fontSize: 13, color: colors.text, lineHeight: 1.5 }}>
-              {item.ai_summary.slice(0, 200)}{item.ai_summary.length > 200 ? '…' : ''}
-            </p>
-          )}
-
-          {/* Original text preview */}
-          {item.original_text && (
-            <div
-              style={{
-                fontSize: 12,
-                color: colors.dim,
-                background: colors.bgSoft,
-                border: `1px solid ${colors.line}`,
-                borderRadius: '6px 0 6px 0',
-                padding: '6px 10px',
-                marginBottom: 8,
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
-                maxHeight: expanded ? 'none' : 80,
-                overflow: 'hidden',
-              }}
-            >
-              {item.original_text}
-            </div>
-          )}
-
-          {/* Image thumbnails */}
-          {item.attachment_paths.length > 0 && (
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
-              {item.attachment_paths.map((a, i) => (
-                <a key={i} href={storageBase + a.storage_path} target="_blank" rel="noreferrer">
-                  <img
-                    src={storageBase + a.storage_path}
-                    alt={a.filename}
-                    style={{
-                      width: 80,
-                      height: 60,
-                      objectFit: 'cover',
-                      borderRadius: '6px 0 6px 0',
-                      border: `1px solid ${colors.lineHi}`,
-                    }}
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                  />
-                </a>
-              ))}
-            </div>
-          )}
-
-          {/* Expand / collapse */}
-          {(item.original_text?.length ?? 0) > 200 && (
+          {/* Actions */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flexShrink: 0, alignItems: 'stretch' }}>
+            {opmsLink && (
+              <Link to={opmsLink}>
+                <LBtn style={{ whiteSpace: 'nowrap', width: '100%' }}>ดูใน OPMS →</LBtn>
+              </Link>
+            )}
             <button
               type="button"
-              onClick={() => setExpanded(v => !v)}
-              style={{ background: 'none', border: 'none', color: colors.green, cursor: 'pointer', fontSize: 12, padding: 0, fontFamily: 'inherit' }}
+              onClick={() => dismissMutation.mutate()}
+              disabled={dismissMutation.isPending}
+              style={{
+                background: 'transparent',
+                border: `1px solid ${colors.lineHi}`,
+                color: isCancelled ? colors.green : colors.dim,
+                borderRadius: '8px 0 8px 0',
+                padding: '5px 12px',
+                fontSize: 11.5,
+                fontWeight: 600,
+                cursor: dismissMutation.isPending ? 'not-allowed' : 'pointer',
+                fontFamily: 'inherit',
+                letterSpacing: 0.4,
+                opacity: dismissMutation.isPending ? 0.5 : 1,
+                whiteSpace: 'nowrap',
+              }}
             >
-              {expanded ? 'แสดงน้อยลง' : 'แสดงทั้งหมด'}
+              {dismissMutation.isPending ? '…' : isCancelled ? 'คืนสถานะ' : 'ยกเลิก'}
             </button>
-          )}
+            <button
+              type="button"
+              onClick={() => setShowDeleteConfirm(true)}
+              style={{
+                background: 'transparent',
+                border: `1px solid #5a1a18`,
+                color: '#d96a66',
+                borderRadius: '8px 0 8px 0',
+                padding: '5px 12px',
+                fontSize: 11.5,
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                letterSpacing: 0.4,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              ลบ
+            </button>
+          </div>
         </div>
+      </LCard>
 
-        {/* Action: link to created record */}
-        {opmsLink && (
-          <Link to={opmsLink}>
-            <LBtn style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>
-              ดูใน OPMS →
-            </LBtn>
-          </Link>
-        )}
-      </div>
-    </LCard>
+      {showDeleteConfirm && (
+        <ConfirmModal
+          title="ลบ inbox นี้?"
+          body="ลบบันทึกนี้ถาวร ข้อความต้นฉบับและรูปภาพจะหายไป ไม่สามารถกู้คืนได้"
+          confirmLabel="ลบถาวร"
+          danger
+          isLoading={deleteMutation.isPending}
+          onConfirm={() => deleteMutation.mutate()}
+          onCancel={() => setShowDeleteConfirm(false)}
+        />
+      )}
+    </>
   );
 }
