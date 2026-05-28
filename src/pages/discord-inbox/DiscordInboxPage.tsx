@@ -137,7 +137,7 @@ function InboxCard({
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const queryClient = useQueryClient();
   const catMeta = item.detected_category ? CATEGORY_LABELS[item.detected_category] : null;
-  const isCancelled = item.processing_status === 'cancelled';
+  const isCancelled = (item.processing_status as string) === 'cancelled';
 
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: ['discord-inbox', activeCategory, showCancelled] });
@@ -161,44 +161,32 @@ function InboxCard({
       if (isCancelled) {
         // Restore
         if (item.created_opportunity_id) {
-          const { error } = await supabase
-            .from('opportunities')
-            .update({ archived_at: null, archived_reason: null })
-            .eq('id', item.created_opportunity_id);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { error } = await supabase.from('opportunities').update({ archived_at: null, archived_reason: null } as any).eq('id', item.created_opportunity_id);
           if (error) throw error;
         }
         if (item.created_contact_id) {
-          const { error } = await supabase
-            .from('contacts')
-            .update({ relationship_status: 'known' })
-            .eq('id', item.created_contact_id);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { error } = await supabase.from('contacts').update({ relationship_status: 'known' } as any).eq('id', item.created_contact_id);
           if (error) throw error;
         }
-        const { error } = await supabase
-          .from('discord_inbox')
-          .update({ processing_status: 'done' })
-          .eq('id', item.id);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error } = await supabase.from('discord_inbox').update({ processing_status: 'done' } as any).eq('id', item.id);
         if (error) throw error;
       } else {
         // Cancel
         if (item.created_opportunity_id) {
-          const { error } = await supabase
-            .from('opportunities')
-            .update({ archived_at: now, archived_reason: 'ยกเลิกจาก Discord Inbox' })
-            .eq('id', item.created_opportunity_id);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { error } = await supabase.from('opportunities').update({ archived_at: now, archived_reason: 'ยกเลิกจาก Discord Inbox' } as any).eq('id', item.created_opportunity_id);
           if (error) throw error;
         }
         if (item.created_contact_id) {
-          const { error } = await supabase
-            .from('contacts')
-            .update({ relationship_status: 'inactive' })
-            .eq('id', item.created_contact_id);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { error } = await supabase.from('contacts').update({ relationship_status: 'inactive' } as any).eq('id', item.created_contact_id);
           if (error) throw error;
         }
-        const { error } = await supabase
-          .from('discord_inbox')
-          .update({ processing_status: 'cancelled' })
-          .eq('id', item.id);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error } = await supabase.from('discord_inbox').update({ processing_status: 'cancelled' } as any).eq('id', item.id);
         if (error) throw error;
       }
     },

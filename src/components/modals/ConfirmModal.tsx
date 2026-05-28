@@ -1,9 +1,10 @@
+import type { ReactNode } from 'react';
 import { LCard, LBtn } from '../primitives';
 import { colors } from '../../styles/tokens';
 
 interface ConfirmModalProps {
   title: string;
-  body: string | JSX.Element;
+  body: ReactNode;
   confirmLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
