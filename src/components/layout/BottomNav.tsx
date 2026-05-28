@@ -15,12 +15,13 @@ interface NavTab {
 const PRIMARY_TABS: NavTab[] = [
   { to: '/briefing', label: 'Briefing', icon: 'home' },
   { to: '/inbox', label: 'Inbox', icon: 'inbox' },
+  { to: '/calendar', label: 'Calendar', icon: 'cal' },
   { to: '/contacts', label: 'Contacts', icon: 'user' },
-  { to: '/milestones', label: 'Goals', icon: 'target' },
 ];
 
 const MORE_ITEMS: NavTab[] = [
   { to: '/discord-inbox', label: 'Discord Inbox', icon: 'inbox' },
+  { to: '/milestones', label: 'Goals', icon: 'target' },
   { to: '/organizations', label: 'Organizations', icon: 'building' },
   { to: '/groups', label: 'Groups', icon: 'folder' },
   { to: '/relationships', label: 'Network', icon: 'graph' },

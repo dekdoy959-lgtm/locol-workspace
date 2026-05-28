@@ -27,6 +27,7 @@ import { BriefingPage } from './pages/briefing/BriefingPage';
 import { SettingsPage } from './pages/settings/SettingsPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { DiscordInboxPage } from './pages/discord-inbox/DiscordInboxPage';
+import { CalendarPage } from './pages/calendar/CalendarPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -105,6 +106,7 @@ export function App() {
               <Route path="groups/:id/edit" element={<GroupFormPage mode="edit" />} />
               <Route path="relationships" element={<RelationshipGraphPage />} />
               <Route path="discord-inbox" element={<DiscordInboxPage />} />
+              <Route path="calendar" element={<CalendarPage />} />
               <Route path="briefing" element={<BriefingPage />} />
               <Route path="settings" element={<SettingsPage />} />
             </Route>
