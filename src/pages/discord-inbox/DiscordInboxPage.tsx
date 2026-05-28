@@ -157,36 +157,30 @@ function InboxCard({
   // Undoes by un-archiving and restoring status to 'done'.
   const cancelMutation = useMutation({
     mutationFn: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const db = supabase as any;
       const now = new Date().toISOString();
       if (isCancelled) {
-        // Restore
         if (item.created_opportunity_id) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { error } = await supabase.from('opportunities').update({ archived_at: null, archived_reason: null } as any).eq('id', item.created_opportunity_id);
+          const { error } = await db.from('opportunities').update({ archived_at: null, archived_reason: null }).eq('id', item.created_opportunity_id);
           if (error) throw error;
         }
         if (item.created_contact_id) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { error } = await supabase.from('contacts').update({ relationship_status: 'known' } as any).eq('id', item.created_contact_id);
+          const { error } = await db.from('contacts').update({ relationship_status: 'known' }).eq('id', item.created_contact_id);
           if (error) throw error;
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { error } = await supabase.from('discord_inbox').update({ processing_status: 'done' } as any).eq('id', item.id);
+        const { error } = await db.from('discord_inbox').update({ processing_status: 'done' }).eq('id', item.id);
         if (error) throw error;
       } else {
-        // Cancel
         if (item.created_opportunity_id) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { error } = await supabase.from('opportunities').update({ archived_at: now, archived_reason: 'ยกเลิกจาก Discord Inbox' } as any).eq('id', item.created_opportunity_id);
+          const { error } = await db.from('opportunities').update({ archived_at: now, archived_reason: 'ยกเลิกจาก Discord Inbox' }).eq('id', item.created_opportunity_id);
           if (error) throw error;
         }
         if (item.created_contact_id) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { error } = await supabase.from('contacts').update({ relationship_status: 'inactive' } as any).eq('id', item.created_contact_id);
+          const { error } = await db.from('contacts').update({ relationship_status: 'inactive' }).eq('id', item.created_contact_id);
           if (error) throw error;
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { error } = await supabase.from('discord_inbox').update({ processing_status: 'cancelled' } as any).eq('id', item.id);
+        const { error } = await db.from('discord_inbox').update({ processing_status: 'cancelled' }).eq('id', item.id);
         if (error) throw error;
       }
     },
