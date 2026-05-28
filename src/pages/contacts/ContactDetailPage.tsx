@@ -9,6 +9,7 @@ import { ShareContactModal } from '../../components/contacts/ShareContactModal';
 import { RelationsSection } from '../../components/relations/RelationsSection';
 import { LinkedOpportunities } from '../../components/opportunities/LinkedOpportunities';
 import { useLinkedOpportunitiesForContact } from '../../hooks/useLinkedOpportunities';
+import { useDiscordInboxForContact } from '../../hooks/useDiscordInbox';
 import { InteractionsSection } from '../../components/interactions/InteractionsSection';
 import { CommitmentsSection } from '../../components/commitments/CommitmentsSection';
 import {
@@ -43,6 +44,7 @@ export function ContactDetailPage() {
   const { user } = useAuth();
   const [shareOpen, setShareOpen] = useState(false);
   const { data: linkedOpps = [] } = useLinkedOpportunitiesForContact(id);
+  const { data: discordSource } = useDiscordInboxForContact(id);
 
   if (isLoading) {
     return <div style={{ padding: 40, color: colors.dim, textAlign: 'center', fontSize: 13 }}>กำลังโหลด…</div>;
@@ -122,6 +124,11 @@ export function ContactDetailPage() {
                   {contact.health}
                 </LChip>
               )}
+              {discordSource && (
+                <LChip ink="#5865F2" bg="#5865F215" border="#5865F240">
+                  DISCORD
+                </LChip>
+              )}
             </div>
 
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 18 }}>
@@ -176,6 +183,67 @@ export function ContactDetailPage() {
               <p style={{ fontSize: 14, color: colors.surface, lineHeight: 1.55, margin: 0 }}>{contact.bio}</p>
             )}
           </LCard>
+
+          {/* Discord source */}
+          {discordSource && (
+            <LCard padding={20} style={{ borderLeft: '3px solid #5865F2' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 10, letterSpacing: 1.2, color: '#5865F2', fontWeight: 700 }}>
+                    DISCORD SOURCE
+                  </span>
+                  <span style={{ fontSize: 11, color: colors.dim }}>
+                    @{discordSource.author_name} · {new Date(discordSource.created_at).toLocaleDateString('th-TH')}
+                  </span>
+                </div>
+                <a href="/discord-inbox" style={{ fontSize: 11, color: '#5865F2', textDecoration: 'none' }}>
+                  ดู inbox →
+                </a>
+              </div>
+              {discordSource.original_text && (
+                <div
+                  style={{
+                    fontSize: 13,
+                    color: colors.surface,
+                    lineHeight: 1.55,
+                    background: colors.bgSoft,
+                    border: `1px solid ${colors.lineHi}`,
+                    borderRadius: '8px 0 8px 0',
+                    padding: '10px 14px',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
+                    maxHeight: 200,
+                    overflowY: 'auto',
+                  }}
+                >
+                  {discordSource.original_text}
+                </div>
+              )}
+              {discordSource.attachment_paths.length > 0 && (
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
+                  {discordSource.attachment_paths.map((a, i) => {
+                    const src = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/discord-attachments/${a.storage_path}`;
+                    return (
+                      <a key={i} href={src} target="_blank" rel="noreferrer">
+                        <img
+                          src={src}
+                          alt={a.filename}
+                          style={{
+                            width: 100,
+                            height: 72,
+                            objectFit: 'cover',
+                            borderRadius: '6px 0 6px 0',
+                            border: `1px solid ${colors.lineHi}`,
+                          }}
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
+            </LCard>
+          )}
 
           {/* Contact methods */}
           {(phones.length > 0 || emails.length > 0) && (
