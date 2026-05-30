@@ -60,12 +60,15 @@ const DEADLINE_KINDS: CalendarItemKind[] = [
   'decision_date',
   'milestone',
 ];
-const TRIP_EVENT_KINDS: CalendarItemKind[] = ['event', 'meeting'];
+// TRIPS & EVENTS = workspace items where team physically goes / attends.
+// EXCLUDES `meeting` (personal Google Calendar) — those are not "team trips".
+// Will include 'trip' track once Phase 2 migration adds it.
+const TRIP_EVENT_KINDS: CalendarItemKind[] = ['event'];
 
 function matchSplit(item: CalendarItem, split: SplitMode): boolean {
   if (split === 'all') return true;
   if (split === 'deadlines') return DEADLINE_KINDS.includes(item.kind);
-  return TRIP_EVENT_KINDS.includes(item.kind); // trips
+  return TRIP_EVENT_KINDS.includes(item.kind); // trips & events
 }
 
 export function CalendarPage() {
@@ -183,7 +186,7 @@ export function CalendarPage() {
         <SplitBtn
           icon="📅"
           label="TRIPS & EVENTS"
-          sub="งานที่ team มีออกไป"
+          sub="งานที่ team มีออกไป (workspace only)"
           active={splitMode === 'trips'}
           onClick={() => setSplitMode('trips')}
           accent="#d96a66"
