@@ -25,6 +25,7 @@ import {
   coldContactEmail,
   reminderNoteEmail,
   birthdayEmail,
+  eventReminderEmail,
 } from './templates.mjs';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://nfxjqddqaidvykdghlxg.supabase.co';
@@ -63,6 +64,7 @@ const sentCounts = {
   cold_contact: 0,
   reminder_note: 0,
   birthday: 0,
+  event_reminder: 0,
   skipped: 0,
   errors: 0,
 };
@@ -323,6 +325,100 @@ async function processBirthdays() {
   }
 }
 
+// ─── 5. Event/Trip reminders (T-7 and T-1 days before) ──────────────────────
+async function processEventReminders() {
+  console.log('\n📌 Event/Trip reminders (T-7, T-1):');
+  // Pull all non-archived events + trips
+  const { data: opps } = await supabase
+    .from('opportunities')
+    .select('*')
+    .is('archived_at', null)
+    .in('track', ['event', 'trip']);
+
+  const today = new Date(TODAY_ISO);
+  const t7 = new Date(today.getTime() + 7 * MS_PER_DAY).toISOString().slice(0, 10);
+  const t1 = new Date(today.getTime() + 1 * MS_PER_DAY).toISOString().slice(0, 10);
+
+  // Pull trip_stops for first-stop date lookup
+  const { data: allStops } = await supabase
+    .from('trip_stops')
+    .select('opportunity_id, day_date')
+    .order('day_date', { ascending: true });
+
+  // Earliest stop date per opp (used as trip start if no trip_date_start)
+  const earliestStopByOpp = {};
+  for (const s of allStops ?? []) {
+    if (!earliestStopByOpp[s.opportunity_id]) {
+      earliestStopByOpp[s.opportunity_id] = s.day_date;
+    }
+  }
+
+  // Pull all team assignments — we'll notify everyone assigned to a role
+  const { data: allAssignments } = await supabase
+    .from('opportunity_team_assignments')
+    .select('opportunity_id, team_member_id');
+
+  const assigneesByOpp = {};
+  for (const a of allAssignments ?? []) {
+    if (!assigneesByOpp[a.opportunity_id]) assigneesByOpp[a.opportunity_id] = new Set();
+    assigneesByOpp[a.opportunity_id].add(a.team_member_id);
+  }
+
+  for (const opp of opps ?? []) {
+    // Figure out the trigger date for this opp
+    const details = opp.details ?? {};
+    const triggerDate =
+      details.event_date_start ||
+      details.trip_date_start ||
+      earliestStopByOpp[opp.id] ||
+      opp.due_date;
+    if (!triggerDate) continue;
+
+    let daysUntil = null;
+    if (triggerDate === t7) daysUntil = 7;
+    else if (triggerDate === t1) daysUntil = 1;
+    else continue; // not T-7 or T-1
+
+    // Collect recipients: owner + reviewer + all role assignees
+    const recipientIds = new Set();
+    if (opp.owner_id) recipientIds.add(opp.owner_id);
+    if (opp.reviewer_id) recipientIds.add(opp.reviewer_id);
+    for (const id of assigneesByOpp[opp.id] ?? []) recipientIds.add(id);
+
+    if (recipientIds.size === 0) continue;
+
+    const place =
+      details.location ||
+      details.farm_name ||
+      [details.farm_name, details.province].filter(Boolean).join(' · ');
+
+    for (const userId of recipientIds) {
+      const recipient = await getRecipient(userId);
+      if (!recipient) continue;
+
+      const prefs = await getPrefs(recipient.id);
+      // Reuse the 'stale_opportunities' pref as proxy for opp-related alerts
+      if (!prefs?.enabled || prefs?.stale_opportunities === false) continue;
+
+      const { subject, html } = eventReminderEmail({
+        recipientName: recipient.full_name ?? recipient.email.split('@')[0],
+        opp,
+        daysUntil,
+        place: place || null,
+      });
+
+      await sendAndLog({
+        alertType: 'event_reminder',
+        entityTable: 'opportunities',
+        entityId: `${opp.id}-t${daysUntil}`, // unique per opp+offset so T-7 + T-1 are separate
+        recipientUser: recipient,
+        subject,
+        html,
+      });
+    }
+  }
+}
+
 // ─── Main ────────────────────────────────────────────────────────────────────
 console.log(`📧 LOCOL Notifications Runner`);
 console.log(`   Date: ${TODAY_ISO}`);
@@ -333,6 +429,7 @@ await processStaleOpportunities();
 await processColdContacts();
 await processReminderNotes();
 await processBirthdays();
+await processEventReminders();
 
 console.log('\n📊 Summary:');
 for (const [k, v] of Object.entries(sentCounts)) {

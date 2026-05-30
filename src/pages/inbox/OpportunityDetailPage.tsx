@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useOpportunity, useUpdateOpportunity } from '../../hooks/useOpportunities';
+import { useOpportunity, useUpdateOpportunity, useDuplicateOpportunity } from '../../hooks/useOpportunities';
 import { useTeamMembers, teamMemberDisplayName, teamMemberInitials } from '../../hooks/useTeamMembers';
 import { useTrackSettings, getStaleThreshold } from '../../hooks/useTrackSettings';
 import { useDiscordInboxForOpportunity } from '../../hooks/useDiscordInbox';
@@ -17,6 +17,7 @@ import { Timeline } from '../../components/notes/Timeline';
 import { OpportunityPeopleSection } from '../../components/opportunities/OpportunityPeopleSection';
 import { TeamAssignmentsSection } from '../../components/opportunities/TeamAssignmentsSection';
 import { TripItinerary } from '../../components/trips/TripItinerary';
+import { TripBudgetCard } from '../../components/trips/TripBudgetCard';
 import { OpportunityDetailsView } from '../../components/opportunities/OpportunityDetailsView';
 import { ConfirmModal } from '../../components/modals/ConfirmModal';
 import { colors } from '../../styles/tokens';
@@ -30,6 +31,26 @@ export function OpportunityDetailPage() {
   const { data: discordSource } = useDiscordInboxForOpportunity(id);
   const { user } = useAuth();
   const update = useUpdateOpportunity();
+  const duplicate = useDuplicateOpportunity();
+
+  const handleDuplicate = () => {
+    if (!opp) return;
+    const ans = window.prompt(
+      `📋 Duplicate "${opp.title}"\n\n` +
+        `จะคัดลอก opp + trip stops ทั้งหมด\n` +
+        `ใส่ตัวเลขเพื่อเลื่อนวันที่ (กด OK = ไม่เลื่อน · ใส่ 7 = +7 วัน · ใส่ 30 = +30 วัน):`,
+      '0',
+    );
+    if (ans === null) return; // cancelled
+    const shiftDays = Number(ans) || 0;
+    duplicate.mutate(
+      { sourceId: opp.id, shiftDays },
+      {
+        onSuccess: (newOpp) => navigate(`/inbox/${newOpp.id}`),
+        onError: (e) => alert(`Duplicate failed: ${(e as Error).message}`),
+      },
+    );
+  };
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [showArchiveConfirm, setShowArchiveConfirm] = useState(false);
 
@@ -176,6 +197,12 @@ export function OpportunityDetailPage() {
               <LBtn primary onClick={() => navigate(`/inbox/${opp.id}/edit`)}>
                 แก้ไข
               </LBtn>
+              <LBtn ghost onClick={handleDuplicate} disabled={duplicate.isPending}>
+                {duplicate.isPending ? 'กำลังคัดลอก…' : '📋 DUPLICATE'}
+              </LBtn>
+              <LBtn ghost onClick={() => navigate(`/inbox/${opp.id}/brief`)}>
+                📄 BRIEF / PDF
+              </LBtn>
               <LBtn ghost onClick={() => setShowArchiveConfirm(true)}>
                 ARCHIVE
               </LBtn>
@@ -297,6 +324,9 @@ export function OpportunityDetailPage() {
 
           {/* Trip itinerary — only for track='trip' */}
           {opp.track === 'trip' && <TripItinerary opportunityId={opp.id} />}
+
+          {/* Budget tracking — relevant for events + trips */}
+          {(opp.track === 'event' || opp.track === 'trip') && <TripBudgetCard opp={opp} />}
 
           {/* Team — who's doing what */}
           <TeamAssignmentsSection opportunityId={opp.id} />

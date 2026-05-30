@@ -23,6 +23,7 @@ import { InboxSummaryPage } from './pages/inbox/InboxSummaryPage';
 import { InboxTablePage } from './pages/inbox/InboxTablePage';
 import { OpportunityDetailPage } from './pages/inbox/OpportunityDetailPage';
 import { OpportunityFormPage } from './pages/inbox/OpportunityFormPage';
+import { OpportunityBriefPage } from './pages/inbox/OpportunityBriefPage';
 import { MilestonesPage } from './pages/milestones/MilestonesPage';
 import { BriefingPage } from './pages/briefing/BriefingPage';
 import { SettingsPage } from './pages/settings/SettingsPage';
@@ -92,6 +93,7 @@ export function App() {
               <Route path="inbox/table" element={<InboxTablePage />} />
               <Route path="inbox/new" element={<OpportunityFormPage mode="create" />} />
               <Route path="inbox/:id" element={<OpportunityDetailPage />} />
+              <Route path="inbox/:id/brief" element={<OpportunityBriefPage />} />
               <Route path="inbox/:id/edit" element={<OpportunityFormPage mode="edit" />} />
               <Route path="milestones" element={<MilestonesPage />} />
               <Route path="contacts" element={<ContactListPage />} />

@@ -175,6 +175,42 @@ export function birthdayEmail({ recipientName, contact, daysUntil }) {
   return { subject, html: wrap(subject, body, 'OPEN CONTACT', url) };
 }
 
+// ─── Event/Trip reminder (T-7 / T-1 days before) ──────────────────
+export function eventReminderEmail({ recipientName, opp, daysUntil, place }) {
+  const isTomorrow = daysUntil <= 1;
+  const dayLabel = daysUntil === 0 ? 'วันนี้' : isTomorrow ? 'พรุ่งนี้' : `ในอีก ${daysUntil} วัน`;
+  const headline = isTomorrow ? 'พรุ่งนี้แล้ว · เตรียมตัว' : 'เริ่มเตรียมตัวได้แล้ว';
+  const trackEmoji = opp.track === 'trip' ? '✈' : '📅';
+  const trackLabel = opp.track === 'trip' ? 'TRIP' : 'EVENT';
+  const subject = `${trackEmoji} ${headline} · ${opp.title}`;
+  const url = `${APP_URL}/inbox/${opp.id}`;
+  const briefUrl = `${APP_URL}/inbox/${opp.id}/brief`;
+  const body = `
+    <div style="font-size:11px;letter-spacing:1.2px;color:${GREEN};font-weight:700;text-transform:uppercase;margin-bottom:8px;">
+      ${trackEmoji} ${trackLabel} REMINDER · T-${daysUntil}
+    </div>
+    <h1 style="margin:0 0 12px;font-size:24px;line-height:1.2;letter-spacing:-0.5px;color:${TEXT};text-transform:uppercase;">
+      ${escapeHtml(opp.title)}
+    </h1>
+    <p style="margin:0 0 16px;font-size:14px;color:${DIM};line-height:1.55;">
+      สวัสดี ${escapeHtml(recipientName)},<br/><br/>
+      ${dayLabel} · ${escapeHtml(headline)}
+    </p>
+    <table cellpadding="6" cellspacing="0" style="background:#181818;border:1px solid ${LINE};border-radius:10px 0 10px 0;width:100%;font-size:13px;color:${TEXT};">
+      <tr><td style="color:${DIM};width:120px;">Date</td><td><b>${dayLabel}</b></td></tr>
+      ${place ? `<tr><td style="color:${DIM};">Place</td><td>${escapeHtml(place)}</td></tr>` : ''}
+      <tr><td style="color:${DIM};">Stage</td><td>${escapeHtml(opp.stage)}</td></tr>
+    </table>
+    <p style="margin:16px 0 0;font-size:13px;color:${DIM};line-height:1.5;">
+      💡 ดู brief เพื่อ checklist marketing/logistics
+    </p>
+    <div style="margin-top:14px;">
+      <a href="${briefUrl}" style="display:inline-block;background:${LINE};color:${TEXT};padding:8px 16px;border-radius:8px 0 8px 0;text-decoration:none;font-weight:600;font-size:12px;letter-spacing:0.4px;">📄 OPEN BRIEF</a>
+    </div>
+  `;
+  return { subject, html: wrap(subject, body, 'OPEN OPPORTUNITY', url) };
+}
+
 // ─── Helpers ────────────────────────────────────────────────────────
 function escapeHtml(s = '') {
   return String(s)
