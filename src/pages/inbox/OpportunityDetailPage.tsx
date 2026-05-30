@@ -222,7 +222,7 @@ export function OpportunityDetailPage() {
                   letterSpacing: 0.5,
                 }}
               >
-                ยกเลิก / DELETE
+                ยกเลิก / CANCEL
               </button>
             </div>
           </LCard>

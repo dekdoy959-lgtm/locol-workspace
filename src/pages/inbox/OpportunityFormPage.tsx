@@ -90,6 +90,11 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
       setError('Owner + Reviewer ต้องระบุ (ยกเว้น Watch track)');
       return;
     }
+    // Two-person rule — owner and reviewer must be different people
+    if (needsReviewer && ownerId && reviewerId && ownerId === reviewerId) {
+      setError('Owner กับ Reviewer ต้องเป็นคนละคน (two-person rule)');
+      return;
+    }
 
     const payload = {
       track,

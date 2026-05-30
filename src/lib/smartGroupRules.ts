@@ -247,9 +247,12 @@ function evalLeaf(leaf: LeafRule, c: ContactRow): boolean {
 }
 
 export function evaluateRule(rule: Rule | null | undefined, c: ContactRow): boolean {
-  if (!rule) return true;
+  if (!rule) return false; // changed: no rule should NEVER match everyone (was returning true)
   if (isCombinator(rule)) {
-    if (rule.rules.length === 0) return true;
+    // Empty combinator should return false ('all' of nothing = vacuous true is
+    // dangerous; same for 'any' of nothing). UI should hide groups with empty
+    // rules anyway, but defending here too.
+    if (rule.rules.length === 0) return false;
     if (rule.combinator === 'all') return rule.rules.every((r) => evaluateRule(r, c));
     return rule.rules.some((r) => evaluateRule(r, c));
   }
@@ -258,6 +261,8 @@ export function evaluateRule(rule: Rule | null | undefined, c: ContactRow): bool
 
 export function matchContacts(rule: Rule | null | undefined, contacts: ContactRow[]): ContactRow[] {
   if (!rule) return [];
+  // Same guard at the top level — empty rule means "no smart group rule set" not "match all"
+  if (isCombinator(rule) && rule.rules.length === 0) return [];
   return contacts.filter((c) => evaluateRule(rule, c));
 }
 

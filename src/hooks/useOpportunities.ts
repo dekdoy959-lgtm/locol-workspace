@@ -1,7 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import type { OpportunityInsert, OpportunityRow, OpportunityUpdate, TrackKey } from '../types/opportunity';
+import type { Database } from '../types/database';
 import { addDaysISO } from '../lib/dateUtil';
+
+type TripStopRow = Database['public']['Tables']['trip_stops']['Row'];
 
 const OPP_KEY = ['opportunities'] as const;
 
@@ -103,8 +106,9 @@ export function useDuplicateOpportunity() {
           .select('*')
           .eq('opportunity_id', sourceId);
         if (sErr) throw sErr;
-        if (stops && stops.length > 0) {
-          const stopsInsert = stops.map((s) => ({
+        const typedStops = (stops ?? []) as TripStopRow[];
+        if (typedStops.length > 0) {
+          const stopsInsert = typedStops.map((s) => ({
             opportunity_id: newOpp.id,
             day_date: shiftDate(s.day_date) ?? s.day_date,
             sort_order: s.sort_order,

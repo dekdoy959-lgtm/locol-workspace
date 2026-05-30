@@ -64,13 +64,19 @@ const DEADLINE_KINDS: CalendarItemKind[] = [
 ];
 // TRIPS & EVENTS = workspace items where team physically goes / attends.
 // EXCLUDES `meeting` (personal Google Calendar) — those are not "team trips".
-// Will include 'trip' track once Phase 2 migration adds it.
+// `event` covers both track='event' opportunities AND track='trip' opportunities
+// (calendarUtils.ts emits both as kind='event' for unified display).
 const TRIP_EVENT_KINDS: CalendarItemKind[] = ['event'];
 
 function matchSplit(item: CalendarItem, split: SplitMode): boolean {
   if (split === 'all') return true;
   if (split === 'deadlines') return DEADLINE_KINDS.includes(item.kind);
-  return TRIP_EVENT_KINDS.includes(item.kind); // trips & events
+  // trips & events: kind='event' OR a trip-stop source (also surfaces as 'event'
+  // but distinguishable by source.kind === 'trip_stop' OR opp.track === 'trip')
+  if (TRIP_EVENT_KINDS.includes(item.kind)) return true;
+  if (item.source.kind === 'trip_stop') return true;
+  if (item.source.kind === 'opportunity' && item.source.opp.track === 'trip') return true;
+  return false;
 }
 
 export function CalendarPage() {

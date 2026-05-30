@@ -10,6 +10,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { supabase } from '../../lib/supabase';
 import { useUpdateOpportunity } from '../../hooks/useOpportunities';
 import type { OpportunityRow } from '../../types/opportunity';
 import { LCard, LBtn, LInput, LLabel } from '../primitives';
@@ -55,13 +56,22 @@ export function TripBudgetCard({ opp }: TripBudgetCardProps) {
   const variance = actual != null && estimated > 0 ? actual - estimated : null;
   const variancePct = variance != null && estimated > 0 ? (variance / estimated) * 100 : null;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const newActual = asNumber(actualDraft);
+    // Refetch the latest details first so we don't overwrite concurrent edits
+    // to other detail fields (e.g. someone editing agenda while we save cost).
+    const { data: fresh } = await supabase
+      .from('opportunities')
+      .select('details')
+      .eq('id', opp.id)
+      .single();
+    const freshDetails = (fresh as { details?: Record<string, unknown> } | null)?.details;
+    const latestDetails = (freshDetails ?? details) as Record<string, unknown>;
     update.mutate(
       {
         id: opp.id,
         patch: {
-          details: { ...details, actual_cost: newActual },
+          details: { ...latestDetails, actual_cost: newActual },
         },
       },
       { onSuccess: () => setEditing(false) },

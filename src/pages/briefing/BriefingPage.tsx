@@ -6,6 +6,7 @@ import { useAllMilestones } from '../../hooks/useAllMilestones';
 import { useTeamMembers, teamMemberInitials } from '../../hooks/useTeamMembers';
 import { useTrackSettings, getStaleThreshold } from '../../hooks/useTrackSettings';
 import { useAuth } from '../../contexts/AuthContext';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 import {
   findTrack,
   isStale,
@@ -29,6 +30,7 @@ type ViewMode = 'me' | 'team';
 export function BriefingPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const isMobile = useIsMobile();
   const { data: opps = [] } = useOpportunities();
   const { data: contacts = [] } = useContacts();
   const { data: milestones = [] } = useAllMilestones();
@@ -206,12 +208,12 @@ export function BriefingPage() {
         </div>
       </LCard>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 14, marginBottom: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', gap: 14, marginBottom: 14 }}>
         {/* Stale items (highlighted) */}
         <LCard padding={20} style={{ borderLeft: `3px solid #d96a66` }}>
           <SectionHeader
             accent="#d96a66"
-            title="MY STALE ITEMS"
+            title={isMine ? 'MY STALE ITEMS' : 'TEAM STALE ITEMS'}
             count={buckets.myStale.length}
             sub="ของผม/ของฉัน ไม่ได้ update เกิน threshold ของ track นั้น — กดเพื่อเปิด + update ทันที"
           />
@@ -230,7 +232,7 @@ export function BriefingPage() {
         <LCard padding={20}>
           <SectionHeader
             accent="#E8B923"
-            title="DUE THIS WEEK"
+            title={isMine ? 'DUE THIS WEEK' : 'TEAM DUE THIS WEEK'}
             count={buckets.myUpcoming.length}
             sub="งานที่ฉัน own + due ใน 7 วัน"
           />
@@ -246,7 +248,7 @@ export function BriefingPage() {
         </LCard>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 14, marginBottom: 14 }}>
         {/* Cold contacts */}
         <LCard padding={20}>
           <SectionHeader

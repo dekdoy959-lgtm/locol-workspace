@@ -172,7 +172,7 @@ export function OpportunityBriefPage() {
                 ['🙏 ต้องให้เครดิตไหม', v('credit_required')],
                 ['🙏 เครดิตให้ใคร', v('credit_to')],
                 ['✅ Consent status', v('consent_status')],
-              ].filter(([, val]) => val)}
+              ].filter((entry): entry is [string, string] => Boolean(entry[1]))}
               vertical
             />
           </Section>
@@ -189,7 +189,7 @@ export function OpportunityBriefPage() {
                 ['💵 Actual cost', v('actual_cost') ? `${v('actual_cost')} ${v('currency') || 'THB'}` : ''],
                 ['🎒 Equipment list', v('equipment_list')],
                 ['📝 Notes', v('notes')],
-              ].filter(([, val]) => val)}
+              ].filter((entry): entry is [string, string] => Boolean(entry[1]))}
               vertical
             />
           </Section>
@@ -315,7 +315,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function KeyValueList({ items, vertical = false }: { items: [string, string][]; vertical?: boolean }) {
+function KeyValueList({ items, vertical = false }: { items: (readonly [string, string] | string[])[]; vertical?: boolean }) {
   if (items.length === 0) {
     return <div className="brief-muted" style={{ fontSize: 12, color: colors.dim, fontStyle: 'italic' }}>(ยังไม่มีข้อมูล)</div>;
   }

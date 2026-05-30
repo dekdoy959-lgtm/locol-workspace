@@ -10,7 +10,7 @@ import {
   useContactInteractions,
   type InteractionRow,
 } from '../../hooks/useInteractions';
-import { useTeamMembers, teamMemberInitials, teamMemberDisplayName } from '../../hooks/useTeamMembers';
+import { useTeamMembers, teamMemberInitials, teamMemberDisplayName, type TeamMemberRow } from '../../hooks/useTeamMembers';
 import { useAuth } from '../../contexts/AuthContext';
 import type { NoteRow, NoteScope } from '../../types/note';
 import {
@@ -396,7 +396,7 @@ interface FeedRowProps {
   contactId: string | undefined;
   sharedKeys: Set<string>;
   sharedByMap: Map<string, string | null>;
-  teamById: Record<string, { id: string; email: string; full_name: string | null } | undefined>;
+  teamById: Record<string, TeamMemberRow | undefined>;
   currentUserId: string | null;
   onShareGmail: (message: GmailMessageMeta) => void;
   onShareCalendar: (event: CalendarEvent) => void;
@@ -608,7 +608,7 @@ function NoteRowItem({
 }: {
   note: NoteRow;
   isFuture: boolean;
-  author: { id: string; email: string; full_name: string | null } | null;
+  author: TeamMemberRow | null;
   onDelete: () => void;
 }) {
   const isFutureWithReminder = isFuture && note.is_future;
@@ -1108,7 +1108,7 @@ function InteractionRowView({
   loggedBy,
 }: {
   interaction: InteractionRow;
-  loggedBy: { id: string; email: string; full_name: string | null } | null;
+  loggedBy: TeamMemberRow | null;
 }) {
   // Choose visual based on source/channel
   const sourceMeta = (() => {

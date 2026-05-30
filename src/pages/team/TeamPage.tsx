@@ -9,7 +9,7 @@ import {
 import { useOpportunities } from '../../hooks/useOpportunities';
 import { useContacts } from '../../hooks/useContacts';
 import { useAuth } from '../../contexts/AuthContext';
-import { LCard, LH, LBtn, LIcon, LInput, LSelect, LLabel, LAvatar, LNote } from '../../components/primitives';
+import { LCard, LH, LBtn, LInput, LSelect, LLabel, LAvatar, LNote } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
 
 export function TeamPage() {
