@@ -10,8 +10,22 @@ import {
   type TripStopUpdate,
   type StopType,
 } from '../../hooks/useTripStops';
-import { LCard, LBtn, LIcon, LInput, LTextarea, LSelect, LLabel } from '../primitives';
+import {
+  useOpportunityTeam,
+  useCreateAssignment,
+  useDeleteAssignment,
+} from '../../hooks/useOpportunityTeam';
+import { useTeamMembers, teamMemberInitials, teamMemberDisplayName } from '../../hooks/useTeamMembers';
+import { LCard, LBtn, LIcon, LInput, LTextarea, LSelect, LLabel, LAvatar } from '../primitives';
 import { colors } from '../../styles/tokens';
+
+/** Google Maps deep link for a stop's place. Uses search query — falls back gracefully if location_name is empty. */
+function googleMapsUrl(stop: TripStopRow): string | null {
+  const parts = [stop.name, stop.location_name, stop.province].filter(Boolean);
+  if (parts.length === 0) return null;
+  const query = encodeURIComponent(parts.join(' '));
+  return `https://www.google.com/maps/search/?api=1&query=${query}`;
+}
 
 interface TripItineraryProps {
   opportunityId: string;
@@ -121,6 +135,7 @@ export function TripItinerary({ opportunityId }: TripItineraryProps) {
             key={date}
             date={date}
             dayNumber={dayIdx + 1}
+            opportunityId={opportunityId}
             stops={dayStops}
             editingStopId={editingStopId}
             onStartEdit={(id) => setEditingStopId(id)}
@@ -149,6 +164,7 @@ export function TripItinerary({ opportunityId }: TripItineraryProps) {
 function DaySection({
   date,
   dayNumber,
+  opportunityId,
   stops,
   editingStopId,
   onStartEdit,
@@ -160,6 +176,7 @@ function DaySection({
 }: {
   date: string;
   dayNumber: number;
+  opportunityId: string;
   stops: TripStopRow[];
   editingStopId: string | null;
   onStartEdit: (id: string) => void;
@@ -211,6 +228,7 @@ function DaySection({
           <StopRow
             key={stop.id}
             stop={stop}
+            opportunityId={opportunityId}
             editing={editingStopId === stop.id}
             onStartEdit={() => onStartEdit(stop.id)}
             onCancelEdit={onCancelEdit}
@@ -258,6 +276,7 @@ function DaySection({
 
 function StopRow({
   stop,
+  opportunityId,
   editing,
   onStartEdit,
   onCancelEdit,
@@ -266,6 +285,7 @@ function StopRow({
   saving,
 }: {
   stop: TripStopRow;
+  opportunityId: string;
   editing: boolean;
   onStartEdit: () => void;
   onCancelEdit: () => void;
@@ -471,14 +491,13 @@ function StopRow({
   // View mode
   const timeStr = [stop.start_time, stop.end_time].filter(Boolean).join(' – ') || '—';
   const placeStr = [stop.name, stop.province, stop.location_name].filter(Boolean).join(' · ') || '(ยังไม่ได้กรอก)';
+  const mapUrl = googleMapsUrl(stop);
 
   return (
     <div
-      onClick={startEdit}
       style={{
         padding: '12px 18px',
         borderBottom: `1px solid ${colors.line}`,
-        cursor: 'pointer',
         transition: 'background 100ms',
         display: 'flex',
         gap: 12,
@@ -499,8 +518,8 @@ function StopRow({
       >
         {timeStr}
       </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+      <div onClick={startEdit} style={{ flex: 1, minWidth: 0, cursor: 'pointer' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 16 }}>{meta.icon}</span>
           <span style={{ fontSize: 13.5, fontWeight: 600, color: colors.text }}>{placeStr}</span>
           <span
@@ -517,6 +536,30 @@ function StopRow({
           >
             {meta.label}
           </span>
+          {mapUrl && (
+            <a
+              href={mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                fontSize: 10.5,
+                color: '#9aa56a',
+                textDecoration: 'none',
+                padding: '1px 6px',
+                background: '#1d1f12',
+                border: '1px solid #3a3f1f',
+                borderRadius: '4px 0 4px 0',
+                letterSpacing: 0.4,
+                fontWeight: 600,
+              }}
+              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = colors.green)}
+              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = '#9aa56a')}
+              title="เปิดใน Google Maps"
+            >
+              📍 MAP ↗
+            </a>
+          )}
         </div>
         {stop.owner_name && (
           <div style={{ fontSize: 11.5, color: colors.dimSoft, marginTop: 2 }}>
@@ -546,7 +589,162 @@ function StopRow({
           </div>
         )}
       </div>
+      <PerStopTravelers opportunityId={opportunityId} stop={stop} />
       <span style={{ color: colors.dim, fontSize: 11, flexShrink: 0, paddingTop: 4 }}>คลิกแก้</span>
+    </div>
+  );
+}
+
+/** Compact per-stop traveler picker. Only stores role='traveler' for now. */
+function PerStopTravelers({
+  opportunityId,
+  stop,
+}: {
+  opportunityId: string;
+  stop: TripStopRow;
+}) {
+  const { data: assignments = [] } = useOpportunityTeam(opportunityId);
+  const { data: team = [] } = useTeamMembers();
+  const create = useCreateAssignment();
+  const remove = useDeleteAssignment();
+  const [picking, setPicking] = useState(false);
+
+  const teamById = Object.fromEntries(team.map((t) => [t.id, t]));
+  const myStopAssignments = assignments.filter(
+    (a) => a.trip_stop_id === stop.id && a.role === 'traveler',
+  );
+  const availableMembers = team.filter(
+    (m) => !myStopAssignments.some((a) => a.team_member_id === m.id),
+  );
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4,
+        flexShrink: 0,
+        minWidth: 120,
+        maxWidth: 200,
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div style={{ fontSize: 9, color: colors.dim, letterSpacing: 0.8, textTransform: 'uppercase', fontWeight: 600 }}>
+        ✈ ใครไปจุดนี้
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+        {myStopAssignments.map((a) => {
+          const m = teamById[a.team_member_id];
+          if (!m) return null;
+          return (
+            <div
+              key={a.id}
+              title={teamMemberDisplayName(m)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 3,
+                background: colors.bgRaise,
+                border: `1px solid ${colors.lineHi}`,
+                borderRadius: '5px 0 5px 0',
+                padding: '1px 3px 1px 1px',
+                fontSize: 10,
+              }}
+            >
+              <LAvatar initials={teamMemberInitials(m)} size={16} />
+              <button
+                type="button"
+                onClick={() => remove.mutate({ id: a.id, opportunityId })}
+                title="ลบ"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: colors.dim,
+                  cursor: 'pointer',
+                  padding: '0 2px',
+                  fontSize: 11,
+                  lineHeight: 1,
+                }}
+              >
+                ×
+              </button>
+            </div>
+          );
+        })}
+        {!picking && availableMembers.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setPicking(true)}
+            style={{
+              background: 'transparent',
+              border: `1px dashed ${colors.lineHi}`,
+              color: colors.dim,
+              padding: '1px 5px',
+              fontSize: 10,
+              borderRadius: '5px 0 5px 0',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}
+          >
+            + assign
+          </button>
+        )}
+        {picking && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, marginTop: 3 }}>
+            {availableMembers.map((m) => (
+              <button
+                key={m.id}
+                type="button"
+                onClick={() => {
+                  create.mutate(
+                    {
+                      opportunity_id: opportunityId,
+                      team_member_id: m.id,
+                      role: 'traveler',
+                      trip_stop_id: stop.id,
+                    },
+                    {
+                      onSuccess: () => {
+                        if (availableMembers.length === 1) setPicking(false);
+                      },
+                    },
+                  );
+                }}
+                style={{
+                  background: colors.bgRaise,
+                  border: `1px solid ${colors.green}`,
+                  color: colors.text,
+                  padding: '2px 6px',
+                  fontSize: 10,
+                  borderRadius: '5px 0 5px 0',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                + {m.full_name?.split(' ')[0] ?? m.email.split('@')[0]}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => setPicking(false)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: colors.dim,
+                fontSize: 10,
+                padding: '2px 6px',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+              }}
+            >
+              done
+            </button>
+          </div>
+        )}
+        {myStopAssignments.length === 0 && !picking && availableMembers.length === 0 && (
+          <span style={{ fontSize: 10, color: colors.dim, fontStyle: 'italic' }}>ไม่มี team</span>
+        )}
+      </div>
     </div>
   );
 }
