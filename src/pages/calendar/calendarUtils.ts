@@ -208,30 +208,22 @@ export function aggregateCalendarItems({
       }
     }
 
-    // Contract-specific
-    if (opp.track === 'contract') {
-      const effective = asString(details.effective_date);
-      const renewal = asString(details.renewal_date);
-      if (effective) {
+    // Trip-specific (on-field/farm visits)
+    if (opp.track === 'trip') {
+      const tripStart = asString(details.trip_date_start);
+      const tripEnd = asString(details.trip_date_end);
+      const farmName = asString(details.farm_name);
+      const province = asString(details.province);
+      const locationName = asString(details.location_name);
+      const placeBits = [farmName, locationName, province].filter(Boolean).join(' · ');
+      if (tripStart) {
         items.push({
-          id: `eff-${opp.id}`,
-          kind: 'contract_effective',
-          date: effective,
-          title: `📜 Start: ${opp.title}`,
-          track: baseTrack,
-          ownerId,
-          status: opp.stage,
-          href,
-          source: { kind: 'opportunity', opp },
-          isMine,
-        });
-      }
-      if (renewal) {
-        items.push({
-          id: `renew-${opp.id}`,
-          kind: 'contract_renewal',
-          date: renewal,
-          title: `🔄 Renew: ${opp.title}`,
+          id: `trip-${opp.id}`,
+          kind: 'event', // surface trips in TRIPS & EVENTS split
+          date: tripStart,
+          endDate: tripEnd || undefined,
+          title: `✈ ${opp.title}`,
+          location: placeBits || null,
           track: baseTrack,
           ownerId,
           status: opp.stage,

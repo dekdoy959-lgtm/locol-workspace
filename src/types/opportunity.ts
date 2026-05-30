@@ -4,7 +4,14 @@ export type OpportunityRow = Database['public']['Tables']['opportunities']['Row'
 export type OpportunityInsert = Database['public']['Tables']['opportunities']['Insert'];
 export type OpportunityUpdate = Database['public']['Tables']['opportunities']['Update'];
 
-export type TrackKey = 'apply' | 'act' | 'watch' | 'contract' | 'event';
+export type TrackKey = 'apply' | 'watch' | 'event' | 'trip';
+
+/**
+ * Legacy track values — used to safely accept old data during migration window.
+ * After Migration 0013 runs in all environments, these will return empty arrays
+ * (no opportunities will have these tracks anymore).
+ */
+export type LegacyTrackKey = 'act' | 'contract';
 
 export interface TrackMeta {
   key: TrackKey;
@@ -38,17 +45,6 @@ export const TRACKS: TrackMeta[] = [
     examples: ['Climate Curve $200k', 'NIA Open Innovation', 'Banpu Champions for Change'],
   },
   {
-    key: 'act',
-    name: 'งานต้องทำ',
-    nameEn: 'Tasks',
-    sub: 'เรื่องที่ต้องตอบ · ต้องส่งเอกสาร · ลงมือทำ',
-    cadence: '1–3 สัปดาห์',
-    stages: ['Captured', 'Scoped', 'Drafting', 'Sent', 'Closed'],
-    defaultStage: 'Captured',
-    color: { ink: '#99CE24', soft: '#1f2a08', chip: '#6e9618' },
-    examples: ['ส่ง proposal ให้พาร์ตเนอร์', 'ตอบ inquiry จากนักข่าว', 'เตรียม pitch deck'],
-  },
-  {
     key: 'watch',
     name: 'ติดตามข่าว',
     nameEn: 'Monitor',
@@ -61,26 +57,26 @@ export const TRACKS: TrackMeta[] = [
     noReviewerRequired: true,
   },
   {
-    key: 'contract',
-    name: 'สัญญา',
-    nameEn: 'Contracts',
-    sub: 'ข้อตกลง · MoU · พาร์ตเนอร์ชิป',
-    cadence: 'แจ้งเตือน 90/30/7 วัน ก่อนหมดอายุ',
-    stages: ['Lead', 'Negotiating', 'Drafting', 'Signed', 'Active', 'Renewal', 'End'],
-    defaultStage: 'Lead',
-    color: { ink: '#9aa56a', soft: '#1d1f12', chip: '#695935' },
-    examples: ['MoU กับ Doi Tung', 'สัญญา distribution กับห้าง', 'partnership agreement'],
-  },
-  {
     key: 'event',
     name: 'อีเวนต์',
     nameEn: 'Events',
-    sub: 'งานสัมมนา · ประชุม · networking · trade show',
+    sub: 'งานสัมมนา · networking · trade show · เปิดบูธ',
     cadence: 'ตามวันที่งาน',
     stages: ['Spotted', 'Decide attend', 'Registered', 'Attended', 'Follow-ups'],
     defaultStage: 'Spotted',
     color: { ink: '#d96a66', soft: '#2a1212', chip: '#A12F2D' },
     examples: ['SIAL Asia 2026', 'ASEAN Climate Summit', 'Thaifex 2026'],
+  },
+  {
+    key: 'trip',
+    name: 'ลงพื้นที่',
+    nameEn: 'On-field Trip',
+    sub: 'ไปฟาร์ม · ลงพื้นที่จริง · เยี่ยมพาร์ตเนอร์',
+    cadence: 'ตามแผนทริป',
+    stages: ['Planned', 'Confirmed', 'Departed', 'Completed', 'Follow-ups'],
+    defaultStage: 'Planned',
+    color: { ink: '#9aa56a', soft: '#1d1f12', chip: '#695935' },
+    examples: ['ไปฟาร์ม ก. เชียงราย', 'ตรวจคุณภาพโคที่ พิจิตร', 'ดู supply chain แม่ฮ่องสอน'],
   },
 ];
 

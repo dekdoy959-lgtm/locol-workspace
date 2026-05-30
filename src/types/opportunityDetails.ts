@@ -46,14 +46,6 @@ export const TRACK_DETAILS: Record<TrackKey, DetailFieldSpec[]> = {
     { key: 'eligibility_status',   label: 'Our Eligibility',      type: 'select',   options: ['Eligible', 'Ineligible — Template Only', 'Need Partner', 'Unclear'] },
   ],
 
-  act: [
-    { key: 'action_type',     label: 'Action Type',          type: 'select',   options: ['Memo', 'Comment', 'Review', 'Reply', 'Sign-off', 'Other'] },
-    { key: 'to_whom',         label: 'To Whom',              type: 'text',     placeholder: 'ใครเป็นผู้รับ' },
-    { key: 'jurisdiction',    label: 'Jurisdiction',         type: 'select',   options: ['Thailand', 'APAC', 'Global', 'US', 'EU', 'UK', 'Other'] },
-    { key: 'artefact_link',   label: 'Artefact / Output Link', type: 'url',    placeholder: 'https://docs.google.com/...' },
-    { key: 'context_note',    label: 'Context',              type: 'textarea', placeholder: 'อยู่ในบริบทไหน · ทำไมต้องทำ' },
-  ],
-
   watch: [
     { key: 'category',        label: 'News Category',        type: 'select',
       options: ['Regulation', 'Industry News', 'Research', 'Market', 'Competitor', 'Technology', 'Risk Signal', 'Supply Chain', 'Policy Change', 'Other'] },
@@ -66,32 +58,60 @@ export const TRACK_DETAILS: Record<TrackKey, DetailFieldSpec[]> = {
     { key: 'related_companies', label: 'Related Companies',  type: 'text',     placeholder: 'CH4 Global, dsm-firmenich · (คั่นด้วย comma)' },
   ],
 
-  contract: [
-    { key: 'counterparty',    label: 'Counterparty',         type: 'org_picker', helpText: 'เชื่อมกับ Organization · เลือกเดิม หรือสร้างใหม่' },
-    { key: 'jurisdiction',    label: 'Jurisdiction',         type: 'select',   options: ['Thailand', 'APAC', 'Global', 'US', 'EU', 'UK', 'Other'] },
-    { key: 'contract_value',  label: 'Contract Value',       type: 'number',   placeholder: '0' },
-    { key: 'currency',        label: 'Currency',             type: 'select',   options: ['THB', 'USD', 'EUR', 'JPY', 'GBP'] },
-    { key: 'term_months',     label: 'Term (months)',        type: 'number',   placeholder: 'เช่น 12' },
-    { key: 'effective_date',  label: 'Effective Date',       type: 'date' },
-    { key: 'renewal_date',    label: 'Renewal Date',         type: 'date',     helpText: 'ระบบจะเตือน 90/30/7 d ก่อน renewal' },
-    { key: 'auto_renew',      label: 'Auto-Renew',           type: 'select',   options: ['Yes', 'No', 'Unknown'] },
-    { key: 'key_terms',       label: 'Key Terms / Notes',    type: 'textarea', placeholder: 'IP · payment terms · exit clause' },
+  event: [
+    // ─── Dates + venue ──────────────────────────────
+    { key: 'event_date_start',      label: 'Start Date',           type: 'date',     helpText: 'วันจัดงาน' },
+    { key: 'event_date_end',        label: 'End Date',             type: 'date',     helpText: 'ถ้าเป็นวันเดียวเว้นไว้' },
+    { key: 'event_time',            label: 'Time',                 type: 'text',     placeholder: '14:00 - 17:00' },
+    { key: 'registration_deadline', label: 'Registration Deadline', type: 'date',   helpText: 'วันสุดท้ายของการลงทะเบียน (อาจต่างจาก event date)' },
+    { key: 'location',              label: 'Location / Venue',     type: 'text',     placeholder: 'BITEC Hall 5 · Online · ฯลฯ' },
+    { key: 'format',                label: 'Format',               type: 'select',   options: ['Online', 'Offline', 'Hybrid'] },
+    { key: 'jurisdiction',          label: 'Region',               type: 'select',   options: ['Thailand', 'APAC', 'Global', 'US', 'EU', 'UK', 'Other'] },
+    { key: 'cost',                  label: 'Cost per Person',      type: 'number',   placeholder: '0 = ฟรี' },
+    { key: 'currency',              label: 'Currency',             type: 'select',   options: ['THB', 'USD', 'EUR', 'JPY', 'GBP'] },
+    { key: 'capacity',              label: 'Capacity',             type: 'number',   placeholder: 'จำนวนผู้เข้าร่วม' },
+    { key: 'dress_code',            label: 'Dress Code',           type: 'text',     placeholder: 'Smart casual / Business / ...' },
+    { key: 'rsvp_url',              label: 'RSVP / Register URL',  type: 'url' },
+    { key: 'organizer',             label: 'Organizer',            type: 'text',     placeholder: 'ผู้จัด (ถ้าไม่ใช่ org ในระบบ)' },
+    // ─── Marketing brief (visible to marketing team) ──
+    { key: 'agenda',                label: '📋 Agenda',             type: 'textarea', placeholder: '08:00 ลงทะเบียน\n09:00 keynote\n10:30 ...', helpText: 'รันดาวน์ของงาน · marketing ใช้ plan timing post' },
+    { key: 'locol_responsibilities', label: '🎯 สิ่งที่ LOCOL ต้องทำ', type: 'textarea', placeholder: 'เปิดบูธ · พูด keynote · นั่งโต๊ะ judge · ...', helpText: 'หน้าที่ของเราในงาน' },
+    { key: 'goals',                  label: '🚀 เป้าหมายของ LOCOL', type: 'textarea', placeholder: 'เก็บ 50 leads · สร้าง awareness ใน segment X · ปิดดีลกับพาร์ตเนอร์', helpText: 'KPI ที่อยากได้กลับมาจากงาน' },
+    { key: 'ideas',                  label: '💡 Idea ที่คิดไว้',     type: 'textarea', placeholder: 'รูปคู่กับวัวบนเวที · ทำ giveaway · QR code → จับสลาก' },
+    { key: 'credit_required',        label: 'ต้องให้เครดิตไหม',     type: 'select',   options: ['ไม่ต้อง', 'ต้อง'] },
+    { key: 'credit_to',              label: '🙏 เครดิตให้ใคร',       type: 'text',     placeholder: 'ชื่อคน / สถาบัน · ใช้ใน content', helpText: 'ถ้าตอบ "ต้อง" ด้านบน' },
+    { key: 'content_assets_needed',  label: '🎨 สื่อที่ต้องเตรียม', type: 'textarea', placeholder: 'ใบปลิว · brochure · video loop · banner', helpText: 'marketing เตรียมล่วงหน้า' },
+    { key: 'shot_list',              label: '📸 Shot List',          type: 'textarea', placeholder: 'รูปบูธ · รูปกับ keynote · interview สั้น · BTS' },
+    { key: 'social_media_plan',      label: '📱 Social Media Plan',  type: 'textarea', placeholder: 'pre: T-7 post คอนเทนต์ build-up\nduring: live story\npost: recap reel + lead nurture' },
+    { key: 'hashtags',               label: '#️⃣ Hashtags + mentions', type: 'text',  placeholder: '#LOCOL #SIALAsia · @sialasia @partnerco' },
   ],
 
-  event: [
-    { key: 'event_date_start',     label: 'Start Date',           type: 'date' },
-    { key: 'event_date_end',       label: 'End Date',             type: 'date',     helpText: 'ถ้าเป็นวันเดียวเว้นไว้' },
-    { key: 'event_time',           label: 'Time',                 type: 'text',     placeholder: '14:00 - 17:00' },
-    { key: 'registration_deadline', label: 'Registration Deadline', type: 'date',   helpText: 'วันสุดท้ายของการลงทะเบียน (อาจต่างจาก event date)' },
-    { key: 'jurisdiction',         label: 'Region',               type: 'select',   options: ['Thailand', 'APAC', 'Global', 'US', 'EU', 'UK', 'Other'] },
-    { key: 'location',             label: 'Location / Venue',     type: 'text',     placeholder: 'BITEC Hall 5 · Online · ฯลฯ' },
-    { key: 'format',               label: 'Format',               type: 'select',   options: ['Online', 'Offline', 'Hybrid'] },
-    { key: 'cost',                 label: 'Cost per Person',      type: 'number',   placeholder: '0 = ฟรี' },
-    { key: 'currency',             label: 'Currency',             type: 'select',   options: ['THB', 'USD', 'EUR', 'JPY', 'GBP'] },
-    { key: 'capacity',             label: 'Capacity',             type: 'number',   placeholder: 'จำนวนผู้เข้าร่วม' },
-    { key: 'dress_code',           label: 'Dress Code',           type: 'text',     placeholder: 'Smart casual / Business / ...' },
-    { key: 'rsvp_url',             label: 'RSVP / Register URL',  type: 'url' },
-    { key: 'organizer',            label: 'Organizer',            type: 'text',     placeholder: 'ผู้จัด (ถ้าไม่ใช่ org ในระบบ)' },
+  trip: [
+    // ─── Dates + place ──────────────────────────────
+    { key: 'trip_date_start',  label: 'วันที่ไป',           type: 'date' },
+    { key: 'trip_date_end',    label: 'วันที่กลับ',          type: 'date',     helpText: 'ถ้าเป็นวันเดียวเว้นไว้' },
+    { key: 'farm_name',        label: '🐄 ชื่อฟาร์ม',        type: 'text',     placeholder: 'ฟาร์มก. · บ้านหนองหิน' },
+    { key: 'location_name',    label: '📍 ชื่อสถานที่',     type: 'text',     placeholder: 'อ.เชียงดาว · บ้านวัวดอย · ฯลฯ' },
+    { key: 'province',         label: '🗺 จังหวัด',          type: 'text',     placeholder: 'เชียงราย · พิจิตร · เลย' },
+    { key: 'farm_owner_name',  label: '👤 ชื่อเจ้าของฟาร์ม', type: 'text',     placeholder: 'คุณ ก' },
+    { key: 'farm_owner_phone', label: 'เบอร์โทร',           type: 'tel',      placeholder: '08x-xxx-xxxx' },
+    // ─── Purpose ─────────────────────────────────────
+    { key: 'purpose',          label: '🎯 วัตถุประสงค์',     type: 'textarea', placeholder: 'ทำไมต้องไป · LOCOL ไปทำอะไรกับเขา', helpText: 'รายละเอียดที่ LOCOL ไปทำกับเค้า / วัตถุประสงค์ในการไป' },
+    { key: 'agenda',           label: '📋 Agenda',           type: 'textarea', placeholder: '07:00 ออกเดินทาง\n10:00 ถึงฟาร์ม\n10:30 ตรวจ ...', helpText: 'แผนวัน · marketing ใช้ plan shot' },
+    { key: 'emphasis',         label: '⭐ สิ่งที่อยากเน้น',  type: 'textarea', placeholder: 'methane reduction · cocoa-fed cattle · sustainability story', helpText: 'มุมที่อยากเน้นในการสื่อสาร' },
+    // ─── Marketing brief ────────────────────────────
+    { key: 'storytelling_angle', label: '🎬 Storytelling angle', type: 'textarea', placeholder: 'narrative ที่จะใช้ทำ content · เน้น human story · เกษตรกร x technology' },
+    { key: 'shot_list',          label: '📸 Shot List',          type: 'textarea', placeholder: 'รูปฟาร์ม · รูปวัว · รูป owner · BTS การทำงาน · drone shot' },
+    { key: 'credit_required',    label: 'ต้องให้เครดิตไหม',     type: 'select',   options: ['ไม่ต้อง', 'ต้อง'] },
+    { key: 'credit_to',          label: '🙏 เครดิตให้ใคร',       type: 'text',     placeholder: 'ชื่อคน / สถาบัน · ใช้ใน content', helpText: 'ถ้าตอบ "ต้อง" ด้านบน' },
+    { key: 'consent_status',     label: '✅ ขออนุญาตถ่ายแล้วยัง', type: 'select', options: ['ยังไม่ได้ขอ', 'ขอแล้ว · ได้', 'ขอแล้ว · ไม่ได้', 'ไม่ต้องขอ'] },
+    // ─── Logistics ──────────────────────────────────
+    { key: 'transport',          label: '🚗 Transport',           type: 'text',     placeholder: 'รถบริษัท · เครื่องบิน + เช่ารถ · ฯลฯ' },
+    { key: 'accommodation',      label: '🏨 ที่พัก',              type: 'text',     placeholder: 'โรงแรม XYZ · บ้านพักฟาร์ม' },
+    { key: 'estimated_cost',     label: '💰 ค่าใช้จ่ายประมาณ',   type: 'number',   placeholder: '0' },
+    { key: 'currency',           label: 'Currency',              type: 'select',   options: ['THB', 'USD', 'EUR', 'JPY', 'GBP'] },
+    { key: 'equipment_list',     label: '🎒 อุปกรณ์ที่เอาไป',     type: 'textarea', placeholder: 'กล้อง · drone · ขาตั้ง · mic · battery · sample bag' },
+    { key: 'notes',              label: '📝 หมายเหตุ',            type: 'textarea', placeholder: 'หมายเหตุอื่น ๆ' },
   ],
 };
 

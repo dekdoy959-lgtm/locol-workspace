@@ -50,8 +50,7 @@ export function InboxSummaryPage() {
     const awaitingDecision: OpportunityRow[] = [];
     const wonRecently: OpportunityRow[] = [];
     const lostRecently: OpportunityRow[] = [];
-    const activeContracts: OpportunityRow[] = [];
-    const renewalSoon: OpportunityRow[] = [];
+    const upcomingTrips: OpportunityRow[] = [];
     const stale: OpportunityRow[] = [];
 
     for (const opp of opps) {
@@ -73,10 +72,9 @@ export function InboxSummaryPage() {
         else applying.push(opp);
       }
 
-      // Contracts
-      if (opp.track === 'contract') {
-        if (opp.stage === 'Active') activeContracts.push(opp);
-        if (opp.stage === 'Renewal') renewalSoon.push(opp);
+      // Trips
+      if (opp.track === 'trip' && ['Planned', 'Confirmed'].includes(opp.stage)) {
+        upcomingTrips.push(opp);
       }
     }
 
@@ -88,8 +86,7 @@ export function InboxSummaryPage() {
       awaitingDecision,
       wonRecently,
       lostRecently,
-      activeContracts,
-      renewalSoon,
+      upcomingTrips,
       stale,
     };
   }, [opps, thisWeekStart, nextWeekStart, weekAfterStart, trackSettings]);
@@ -130,7 +127,7 @@ export function InboxSummaryPage() {
         <BigStat label="Events Soon" value={buckets.upcomingEventsThis.length + buckets.upcomingEventsNext.length} color="#d96a66" />
         <BigStat label="Applying" value={buckets.applying.length} color="#E8B923" />
         <BigStat label="Awaiting Decision" value={buckets.awaitingDecision.length} color="#E8B923" />
-        <BigStat label="Active Contracts" value={buckets.activeContracts.length} color="#9aa56a" />
+        <BigStat label="Upcoming Trips" value={buckets.upcomingTrips.length} color="#9aa56a" />
       </div>
 
       {/* Stale banner */}
@@ -207,25 +204,21 @@ export function InboxSummaryPage() {
         />
       </div>
 
-      {/* Contracts */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 18 }}>
-        <SectionCard
-          title="ACTIVE CONTRACTS"
-          accent="#9aa56a"
-          opps={buckets.activeContracts}
-          teamById={teamById}
-          onClick={(id) => navigate(`/inbox/${id}`)}
-          compact
-        />
-        <SectionCard
-          title="RENEWAL SOON · ต่อสัญญา"
-          accent="#9aa56a"
-          opps={buckets.renewalSoon}
-          teamById={teamById}
-          onClick={(id) => navigate(`/inbox/${id}`)}
-          compact
-        />
-      </div>
+      {/* Upcoming trips */}
+      {buckets.upcomingTrips.length > 0 && (
+        <div style={{ marginBottom: 18 }}>
+          <SectionCard
+            title="UPCOMING TRIPS · ลงพื้นที่"
+            subtitle="งานที่ team จะออกไปฟาร์ม / ภาคสนาม"
+            accent="#9aa56a"
+            opps={buckets.upcomingTrips}
+            teamById={teamById}
+            onClick={(id) => navigate(`/inbox/${id}`)}
+            compact
+            showStage
+          />
+        </div>
+      )}
 
       {/* Track distribution */}
       <LCard padding={20}>

@@ -96,7 +96,7 @@ export type Database = {
       opportunities: {
         Row: {
           id: string;
-          track: 'apply' | 'act' | 'watch' | 'contract' | 'event';
+          track: 'apply' | 'watch' | 'event' | 'trip';
           title: string;
           stage: string;
           status: string;
@@ -115,7 +115,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: Partial<Database['public']['Tables']['opportunities']['Row']> & {
-          track: 'apply' | 'act' | 'watch' | 'contract' | 'event';
+          track: 'apply' | 'watch' | 'event' | 'trip';
           title: string;
           stage: string;
         };
@@ -328,14 +328,14 @@ export type Database = {
       };
       track_settings: {
         Row: {
-          track: 'apply' | 'act' | 'watch' | 'contract' | 'event';
+          track: 'apply' | 'watch' | 'event' | 'trip';
           stale_threshold_days: number | null;
           ping_enabled: boolean;
           email_notifications: boolean;
           updated_at: string;
         };
         Insert: Partial<Database['public']['Tables']['track_settings']['Row']> & {
-          track: 'apply' | 'act' | 'watch' | 'contract' | 'event';
+          track: 'apply' | 'watch' | 'event' | 'trip';
         };
         Update: Partial<Database['public']['Tables']['track_settings']['Row']>;
       };

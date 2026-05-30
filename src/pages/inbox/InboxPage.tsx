@@ -125,10 +125,9 @@ export function InboxPage() {
   const oppsByTrack = useMemo(() => {
     const m: Record<TrackKey, OpportunityRow[]> = {
       apply: [],
-      act: [],
       watch: [],
-      contract: [],
       event: [],
+      trip: [],
     };
     for (const o of filteredOpps) m[o.track as TrackKey]?.push(o);
     // Apply sort to each track
@@ -990,7 +989,7 @@ function OpportunityCard({
   const stale = isStale(opp, staleThreshold);
   const pri = opp.priority === 'High' ? 'hi' : opp.priority === 'Medium' ? 'med' : 'low';
   const trackIcon: 'cal' | 'money' | 'doc' | 'clock' =
-    opp.track === 'event' ? 'cal' : opp.track === 'contract' ? 'money' : opp.track === 'apply' ? 'doc' : 'clock';
+    opp.track === 'event' ? 'cal' : opp.track === 'trip' ? 'cal' : opp.track === 'apply' ? 'doc' : 'clock';
   const fromDiscord = !!(opp.details as Record<string, unknown>)?.discord_message_id;
 
   // ─── Dense mode: single-line row ──────────────────────────────────
