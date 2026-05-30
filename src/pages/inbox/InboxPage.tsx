@@ -88,7 +88,10 @@ export function InboxPage() {
       await Promise.all([
         qc.invalidateQueries({ queryKey: ['opportunities'] }),
         qc.invalidateQueries({ queryKey: ['track-settings'] }),
-        qc.invalidateQueries({ queryKey: ['team-members'] }),
+        qc.invalidateQueries({ queryKey: ['team_members'] }),
+        // Newer tables — used by Calendar + Brief PDF + Summary table
+        qc.invalidateQueries({ queryKey: ['trip-stops'] }),
+        qc.invalidateQueries({ queryKey: ['opp-team-assignments'] }),
       ]);
     },
     { disabled: !isMobile },
@@ -197,7 +200,7 @@ export function InboxPage() {
         <div>
           <LNote>Opportunity Layer · Inbox</LNote>
           <div style={{ height: 10 }} />
-          <LH level={3} sub="หน้าหลัก · 5 tracks · drag การ์ดข้าม column เพื่อเปลี่ยน track">
+          <LH level={3} sub="หน้าหลัก · 4 tracks · drag การ์ดข้าม column เพื่อเปลี่ยน track">
             INBOX
           </LH>
         </div>
@@ -403,7 +406,7 @@ export function InboxPage() {
           onCardClick={(id) => navigate(`/inbox/${id}`)}
         />
       ) : tab === 'all' ? (
-        /* All-tracks kanban: 5-col grid on desktop, horizontal snap-scroll on mobile */
+        /* All-tracks kanban: 4-col grid on desktop, horizontal snap-scroll on mobile */
         <div
           className={isMobile ? 'l-scroll-x' : undefined}
           style={
@@ -419,7 +422,7 @@ export function InboxPage() {
                 }
               : {
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(5, minmax(0, 1fr))',
+                  gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
                   gap: 12,
                 }
           }

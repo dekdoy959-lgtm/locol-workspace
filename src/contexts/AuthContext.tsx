@@ -95,10 +95,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
+    // Wipe ALL local state BEFORE Supabase signs out — prevents PII (contacts,
+    // notes, calendar attendees, meeting titles) from being readable on the
+    // next user's session on a shared device.
     persistProviderToken(null);
     setProviderToken(null);
+    if (typeof window !== 'undefined') {
+      try {
+        // 1. Persisted React Query cache (24h offline cache)
+        window.localStorage.removeItem('LOCOL_QUERY_CACHE');
+        // 2. Any orphaned per-query persistence keys
+        for (const k of Object.keys(window.localStorage)) {
+          if (k.startsWith('LOCOL_QUERY_CACHE') || k.startsWith('locol_google_')) {
+            window.localStorage.removeItem(k);
+          }
+        }
+      } catch {
+        /* localStorage unavailable in private windows — fine */
+      }
+    }
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
+    // Force a full reload so any in-memory React Query cache is dropped too.
+    // (Just navigating to /login keeps the cache alive in the JS heap until
+    // a tab close.) This is the cleanest cross-device guarantee.
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
   };
 
   return (

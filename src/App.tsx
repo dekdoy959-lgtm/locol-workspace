@@ -50,11 +50,17 @@ const queryClient = new QueryClient({
   },
 });
 
+const PERSISTED_CACHE_KEY = 'LOCOL_QUERY_CACHE';
+
 const persister = createSyncStoragePersister({
   storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-  key: 'LOCOL_QUERY_CACHE',
+  key: PERSISTED_CACHE_KEY,
   throttleTime: 1000,
 });
+
+// Export so AuthContext.signOut can clear the persisted cache to prevent
+// PII (contacts/notes/calendar) from leaking to the next user on the same device.
+export { queryClient, PERSISTED_CACHE_KEY };
 
 export function App() {
   return (
@@ -68,7 +74,9 @@ export function App() {
           shouldDehydrateQuery: (query) => {
             const key = query.queryKey[0];
             // Skip Gmail/Calendar live queries — they hold OAuth tokens implicitly
-            if (key === 'gmail' || key === 'calendar-events') return false;
+            // and contain personal email/meeting data that doesn't belong on
+            // shared devices. (Was 'calendar-events' — wrong key; real key is 'calendar')
+            if (key === 'gmail' || key === 'calendar') return false;
             return query.state.status === 'success';
           },
         },

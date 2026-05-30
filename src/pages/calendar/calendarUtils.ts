@@ -3,7 +3,7 @@
  * into a unified CalendarItem feed for the /calendar page.
  */
 
-import type { OpportunityRow } from '../../types/opportunity';
+import type { OpportunityRow, TrackKey } from '../../types/opportunity';
 import type { ContactRow } from '../../types/contact';
 import type { Database } from '../../types/database';
 import type { CalendarEvent } from '../../lib/google-calendar';
@@ -46,7 +46,7 @@ export interface CalendarItem {
   /** Optional currency-aware cost */
   cost?: { amount: number; currency: string } | null;
   /** Track for color/icon — only for opp-based items */
-  track?: 'apply' | 'act' | 'watch' | 'contract' | 'event';
+  track?: TrackKey;
   /** Owner / responsible user ID */
   ownerId?: string | null;
   /** Status badge text e.g. 'Drafting', 'Registered' */

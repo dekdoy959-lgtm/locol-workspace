@@ -197,7 +197,7 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
 
       <LCard padding={28}>
         <FormSection title="1 · เลือก Track">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
             {TRACKS.map((t) => (
               <button
                 key={t.key}

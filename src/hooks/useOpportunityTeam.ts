@@ -104,10 +104,23 @@ export function useCreateAssignment() {
         .select('*')
         .single();
       if (error) throw error;
+      // Sync owner_id / reviewer_id onto opportunities row so legacy queries
+      // (and Briefing's "My" filter) match. Only writes if role is owner/reviewer
+      // AND the field is currently null (don't clobber existing single-value).
+      if (input.role === 'owner' || input.role === 'reviewer') {
+        const field = input.role === 'owner' ? 'owner_id' : 'reviewer_id';
+        await supabase
+          .from('opportunities')
+          .update({ [field]: input.team_member_id } as never)
+          .eq('id', input.opportunity_id)
+          .is(field, null);
+        qc.invalidateQueries({ queryKey: ['opportunities'] });
+      }
       return data as TeamAssignmentRow;
     },
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: [...KEY, vars.opportunity_id] });
+      qc.invalidateQueries({ queryKey: [...KEY, 'all'] });
     },
   });
 }

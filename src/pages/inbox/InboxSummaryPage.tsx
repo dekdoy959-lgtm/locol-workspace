@@ -225,7 +225,7 @@ export function InboxSummaryPage() {
         <LH level={5} accent={false} color={colors.green}>
           BY TRACK
         </LH>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12, marginTop: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginTop: 10 }}>
           {TRACKS.map((t) => {
             const count = opps.filter((o) => o.track === t.key).length;
             return (
