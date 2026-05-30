@@ -32,6 +32,7 @@ import {
 } from '../../lib/google-gmail';
 import { colors } from '../../styles/tokens';
 import { LIcon, LAvatar } from '../primitives';
+import { todayLocalISO } from '../../lib/dateUtil';
 import type { LinkedOpportunity } from '../../hooks/useLinkedOpportunities';
 import { findTrack, formatDueRelative } from '../../types/opportunity';
 import { useNavigate } from 'react-router-dom';
@@ -53,7 +54,7 @@ type FeedItem =
   | { kind: 'opportunity'; date: string; isFuture: boolean; opp: LinkedOpportunity };
 
 function todayISO(): string {
-  return new Date().toISOString().slice(0, 10);
+  return todayLocalISO();
 }
 
 function formatDate(iso: string): string {

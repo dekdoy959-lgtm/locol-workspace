@@ -1,4 +1,5 @@
 import type { Database } from './database';
+import { daysFromTodayISO } from '../lib/dateUtil';
 
 export type OpportunityRow = Database['public']['Tables']['opportunities']['Row'];
 export type OpportunityInsert = Database['public']['Tables']['opportunities']['Insert'];
@@ -110,9 +111,7 @@ export function isStale(opp: OpportunityRow, thresholdDays: number | null): bool
 
 export function daysUntilDue(dueDate: string | null): number | null {
   if (!dueDate) return null;
-  const due = new Date(dueDate).getTime();
-  const today = new Date(new Date().toISOString().slice(0, 10)).getTime();
-  return Math.round((due - today) / (1000 * 60 * 60 * 24));
+  return daysFromTodayISO(dueDate);
 }
 
 export function formatDueRelative(dueDate: string | null): string {

@@ -18,6 +18,7 @@ import {
 import { useTeamMembers, teamMemberInitials, teamMemberDisplayName } from '../../hooks/useTeamMembers';
 import { LCard, LBtn, LIcon, LInput, LTextarea, LSelect, LLabel, LAvatar } from '../primitives';
 import { colors } from '../../styles/tokens';
+import { todayLocalISO } from '../../lib/dateUtil';
 
 /** Google Maps deep link for a stop's place. Uses search query — falls back gracefully if location_name is empty. */
 function googleMapsUrl(stop: TripStopRow): string | null {
@@ -47,7 +48,7 @@ export function TripItinerary({ opportunityId }: TripItineraryProps) {
    */
   const handleAddFieldVisit = () => {
     // Default to today; user edits the date inline if needed
-    const today = new Date().toISOString().slice(0, 10);
+    const today = todayLocalISO();
     create.mutate(
       {
         opportunity_id: opportunityId,

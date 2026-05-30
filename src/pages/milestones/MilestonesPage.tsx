@@ -10,6 +10,7 @@ import {
 import { SIDE_LABEL, type MilestoneRow, type MilestoneSide } from '../../types/milestone';
 import { LCard, LH, LIcon, LNote, LAvatar, LChip } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
+import { todayLocalISO } from '../../lib/dateUtil';
 
 type SideFilter = 'all' | MilestoneSide;
 type StatusFilter = 'all' | 'open' | 'done';
@@ -56,7 +57,7 @@ export function MilestonesPage() {
     });
   }, [milestones, side, status]);
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayLocalISO();
 
   // Group by Tier (primary)
   const byTier = useMemo(() => {
@@ -382,7 +383,7 @@ function DateSection({
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {milestones.map((m) => (
-          <MilestoneItem key={m.id} milestone={m} contactById={contactById} navigate={navigate} today={new Date().toISOString().slice(0, 10)} />
+          <MilestoneItem key={m.id} milestone={m} contactById={contactById} navigate={navigate} today={todayLocalISO()} />
         ))}
       </div>
     </div>

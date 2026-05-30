@@ -1,6 +1,8 @@
 // Gmail API v1 — minimal client. Uses user's provider_token from Google OAuth.
 // https://developers.google.com/gmail/api/reference/rest/v1/users.messages
 
+import { toLocalISO } from './dateUtil';
+
 const BASE = 'https://gmail.googleapis.com/gmail/v1';
 
 export class GmailAuthError extends Error {
@@ -34,9 +36,9 @@ export function getHeader(message: GmailMessageMeta, name: string): string {
 }
 
 export function messageDate(message: GmailMessageMeta): string {
-  // Use internalDate (ms since epoch) and return ISO yyyy-mm-dd
+  // Use internalDate (ms since epoch) and return ISO yyyy-mm-dd in local time
   const d = new Date(Number(message.internalDate));
-  return d.toISOString().slice(0, 10);
+  return toLocalISO(d);
 }
 
 export function messageTime(message: GmailMessageMeta): string {

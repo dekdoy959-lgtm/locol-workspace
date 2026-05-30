@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { STOP_TYPE_META, type StopType } from '../../hooks/useTripStops';
 import { LCard, LBtn, LIcon, LInput, LTextarea, LSelect, LLabel } from '../primitives';
 import { colors } from '../../styles/tokens';
+import { todayLocalISO } from '../../lib/dateUtil';
 
 /** A stop row before persistence — no opportunity_id yet, has client-side temp_id */
 export interface LocalStop {
@@ -79,7 +80,7 @@ export function LocalItineraryEditor({ stops, onChange }: LocalItineraryEditorPr
   const [editingTempId, setEditingTempId] = useState<string | null>(null);
   const grouped = groupLocalByDay(stops);
 
-  const today = () => new Date().toISOString().slice(0, 10);
+  const today = () => todayLocalISO();
 
   const handleAdd = () => {
     const date = today();

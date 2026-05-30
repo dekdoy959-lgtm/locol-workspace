@@ -10,6 +10,7 @@ import { contactDisplayName, type ContactRow } from '../../types/contact';
 import { TRACKS, findTrack, type TrackKey, type OpportunityRow } from '../../types/opportunity';
 import { LCard, LH, LBtn, LIcon, LNote, LAvatar, LInput, LSelect } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
+import { todayLocalISO } from '../../lib/dateUtil';
 import type { OppPersonRow } from '../../types/opportunityPeople';
 
 interface SummaryRow {
@@ -253,7 +254,7 @@ export function InboxTablePage() {
 
   const handleExport = () => {
     const csv = rowsToCSV(filtered);
-    const filename = `locol-summary-${new Date().toISOString().slice(0, 10)}.csv`;
+    const filename = `locol-summary-${todayLocalISO()}.csv`;
     downloadCSV(csv, filename);
   };
 

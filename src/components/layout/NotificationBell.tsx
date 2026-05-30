@@ -9,6 +9,7 @@ import { isStale, findTrack, type TrackKey } from '../../types/opportunity';
 import { contactDisplayName, contactInitials, type ContactRow } from '../../types/contact';
 import { LAvatar, LIcon } from '../primitives';
 import { colors } from '../../styles/tokens';
+import { todayLocalISO, addDaysISO } from '../../lib/dateUtil';
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -50,8 +51,8 @@ export function NotificationBell() {
   }, [open]);
 
   const alerts: Alert[] = useMemo(() => {
-    const todayISO = new Date().toISOString().slice(0, 10);
-    const sevenDaysISO = new Date(Date.now() + 7 * MS_PER_DAY).toISOString().slice(0, 10);
+    const todayISO = todayLocalISO();
+    const sevenDaysISO = addDaysISO(todayISO, 7);
     const list: Alert[] = [];
 
     // Stale opps owned by me

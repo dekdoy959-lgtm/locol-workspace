@@ -17,6 +17,7 @@ import {
   messageDate,
   parseAddress,
 } from '../lib/google-gmail';
+import { todayLocalISO } from '../lib/dateUtil';
 
 export type InteractionRow = Database['public']['Tables']['interactions']['Row'];
 export type InteractionInsert = Database['public']['Tables']['interactions']['Insert'];
@@ -162,7 +163,7 @@ export function calendarToInteraction(
   contactId: string,
   loggedBy: string | null,
 ): InteractionInsert {
-  const date = eventDate(event) ?? new Date().toISOString().slice(0, 10);
+  const date = eventDate(event) ?? todayLocalISO();
   const time = eventTime(event);
   const meetLink = eventMeetLink(event);
   const title = event.summary ?? '(no title)';

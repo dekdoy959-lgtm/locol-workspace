@@ -91,31 +91,32 @@ async function getPrefs(userId) {
   return data ?? { enabled: true, stale_opportunities: true, cold_contacts: true, reminder_notes: true, birthdays: true };
 }
 
-async function alreadySentToday(alertType, entityId, email) {
-  const { data } = await supabase
+async function alreadySentToday(alertType, entityId, email, variant = null) {
+  let q = supabase
     .from('alert_log')
     .select('id')
     .eq('alert_type', alertType)
     .eq('entity_id', entityId)
     .eq('recipient_email', email)
-    .eq('sent_date', TODAY_ISO)
-    .maybeSingle();
+    .eq('sent_date', TODAY_ISO);
+  q = variant ? q.eq('variant', variant) : q.is('variant', null);
+  const { data } = await q.maybeSingle();
   return !!data;
 }
 
-async function sendAndLog({ alertType, entityTable, entityId, recipientUser, subject, html }) {
+async function sendAndLog({ alertType, entityTable, entityId, recipientUser, subject, html, variant = null }) {
   if (!recipientUser?.email) {
     sentCounts.skipped++;
     return;
   }
 
-  if (await alreadySentToday(alertType, entityId, recipientUser.email)) {
+  if (await alreadySentToday(alertType, entityId, recipientUser.email, variant)) {
     sentCounts.skipped++;
     return;
   }
 
   if (DRY_RUN) {
-    console.log(`  [DRY] → ${recipientUser.email}: ${subject}`);
+    console.log(`  [DRY] → ${recipientUser.email}: ${subject}${variant ? ` (variant=${variant})` : ''}`);
     sentCounts[alertType] = (sentCounts[alertType] ?? 0) + 1;
     return;
   }
@@ -129,14 +130,21 @@ async function sendAndLog({ alertType, entityTable, entityId, recipientUser, sub
     });
     if (result.error) throw result.error;
 
-    await supabase.from('alert_log').insert({
+    const { error: logErr } = await supabase.from('alert_log').insert({
       alert_type: alertType,
       entity_table: entityTable,
       entity_id: entityId,
       recipient_email: recipientUser.email,
       recipient_user_id: recipientUser.id,
       subject,
+      variant,
     });
+    if (logErr) {
+      // CRITICAL: if logging fails after sending, next run will re-send (spam)
+      console.error(`  ⚠ SENT but FAILED TO LOG (dup risk): ${recipientUser.email} · ${logErr.message}`);
+      sentCounts.errors++;
+      return;
+    }
 
     sentCounts[alertType] = (sentCounts[alertType] ?? 0) + 1;
     console.log(`  ✓ ${recipientUser.email.padEnd(35)} ${subject}`);
@@ -410,7 +418,8 @@ async function processEventReminders() {
       await sendAndLog({
         alertType: 'event_reminder',
         entityTable: 'opportunities',
-        entityId: `${opp.id}-t${daysUntil}`, // unique per opp+offset so T-7 + T-1 are separate
+        entityId: opp.id, // valid UUID
+        variant: `t${daysUntil}`, // distinguishes T-7 from T-1 via new column
         recipientUser: recipient,
         subject,
         html,

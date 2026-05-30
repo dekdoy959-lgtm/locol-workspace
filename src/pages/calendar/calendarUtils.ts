@@ -8,6 +8,7 @@ import type { ContactRow } from '../../types/contact';
 import type { Database } from '../../types/database';
 import type { CalendarEvent } from '../../lib/google-calendar';
 import { eventDate, eventTime } from '../../lib/google-calendar';
+import { todayLocalISO, toLocalISO, addDaysISO } from '../../lib/dateUtil';
 
 type MilestoneRow = Database['public']['Tables']['milestones']['Row'];
 type CommitmentRow = Database['public']['Tables']['commitments']['Row'];
@@ -68,7 +69,7 @@ export interface CalendarItem {
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 function todayISO(): string {
-  return new Date().toISOString().slice(0, 10);
+  return todayLocalISO();
 }
 
 function asString(v: unknown): string {
@@ -340,7 +341,7 @@ export function aggregateCalendarItems({
     const yearNow = todayDate.getFullYear();
     let next = new Date(yearNow, monthN, dayN);
     if (next < todayDate) next = new Date(yearNow + 1, monthN, dayN);
-    const dateISO = next.toISOString().slice(0, 10);
+    const dateISO = toLocalISO(next);
     const turning = birthYearNum != null ? next.getFullYear() - birthYearNum : null;
 
     items.push({
@@ -510,7 +511,7 @@ export function contractsRenewing(items: CalendarItem[]): CalendarItem[] {
 
 export function thisWeekItems(items: CalendarItem[]): CalendarItem[] {
   const today = todayISO();
-  const sevenDays = new Date(Date.now() + 7 * MS_PER_DAY).toISOString().slice(0, 10);
+  const sevenDays = addDaysISO(today, 7);
   return items.filter((i) => i.date >= today && i.date <= sevenDays);
 }
 

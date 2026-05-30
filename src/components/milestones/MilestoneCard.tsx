@@ -3,6 +3,7 @@ import { useUpdateMilestone, useDeleteMilestone } from '../../hooks/useMilestone
 import type { MilestoneRow, MilestoneSide } from '../../types/milestone';
 import { LInput, LTextarea, LBtn, LIcon } from '../primitives';
 import { colors } from '../../styles/tokens';
+import { todayLocalISO } from '../../lib/dateUtil';
 
 interface MilestoneCardProps {
   milestone: MilestoneRow;
@@ -43,7 +44,7 @@ export function MilestoneCard({ milestone }: MilestoneCardProps) {
       id: milestone.id,
       patch: {
         achieved: !milestone.achieved,
-        achieved_at: milestone.achieved ? null : new Date().toISOString().slice(0, 10),
+        achieved_at: milestone.achieved ? null : todayLocalISO(),
       },
     });
   };

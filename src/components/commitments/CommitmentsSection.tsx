@@ -8,13 +8,14 @@ import {
 } from '../../hooks/useCommitments';
 import { LBtn, LInput, LLabel, LIcon } from '../primitives';
 import { colors } from '../../styles/tokens';
+import { todayLocalISO } from '../../lib/dateUtil';
 
 interface Props {
   contactId: string;
 }
 
 function todayISO(): string {
-  return new Date().toISOString().slice(0, 10);
+  return todayLocalISO();
 }
 
 export function CommitmentsSection({ contactId }: Props) {

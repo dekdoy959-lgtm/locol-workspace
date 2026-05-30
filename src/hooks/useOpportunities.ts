@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import type { OpportunityInsert, OpportunityRow, OpportunityUpdate, TrackKey } from '../types/opportunity';
+import { addDaysISO } from '../lib/dateUtil';
 
 const OPP_KEY = ['opportunities'] as const;
 
@@ -50,9 +51,7 @@ export function useDuplicateOpportunity() {
 
       const shiftDate = (iso: string | null): string | null => {
         if (!iso || shiftDays === 0) return iso;
-        const d = new Date(iso);
-        d.setDate(d.getDate() + shiftDays);
-        return d.toISOString().slice(0, 10);
+        return addDaysISO(iso, shiftDays);
       };
 
       // Shift dates in details (event_date_*, registration_deadline, trip_date_*, etc.)

@@ -177,7 +177,9 @@ function InboxCard({
           if (error) throw error;
         }
         if (item.created_contact_id) {
-          const { error } = await db.from('contacts').update({ relationship_status: 'inactive' }).eq('id', item.created_contact_id);
+          // 'inactive' is not a valid relationship_status enum value
+          // (enum: known | prospect | cold | archived) — use 'archived'
+          const { error } = await db.from('contacts').update({ relationship_status: 'archived' }).eq('id', item.created_contact_id);
           if (error) throw error;
         }
         const { error } = await db.from('discord_inbox').update({ processing_status: 'cancelled' }).eq('id', item.id);
@@ -187,6 +189,11 @@ function InboxCard({
     onSuccess: () => {
       setShowCancelConfirm(false);
       invalidate();
+    },
+    onError: (e) => {
+      // Surface the error so a transaction failure doesn't silently leave state divergent
+      const msg = e instanceof Error ? e.message : 'Unknown error';
+      window.alert(`Cancel failed: ${msg}`);
     },
   });
 

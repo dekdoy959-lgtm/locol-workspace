@@ -9,13 +9,14 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import { LBtn, LInput, LTextarea, LSelect, LLabel, LIcon } from '../primitives';
 import { colors } from '../../styles/tokens';
+import { todayLocalISO } from '../../lib/dateUtil';
 
 interface Props {
   contactId: string;
 }
 
 function todayISO(): string {
-  return new Date().toISOString().slice(0, 10);
+  return todayLocalISO();
 }
 
 export function InteractionsSection({ contactId }: Props) {

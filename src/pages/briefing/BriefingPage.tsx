@@ -20,6 +20,7 @@ import {
 } from '../../types/contact';
 import { LCard, LH, LBtn, LIcon, LNote, LAvatar, LPri } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
+import { todayLocalISO, addDaysISO } from '../../lib/dateUtil';
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -41,8 +42,8 @@ export function BriefingPage() {
   const contactById = useMemo(() => Object.fromEntries(contacts.map((c) => [c.id, c])), [contacts]);
 
   const today = new Date();
-  const todayISO = today.toISOString().slice(0, 10);
-  const sevenDays = new Date(today.getTime() + 7 * MS_PER_DAY).toISOString().slice(0, 10);
+  const todayISO = todayLocalISO();
+  const sevenDays = addDaysISO(todayISO, 7);
 
   const isMine = viewMode === 'me' && !!user?.id;
 

@@ -13,6 +13,7 @@ import {
   type CalendarEvent,
 } from '../lib/google-calendar';
 import type { Database } from '../types/database';
+import { todayLocalISO } from '../lib/dateUtil';
 
 type CommitmentRow = Database['public']['Tables']['commitments']['Row'];
 type NoteRow = Database['public']['Tables']['notes']['Row'];
@@ -38,7 +39,7 @@ export function useAllOpenCommitments() {
 
 /** All future-dated reminder notes (is_future=true, date >= today). */
 export function useAllFutureNotes() {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayLocalISO();
   return useQuery({
     queryKey: ['notes', 'all-future', today],
     queryFn: async (): Promise<NoteRow[]> => {

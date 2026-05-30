@@ -31,22 +31,44 @@ function escapeText(s: string): string {
     .replace(/\\/g, '\\\\')
     .replace(/;/g, '\\;')
     .replace(/,/g, '\\,')
-    .replace(/\n/g, '\\n');
+    .replace(/\r\n/g, '\\n')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\n');
 }
 
-/** Fold long lines per RFC 5545 (75 octets max, continuation = leading space) */
+/** Add N days to a YYYY-MM-DD date (returns YYYY-MM-DD) */
+function addDays(iso: string, days: number): string {
+  const [y, m, d] = iso.split('-').map(Number);
+  // Local time, no UTC drift
+  const dt = new Date(y, m - 1, d);
+  dt.setDate(dt.getDate() + days);
+  return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}`;
+}
+
+/**
+ * Fold long lines per RFC 5545 (75 octets max, continuation = leading space).
+ * IMPORTANT: must split on octet boundaries, not character boundaries —
+ * splitting mid-UTF-8-codepoint produces invalid bytes that calendars reject.
+ */
 function foldLine(line: string): string {
-  if (line.length <= 75) return line;
+  const encoder = new TextEncoder();
+  const bytes = encoder.encode(line);
+  if (bytes.length <= 75) return line;
+
+  const decoder = new TextDecoder();
   const out: string[] = [];
   let i = 0;
-  while (i < line.length) {
-    if (i === 0) {
-      out.push(line.slice(i, i + 75));
-      i += 75;
-    } else {
-      out.push(' ' + line.slice(i, i + 74));
-      i += 74;
-    }
+  let isFirst = true;
+
+  while (i < bytes.length) {
+    const limit = isFirst ? 75 : 74;
+    let end = Math.min(i + limit, bytes.length);
+    // Walk back to a valid UTF-8 boundary (don't split inside a codepoint)
+    while (end < bytes.length && (bytes[end] & 0xc0) === 0x80) end--;
+    const segment = decoder.decode(bytes.slice(i, end));
+    out.push(isFirst ? segment : ' ' + segment);
+    i = end;
+    isFirst = false;
   }
   return out.join('\r\n');
 }
@@ -59,10 +81,15 @@ function makeEvent(item: CalendarItem, baseUrl: string): string {
   const uid = `${item.id}@locol-workspace`;
   const dtstamp = nowStamp();
   const dtstart = toICalDate(item.date);
-  const dtend = toICalDate(item.endDate ?? item.date);
+  // RFC 5545: DTEND in VALUE=DATE is EXCLUSIVE — we want the event to cover
+  // through the endDate inclusive, so add +1 day. Single-day event:
+  // DTSTART=20260615, DTEND=20260616.
+  const endIso = item.endDate ?? item.date;
+  const dtend = toICalDate(addDays(endIso, 1));
 
   const summary = escapeText(item.title);
   const location = item.location ? `LOCATION:${escapeText(item.location)}` : null;
+  // Build description as plain text WITH real newlines · escapeText converts to \n
   const description = escapeText(
     [
       item.kind && `Type: ${item.kind}`,
@@ -74,7 +101,7 @@ function makeEvent(item: CalendarItem, baseUrl: string): string {
         : `Link: ${baseUrl}${item.href}`,
     ]
       .filter(Boolean)
-      .join('\\n'),
+      .join('\n'),
   );
 
   // Use DATE (all-day) format unless we have a real time on a Google meeting

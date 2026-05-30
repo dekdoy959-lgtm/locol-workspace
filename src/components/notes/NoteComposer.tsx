@@ -3,6 +3,7 @@ import { LBtn, LInput, LTextarea, LIcon } from '../primitives';
 import { useCreateNote } from '../../hooks/useNotes';
 import type { NoteScope } from '../../types/note';
 import { colors } from '../../styles/tokens';
+import { todayLocalISO } from '../../lib/dateUtil';
 
 interface NoteComposerProps {
   scope: NoteScope;
@@ -11,8 +12,7 @@ interface NoteComposerProps {
 }
 
 function todayISO(): string {
-  const d = new Date();
-  return d.toISOString().slice(0, 10);
+  return todayLocalISO();
 }
 
 export function NoteComposer({ scope, targetId, currentUserId }: NoteComposerProps) {

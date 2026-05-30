@@ -29,6 +29,7 @@ import {
   type CalendarItemKind,
 } from './calendarUtils';
 import { downloadICal } from './icalExport';
+import { todayLocalISO, toLocalISO } from '../../lib/dateUtil';
 
 type ViewMode = 'month' | 'agenda' | 'travel';
 type Scope = 'all' | 'mine';
@@ -133,7 +134,7 @@ export function CalendarPage() {
   const monthCost = useMemo(() => formatCostMap(totalCost(monthItems.filter((i) => i.kind === 'event'))), [monthItems]);
 
   const handleExport = () => {
-    downloadICal(items.filter((i) => !i.href.startsWith('#')), `locol-calendar-${new Date().toISOString().slice(0, 10)}.ics`);
+    downloadICal(items.filter((i) => !i.href.startsWith('#')), `locol-calendar-${todayLocalISO()}.ics`);
   };
 
   return (
@@ -484,7 +485,7 @@ function MonthGrid({
   onDateClick: (dateISO: string) => void;
 }) {
   const { year, month } = cursorMonth;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayLocalISO();
 
   // Build cells for the month grid (always 6 rows = 42 cells)
   const firstDay = new Date(year, month, 1);
@@ -494,7 +495,7 @@ function MonthGrid({
     const d = new Date(year, month, i - startOffset + 1);
     cells.push({
       date: d,
-      iso: d.toISOString().slice(0, 10),
+      iso: toLocalISO(d),
       inMonth: d.getMonth() === month,
     });
   }
@@ -673,7 +674,7 @@ function AgendaView({
   conflicts: Set<string>;
   onClickItem: (item: CalendarItem) => void;
 }) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayLocalISO();
   const upcoming = items.filter((i) => i.date >= today);
 
   // Group by relative bucket
