@@ -26,6 +26,7 @@ import { OpportunityFormPage } from './pages/inbox/OpportunityFormPage';
 import { MilestonesPage } from './pages/milestones/MilestonesPage';
 import { BriefingPage } from './pages/briefing/BriefingPage';
 import { SettingsPage } from './pages/settings/SettingsPage';
+import { TeamPage } from './pages/team/TeamPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { DiscordInboxPage } from './pages/discord-inbox/DiscordInboxPage';
 import { CalendarPage } from './pages/calendar/CalendarPage';
@@ -111,6 +112,7 @@ export function App() {
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="briefing" element={<BriefingPage />} />
               <Route path="settings" element={<SettingsPage />} />
+              <Route path="team" element={<TeamPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

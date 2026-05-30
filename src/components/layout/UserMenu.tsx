@@ -124,6 +124,7 @@ export function UserMenu({ initials }: UserMenuProps) {
           </div>
 
           {/* Menu items */}
+          <MenuItem icon="users" label="ทีม · Team management" onClick={() => go('/team')} />
           <MenuItem icon="settings" label="ตั้งค่า · Settings" onClick={() => go('/settings')} />
           <MenuItem
             icon="user"
@@ -151,7 +152,7 @@ function MenuItem({
   onClick,
   danger = false,
 }: {
-  icon: 'settings' | 'user' | 'close';
+  icon: 'settings' | 'user' | 'users' | 'close';
   label: string;
   sub?: string;
   onClick: () => void;

@@ -25,6 +25,7 @@ const MORE_ITEMS: NavTab[] = [
   { to: '/organizations', label: 'Organizations', icon: 'building' },
   { to: '/groups', label: 'Groups', icon: 'folder' },
   { to: '/relationships', label: 'Network', icon: 'graph' },
+  { to: '/team', label: 'Team', icon: 'users' },
   { to: '/settings', label: 'Settings', icon: 'settings' },
 ];
 

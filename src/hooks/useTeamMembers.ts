@@ -1,8 +1,28 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../types/database';
 
 export type TeamMemberRow = Database['public']['Tables']['team_members']['Row'];
+export type TeamMemberUpdate = Database['public']['Tables']['team_members']['Update'];
+
+export function useUpdateTeamMember() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, patch }: { id: string; patch: TeamMemberUpdate }) => {
+      const { data, error } = await supabase
+        .from('team_members')
+        .update(patch as never)
+        .eq('id', id)
+        .select('*')
+        .single();
+      if (error) throw error;
+      return data as TeamMemberRow;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['team_members'] });
+    },
+  });
+}
 
 export function useTeamMembers() {
   return useQuery({
