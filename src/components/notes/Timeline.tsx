@@ -7,8 +7,10 @@ import {
   usePromoteGmail,
   usePromoteCalendar,
   usePromoteBulk,
+  useContactInteractions,
+  type InteractionRow,
 } from '../../hooks/useInteractions';
-import { useTeamMembers } from '../../hooks/useTeamMembers';
+import { useTeamMembers, teamMemberInitials, teamMemberDisplayName } from '../../hooks/useTeamMembers';
 import { useAuth } from '../../contexts/AuthContext';
 import type { NoteRow, NoteScope } from '../../types/note';
 import {
@@ -29,7 +31,7 @@ import {
   parseAddress,
 } from '../../lib/google-gmail';
 import { colors } from '../../styles/tokens';
-import { LIcon } from '../primitives';
+import { LIcon, LAvatar } from '../primitives';
 import type { LinkedOpportunity } from '../../hooks/useLinkedOpportunities';
 import { findTrack, formatDueRelative } from '../../types/opportunity';
 import { useNavigate } from 'react-router-dom';
@@ -47,6 +49,7 @@ type FeedItem =
   | { kind: 'note'; date: string; isFuture: boolean; note: NoteRow }
   | { kind: 'meeting'; date: string; isFuture: boolean; event: CalendarEvent }
   | { kind: 'email'; date: string; isFuture: boolean; message: GmailMessageMeta }
+  | { kind: 'interaction'; date: string; isFuture: boolean; interaction: InteractionRow }
   | { kind: 'opportunity'; date: string; isFuture: boolean; opp: LinkedOpportunity };
 
 function todayISO(): string {
@@ -89,6 +92,7 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
   const isContactScope = scope === 'contact';
   const contactId = isContactScope ? targetId : undefined;
   const { sharedKeys, sharedByMap } = useSharedExternalIds(contactId);
+  const { data: interactions = [] } = useContactInteractions(contactId);
   const promoteGmail = usePromoteGmail();
   const promoteCalendar = usePromoteCalendar();
   const promoteBulk = usePromoteBulk();
@@ -149,6 +153,16 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
       items.push({ kind: 'email', date: d, isFuture: false, message });
     }
 
+    // Interactions logged manually (or promoted from gmail/calendar)
+    for (const i of interactions) {
+      items.push({
+        kind: 'interaction',
+        date: i.date,
+        isFuture: i.date > today,
+        interaction: i,
+      });
+    }
+
     for (const opp of linkedOpportunities) {
       // Use due_date if exists (it's the event-relevant date), else created_at
       const rawDate = opp.due_date ?? opp.created_at.slice(0, 10);
@@ -161,7 +175,7 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
     }
 
     return items.sort((a, b) => b.date.localeCompare(a.date));
-  }, [notes, events, messages, linkedOpportunities, today]);
+  }, [notes, events, messages, interactions, linkedOpportunities, today]);
 
   const todayIndex = useMemo(() => {
     for (let i = 0; i < feed.length; i++) {
@@ -371,6 +385,7 @@ function feedKey(item: FeedItem): string {
   if (item.kind === 'note') return `note-${item.note.id}`;
   if (item.kind === 'meeting') return `evt-${item.event.id}`;
   if (item.kind === 'email') return `email-${item.message.id}`;
+  if (item.kind === 'interaction') return `int-${item.interaction.id}`;
   return `opp-${item.opp.id}-${item.opp.link_role}`;
 }
 
@@ -449,7 +464,19 @@ function FeedRow({
   }
   if (item.kind === 'opportunity')
     return <OpportunityRow opp={item.opp} isFuture={item.isFuture} onOpen={() => onOpenOpportunity(item.opp.id)} />;
-  return <NoteRowItem note={item.note} isFuture={item.isFuture} onDelete={() => onDeleteNote(item.note.id)} />;
+  if (item.kind === 'interaction') {
+    const member = item.interaction.logged_by ? teamById[item.interaction.logged_by] : null;
+    return <InteractionRowView interaction={item.interaction} loggedBy={member ?? null} />;
+  }
+  const noteAuthor = item.note.created_by ? teamById[item.note.created_by] : null;
+  return (
+    <NoteRowItem
+      note={item.note}
+      isFuture={item.isFuture}
+      author={noteAuthor ?? null}
+      onDelete={() => onDeleteNote(item.note.id)}
+    />
+  );
 }
 
 // Bulk-share confirmation modal
@@ -575,10 +602,12 @@ function ExternalAuthNotice() {
 function NoteRowItem({
   note,
   isFuture,
+  author,
   onDelete,
 }: {
   note: NoteRow;
   isFuture: boolean;
+  author: { id: string; email: string; full_name: string | null } | null;
   onDelete: () => void;
 }) {
   const isFutureWithReminder = isFuture && note.is_future;
@@ -602,6 +631,21 @@ function NoteRowItem({
           <KindChip color={colors.green} bg="#19250a" border={colors.greenDk}>
             NOTE
           </KindChip>
+          {author && (
+            <span
+              title={`เขียนโดย ${teamMemberDisplayName(author)}`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 5,
+                fontSize: 10.5,
+                color: colors.dimSoft,
+              }}
+            >
+              <LAvatar initials={teamMemberInitials(author)} size={16} />
+              {author.full_name?.split(' ')[0] ?? author.email.split('@')[0]}
+            </span>
+          )}
           {isFuture && (
             <KindChip color="#E8B923" bg="#241a06" border="#5a3f10">
               SCHEDULED
@@ -1055,6 +1099,113 @@ function KindChip({
     >
       {children}
     </span>
+  );
+}
+
+function InteractionRowView({
+  interaction,
+  loggedBy,
+}: {
+  interaction: InteractionRow;
+  loggedBy: { id: string; email: string; full_name: string | null } | null;
+}) {
+  // Choose visual based on source/channel
+  const sourceMeta = (() => {
+    if (interaction.source === 'gmail') {
+      return { accent: '#9aa56a', bg: '#1d1f12', border: '#3a3f1f', icon: '✉', label: 'EMAIL (TEAM)' };
+    }
+    if (interaction.source === 'calendar') {
+      return { accent: '#d96a66', bg: '#241010', border: '#5a1a18', icon: '📅', label: 'MEETING (TEAM)' };
+    }
+    // Manual entries
+    if (interaction.channel === 'Email') {
+      return { accent: '#9aa56a', bg: '#1d1f12', border: '#3a3f1f', icon: '✉', label: 'EMAIL' };
+    }
+    if (interaction.channel === 'Phone') {
+      return { accent: '#E8B923', bg: '#241a06', border: '#5a3f10', icon: '📞', label: 'PHONE' };
+    }
+    if (interaction.channel === 'Line') {
+      return { accent: '#99CE24', bg: '#19250a', border: '#6e9618', icon: '💬', label: 'LINE' };
+    }
+    if (interaction.channel === 'In Person') {
+      return { accent: '#d99a66', bg: '#2a1d10', border: '#6a3f1c', icon: '🤝', label: 'IN PERSON' };
+    }
+    if (interaction.channel === 'Video Call') {
+      return { accent: '#d96a66', bg: '#241010', border: '#5a1a18', icon: '🎥', label: 'VIDEO CALL' };
+    }
+    return { accent: colors.green, bg: '#19250a', border: colors.greenDk, icon: '·', label: 'INTERACTION' };
+  })();
+
+  return (
+    <div style={{ display: 'flex', gap: 12 }}>
+      <DateColumn date={interaction.date} />
+      <Rail isFuture={false} accent={sourceMeta.accent} />
+      <div
+        style={{
+          flex: 1,
+          minWidth: 0,
+          background: sourceMeta.bg,
+          border: `1px solid ${sourceMeta.border}`,
+          borderRadius: '12px 0 12px 0',
+          padding: '10px 14px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
+          <KindChip color={sourceMeta.accent} bg={sourceMeta.bg} border={sourceMeta.border}>
+            {sourceMeta.icon} {sourceMeta.label}
+            {interaction.direction === 'outbound' && ' · OUT'}
+            {interaction.direction === 'inbound' && ' · IN'}
+          </KindChip>
+          {loggedBy && (
+            <span
+              title={`Logged by ${teamMemberDisplayName(loggedBy)}`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 5,
+                fontSize: 10.5,
+                color: colors.dimSoft,
+              }}
+            >
+              <LAvatar initials={teamMemberInitials(loggedBy)} size={16} />
+              {loggedBy.full_name?.split(' ')[0] ?? loggedBy.email.split('@')[0]}
+            </span>
+          )}
+          <span style={{ flex: 1 }} />
+          {interaction.external_url && (
+            <a
+              href={interaction.external_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: 10.5,
+                color: colors.dim,
+                letterSpacing: 0.4,
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+              }}
+              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = colors.green)}
+              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = colors.dim)}
+            >
+              OPEN ↗
+            </a>
+          )}
+        </div>
+        {interaction.subject && (
+          <div style={{ fontSize: 13, color: colors.text, fontWeight: 500, marginBottom: 4 }}>
+            {interaction.subject}
+          </div>
+        )}
+        <div style={{ fontSize: 12.5, color: colors.surface, lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+          {interaction.summary}
+        </div>
+        {interaction.outcome && (
+          <div style={{ fontSize: 11.5, color: colors.dimSoft, marginTop: 6, fontStyle: 'italic' }}>
+            → {interaction.outcome}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
