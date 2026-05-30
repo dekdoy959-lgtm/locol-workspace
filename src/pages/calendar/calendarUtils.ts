@@ -12,6 +12,7 @@ import { eventDate, eventTime } from '../../lib/google-calendar';
 type MilestoneRow = Database['public']['Tables']['milestones']['Row'];
 type CommitmentRow = Database['public']['Tables']['commitments']['Row'];
 type NoteRow = Database['public']['Tables']['notes']['Row'];
+type TripStopRow = Database['public']['Tables']['trip_stops']['Row'];
 
 export type CalendarItemKind =
   | 'event'                  // event_date_start — actual event day
@@ -54,6 +55,7 @@ export interface CalendarItem {
   /** Source raw object — for side-panel deep dive */
   source:
     | { kind: 'opportunity'; opp: OpportunityRow }
+    | { kind: 'trip_stop'; stop: TripStopRow; opp: OpportunityRow }
     | { kind: 'milestone'; milestone: MilestoneRow; contact: ContactRow | undefined }
     | { kind: 'commitment'; commitment: CommitmentRow; contact: ContactRow | undefined }
     | { kind: 'note'; note: NoteRow }
@@ -89,6 +91,8 @@ interface AggregateInput {
   notes: NoteRow[];
   contacts: ContactRow[];
   calendarEvents: CalendarEvent[];
+  /** All trip_stops across all trip opps · we group/lookup by opportunity_id */
+  tripStops?: TripStopRow[];
   myUserId: string | null;
 }
 
@@ -99,11 +103,20 @@ export function aggregateCalendarItems({
   notes,
   contacts,
   calendarEvents,
+  tripStops = [],
   myUserId,
 }: AggregateInput): CalendarItem[] {
   const items: CalendarItem[] = [];
   const contactById = new Map(contacts.map((c) => [c.id, c]));
   const today = todayISO();
+
+  // Group trip stops by opportunity_id for fast lookup
+  const stopsByOppId = new Map<string, TripStopRow[]>();
+  for (const s of tripStops) {
+    const arr = stopsByOppId.get(s.opportunity_id) ?? [];
+    arr.push(s);
+    stopsByOppId.set(s.opportunity_id, arr);
+  }
 
   // ─── Opportunities — multiple date fields per row ───────────────
   for (const opp of opportunities) {
@@ -210,27 +223,52 @@ export function aggregateCalendarItems({
 
     // Trip-specific (on-field/farm visits)
     if (opp.track === 'trip') {
-      const tripStart = asString(details.trip_date_start);
-      const tripEnd = asString(details.trip_date_end);
-      const farmName = asString(details.farm_name);
-      const province = asString(details.province);
-      const locationName = asString(details.location_name);
-      const placeBits = [farmName, locationName, province].filter(Boolean).join(' · ');
-      if (tripStart) {
-        items.push({
-          id: `trip-${opp.id}`,
-          kind: 'event', // surface trips in TRIPS & EVENTS split
-          date: tripStart,
-          endDate: tripEnd || undefined,
-          title: `✈ ${opp.title}`,
-          location: placeBits || null,
-          track: baseTrack,
-          ownerId,
-          status: opp.stage,
-          href,
-          source: { kind: 'opportunity', opp },
-          isMine,
-        });
+      const myStops = stopsByOppId.get(opp.id) ?? [];
+
+      if (myStops.length > 0) {
+        // Detailed itinerary — surface each stop as separate calendar item
+        for (const stop of myStops) {
+          const placeBits = [stop.name, stop.province, stop.location_name].filter(Boolean).join(' · ');
+          const stopTime = [stop.start_time, stop.end_time].filter(Boolean).join('–');
+          items.push({
+            id: `tripstop-${stop.id}`,
+            kind: 'event', // surface trips in TRIPS & EVENTS split
+            date: stop.day_date,
+            time: stopTime || undefined,
+            title: `✈ ${opp.title} · ${stop.name ?? '(จุดไม่ระบุชื่อ)'}`,
+            location: placeBits || null,
+            track: baseTrack,
+            ownerId,
+            status: opp.stage,
+            href,
+            source: { kind: 'trip_stop', stop, opp },
+            isMine,
+          });
+        }
+      } else {
+        // Fallback for trips with no itinerary entered yet
+        const tripStart = asString(details.trip_date_start);
+        const tripEnd = asString(details.trip_date_end);
+        const farmName = asString(details.farm_name);
+        const province = asString(details.province);
+        const locationName = asString(details.location_name);
+        const placeBits = [farmName, locationName, province].filter(Boolean).join(' · ');
+        if (tripStart) {
+          items.push({
+            id: `trip-${opp.id}`,
+            kind: 'event',
+            date: tripStart,
+            endDate: tripEnd || undefined,
+            title: `✈ ${opp.title}`,
+            location: placeBits || null,
+            track: baseTrack,
+            ownerId,
+            status: opp.stage,
+            href,
+            source: { kind: 'opportunity', opp },
+            isMine,
+          });
+        }
       }
     }
   }

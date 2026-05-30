@@ -121,6 +121,33 @@ export type Database = {
         };
         Update: Partial<Database['public']['Tables']['opportunities']['Row']>;
       };
+      trip_stops: {
+        Row: {
+          id: string;
+          opportunity_id: string;
+          day_date: string;
+          sort_order: number;
+          start_time: string | null;
+          end_time: string | null;
+          stop_type: 'farm' | 'place' | 'workshop' | 'meeting' | 'lodging' | 'transport' | 'other';
+          name: string | null;
+          province: string | null;
+          location_name: string | null;
+          owner_name: string | null;
+          owner_phone: string | null;
+          purpose: string | null;
+          agenda: string | null;
+          emphasis: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database['public']['Tables']['trip_stops']['Row']> & {
+          opportunity_id: string;
+          day_date: string;
+        };
+        Update: Partial<Database['public']['Tables']['trip_stops']['Row']>;
+      };
       interactions: {
         Row: {
           id: string;

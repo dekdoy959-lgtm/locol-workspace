@@ -4,6 +4,7 @@ import { useOpportunities } from '../../hooks/useOpportunities';
 import { useContacts } from '../../hooks/useContacts';
 import { useAllMilestones } from '../../hooks/useAllMilestones';
 import { useAllOpenCommitments, useAllFutureNotes, useWideCalendarEvents } from '../../hooks/useCalendarData';
+import { useAllTripStops } from '../../hooks/useTripStops';
 import { useAuth } from '../../contexts/AuthContext';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { LCard, LH, LBtn, LIcon, LNote } from '../../components/primitives';
@@ -82,6 +83,7 @@ export function CalendarPage() {
   const { data: commitments = [] } = useAllOpenCommitments();
   const { data: notes = [] } = useAllFutureNotes();
   const { data: gcalEvents = [], error: gcalError } = useWideCalendarEvents();
+  const { data: tripStops = [] } = useAllTripStops();
 
   const [view, setView] = useState<ViewMode>('month');
   const [scope, setScope] = useState<Scope>('all');
@@ -103,9 +105,10 @@ export function CalendarPage() {
         notes,
         contacts,
         calendarEvents: gcalEvents,
+        tripStops,
         myUserId: user?.id ?? null,
       }),
-    [opportunities, milestones, commitments, notes, contacts, gcalEvents, user],
+    [opportunities, milestones, commitments, notes, contacts, gcalEvents, tripStops, user],
   );
 
   // Apply scope + split + kind filter (in that order)
