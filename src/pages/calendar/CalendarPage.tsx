@@ -31,6 +31,7 @@ import { downloadICal } from './icalExport';
 
 type ViewMode = 'month' | 'agenda' | 'travel';
 type Scope = 'all' | 'mine';
+type SplitMode = 'all' | 'deadlines' | 'trips';
 
 const KIND_FILTERS: { value: 'all' | CalendarItemKind | 'events' | 'deadlines'; label: string }[] = [
   { value: 'all',         label: 'ทั้งหมด' },
@@ -50,6 +51,23 @@ function matchKindFilter(item: CalendarItem, filter: typeof KIND_FILTERS[number]
   return item.kind === filter;
 }
 
+const DEADLINE_KINDS: CalendarItemKind[] = [
+  'apply_deadline',
+  'registration_deadline',
+  'contract_renewal',
+  'due',
+  'commitment',
+  'decision_date',
+  'milestone',
+];
+const TRIP_EVENT_KINDS: CalendarItemKind[] = ['event', 'meeting'];
+
+function matchSplit(item: CalendarItem, split: SplitMode): boolean {
+  if (split === 'all') return true;
+  if (split === 'deadlines') return DEADLINE_KINDS.includes(item.kind);
+  return TRIP_EVENT_KINDS.includes(item.kind); // trips
+}
+
 export function CalendarPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -64,6 +82,7 @@ export function CalendarPage() {
 
   const [view, setView] = useState<ViewMode>('month');
   const [scope, setScope] = useState<Scope>('all');
+  const [splitMode, setSplitMode] = useState<SplitMode>('all');
   const [kindFilter, setKindFilter] = useState<typeof KIND_FILTERS[number]['value']>('all');
   const [cursorMonth, setCursorMonth] = useState(() => {
     const d = new Date();
@@ -86,14 +105,15 @@ export function CalendarPage() {
     [opportunities, milestones, commitments, notes, contacts, gcalEvents, user],
   );
 
-  // Apply scope + kind filter
+  // Apply scope + split + kind filter (in that order)
   const items = useMemo(
     () =>
       allItems.filter((i) => {
         if (scope === 'mine' && !i.isMine) return false;
+        if (!matchSplit(i, splitMode)) return false;
         return matchKindFilter(i, kindFilter);
       }),
-    [allItems, scope, kindFilter],
+    [allItems, scope, splitMode, kindFilter],
   );
 
   // Smart sections
@@ -129,6 +149,45 @@ export function CalendarPage() {
             </LBtn>
           </div>
         </div>
+      </div>
+
+      {/* Prominent split toggle — choose context lens */}
+      <div
+        style={{
+          display: 'flex',
+          gap: 0,
+          marginBottom: 18,
+          background: colors.bgSoft,
+          border: `1px solid ${colors.lineHi}`,
+          borderRadius: '12px 0 12px 0',
+          padding: 4,
+          overflow: 'hidden',
+        }}
+      >
+        <SplitBtn
+          icon="🌐"
+          label="ALL"
+          sub="ทุกอย่างใน workspace"
+          active={splitMode === 'all'}
+          onClick={() => setSplitMode('all')}
+          accent={colors.green}
+        />
+        <SplitBtn
+          icon="⏰"
+          label="DEADLINES"
+          sub="งานต้องเสร็จให้ทัน"
+          active={splitMode === 'deadlines'}
+          onClick={() => setSplitMode('deadlines')}
+          accent="#E8B923"
+        />
+        <SplitBtn
+          icon="📅"
+          label="TRIPS & EVENTS"
+          sub="งานที่ team มีออกไป"
+          active={splitMode === 'trips'}
+          onClick={() => setSplitMode('trips')}
+          accent="#d96a66"
+        />
       </div>
 
       {/* Stats banner */}
@@ -1004,6 +1063,81 @@ function DayPanel({
 }
 
 // ─── Toolbar bits ───────────────────────────────────────────────────
+function SplitBtn({
+  icon,
+  label,
+  sub,
+  active,
+  onClick,
+  accent,
+}: {
+  icon: string;
+  label: string;
+  sub: string;
+  active: boolean;
+  onClick: () => void;
+  accent: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        flex: 1,
+        padding: '10px 14px',
+        background: active ? accent : 'transparent',
+        color: active ? colors.bg : colors.text,
+        border: 'none',
+        borderRadius: '10px 0 10px 0',
+        cursor: 'pointer',
+        fontFamily: 'inherit',
+        textAlign: 'left',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        transition: 'background 120ms, color 120ms',
+        minWidth: 0,
+      }}
+      onMouseEnter={(e) => {
+        if (!active) e.currentTarget.style.background = colors.bgRaise;
+      }}
+      onMouseLeave={(e) => {
+        if (!active) e.currentTarget.style.background = 'transparent';
+      }}
+    >
+      <span style={{ fontSize: 18, flexShrink: 0 }}>{icon}</span>
+      <span style={{ minWidth: 0 }}>
+        <div
+          style={{
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: 1,
+            lineHeight: 1.1,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {label}
+        </div>
+        <div
+          style={{
+            fontSize: 10.5,
+            color: active ? colors.bg : colors.dimSoft,
+            opacity: active ? 0.7 : 1,
+            marginTop: 2,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {sub}
+        </div>
+      </span>
+    </button>
+  );
+}
+
 function ViewBtn({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
     <button

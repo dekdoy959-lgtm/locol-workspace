@@ -15,5 +15,9 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
+    // Explicit key so multiple Supabase projects sharing a domain don't clash
+    storageKey: 'locol-auth',
+    // localStorage = default. Explicit for clarity. (Incognito may not persist.)
+    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
   },
 });
