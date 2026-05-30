@@ -29,6 +29,21 @@ export const TEAM_ROLE_ORDER: TeamRole[] = [
 
 const KEY = ['opp-team-assignments'] as const;
 
+/** Fetch ALL team assignments across all opps — for summary table */
+export function useAllOpportunityTeam() {
+  return useQuery({
+    queryKey: [...KEY, 'all'],
+    queryFn: async (): Promise<TeamAssignmentRow[]> => {
+      const { data, error } = await supabase
+        .from('opportunity_team_assignments')
+        .select('*')
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
 export function useOpportunityTeam(opportunityId: string | undefined) {
   return useQuery({
     queryKey: [...KEY, opportunityId],

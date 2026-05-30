@@ -205,6 +205,9 @@ export function InboxPage() {
           <LBtn ghost onClick={() => navigate('/inbox/summary')}>
             SUMMARY
           </LBtn>
+          <LBtn ghost onClick={() => navigate('/inbox/table')}>
+            📊 TABLE
+          </LBtn>
           <LBtn primary onClick={() => navigate('/inbox/new')}>
             <LIcon kind="plus" size={12} color={colors.bg} /> CAPTURE
           </LBtn>

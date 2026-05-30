@@ -20,6 +20,7 @@ import { OrgFormPage } from './pages/organizations/OrgFormPage';
 import { RelationshipGraphPage } from './pages/relationships/RelationshipGraphPage';
 import { InboxPage } from './pages/inbox/InboxPage';
 import { InboxSummaryPage } from './pages/inbox/InboxSummaryPage';
+import { InboxTablePage } from './pages/inbox/InboxTablePage';
 import { OpportunityDetailPage } from './pages/inbox/OpportunityDetailPage';
 import { OpportunityFormPage } from './pages/inbox/OpportunityFormPage';
 import { MilestonesPage } from './pages/milestones/MilestonesPage';
@@ -87,6 +88,7 @@ export function App() {
               <Route index element={<Navigate to="/inbox" replace />} />
               <Route path="inbox" element={<InboxPage />} />
               <Route path="inbox/summary" element={<InboxSummaryPage />} />
+              <Route path="inbox/table" element={<InboxTablePage />} />
               <Route path="inbox/new" element={<OpportunityFormPage mode="create" />} />
               <Route path="inbox/:id" element={<OpportunityDetailPage />} />
               <Route path="inbox/:id/edit" element={<OpportunityFormPage mode="edit" />} />

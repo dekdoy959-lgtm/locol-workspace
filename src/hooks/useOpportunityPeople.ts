@@ -4,6 +4,21 @@ import type { OppPersonInsert, OppPersonRow, ParticipantRole, ParticipantStatus 
 
 const KEY = ['opportunity_people'] as const;
 
+/** Fetch ALL opportunity_people rows — used by Summary table to denormalize */
+export function useAllOpportunityPeople() {
+  return useQuery({
+    queryKey: [...KEY, 'all'],
+    queryFn: async (): Promise<OppPersonRow[]> => {
+      const { data, error } = await supabase
+        .from('opportunity_people')
+        .select('*')
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
 export function useOpportunityPeople(opportunityId: string | undefined) {
   return useQuery({
     queryKey: [...KEY, 'opp', opportunityId],
