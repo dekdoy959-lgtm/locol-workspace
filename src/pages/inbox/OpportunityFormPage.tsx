@@ -12,6 +12,8 @@ import { PRIORITY_OPTIONS } from '../../types/contact';
 import { LCard, LH, LBtn, LInput, LSelect, LLabel, LNote, LTextarea, LIcon } from '../../components/primitives';
 import { FormSection } from '../../components/forms/FormSection';
 import { OpportunityDetailsForm } from '../../components/opportunities/OpportunityDetailsForm';
+import { LocalItineraryEditor, type LocalStop } from '../../components/trips/LocalItineraryEditor';
+import { supabase } from '../../lib/supabase';
 import { colors } from '../../styles/tokens';
 
 export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
@@ -28,6 +30,8 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const del = useDeleteOpportunity();
 
   const [track, setTrack] = useState<TrackKey>(initialTrack);
+  // Trip-only: in-memory stops collected before opp is created
+  const [localStops, setLocalStops] = useState<LocalStop[]>([]);
   const [title, setTitle] = useState('');
   const [stage, setStage] = useState(findTrack(initialTrack).defaultStage);
   const [status, setStatus] = useState('New');
@@ -104,6 +108,32 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
     try {
       if (mode === 'create') {
         const created = await create.mutateAsync(payload);
+        // If this is a trip with local stops, batch-insert them now that we have opp.id
+        if (track === 'trip' && localStops.length > 0) {
+          const inserts = localStops.map((s) => ({
+            opportunity_id: created.id,
+            day_date: s.day_date,
+            sort_order: s.sort_order,
+            stop_type: s.stop_type,
+            start_time: s.start_time,
+            end_time: s.end_time,
+            name: s.name,
+            province: s.province,
+            location_name: s.location_name,
+            owner_name: s.owner_name,
+            owner_phone: s.owner_phone,
+            purpose: s.purpose,
+            agenda: s.agenda,
+            emphasis: s.emphasis,
+            notes: s.notes,
+          }));
+          const { error: stopsErr } = await supabase.from('trip_stops').insert(inserts as never);
+          if (stopsErr) {
+            console.error('Trip created but stops failed:', stopsErr);
+            setError(`Trip ถูกสร้างแล้ว แต่ stops บางอันใส่ไม่สำเร็จ: ${stopsErr.message}`);
+            // Still navigate so user can fix manually
+          }
+        }
         navigate(`/inbox/${created.id}`);
       } else if (id) {
         await update.mutateAsync({ id, patch: payload });
@@ -255,6 +285,16 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
         >
           <OpportunityDetailsForm track={track} values={details} onChange={setDetails} />
         </FormSection>
+
+        {/* Trip-only · in-form itinerary editor (create mode) */}
+        {mode === 'create' && track === 'trip' && (
+          <FormSection
+            title="4.5 · Itinerary · ที่ที่จะไป (ใส่ได้เลย ก่อนกดสร้าง)"
+            description="แต่ละจุดมีวัน/เวลา/ฟาร์ม/วัตถุประสงค์ของตัวเอง · กรอกตอนนี้เลย ทุกอย่างถูกบันทึกพร้อมกันตอนคุณกด 'สร้าง'"
+          >
+            <LocalItineraryEditor stops={localStops} onChange={setLocalStops} />
+          </FormSection>
+        )}
 
         <FormSection
           title={trackMeta.noReviewerRequired ? '5 · Filer (Watch track)' : '5 · Owner + Reviewer'}
