@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   useTripStops,
   useCreateTripStop,
@@ -23,27 +23,26 @@ export function TripItinerary({ opportunityId }: TripItineraryProps) {
   const update = useUpdateTripStop();
   const remove = useDeleteTripStop();
   const [editingStopId, setEditingStopId] = useState<string | null>(null);
-  const [addingDay, setAddingDay] = useState(false);
-  const [newDayDate, setNewDayDate] = useState('');
 
   const grouped = groupStopsByDay(stops);
 
-  const handleAddDay = () => {
-    if (!newDayDate) return;
-    // Add an empty placeholder stop for the new day (user will edit it)
+  /**
+   * One-click "Add Field Visit" — creates a stop right away (date = today
+   * by default · user can change it in the edit form) and opens edit mode.
+   * No separate "add day" step.
+   */
+  const handleAddFieldVisit = () => {
+    // Default to today; user edits the date inline if needed
+    const today = new Date().toISOString().slice(0, 10);
     create.mutate(
       {
         opportunity_id: opportunityId,
-        day_date: newDayDate,
+        day_date: today,
         sort_order: 0,
         stop_type: 'farm',
       },
       {
-        onSuccess: (created) => {
-          setEditingStopId(created.id);
-          setAddingDay(false);
-          setNewDayDate('');
-        },
+        onSuccess: (created) => setEditingStopId(created.id),
       },
     );
   };
@@ -88,50 +87,18 @@ export function TripItinerary({ opportunityId }: TripItineraryProps) {
           </div>
           <div style={{ fontSize: 11.5, color: colors.dimSoft, marginTop: 4 }}>
             {grouped.length === 0
-              ? 'ยังไม่มีแผน · เพิ่มวันแรกด้านล่าง'
+              ? 'ยังไม่มีจุด — กด + Add Field Visit เพื่อเริ่ม'
               : `${grouped.length} วัน · ${stops.length} จุด`}
           </div>
         </div>
-        <LBtn small primary onClick={() => setAddingDay(true)} disabled={addingDay}>
-          <LIcon kind="plus" size={11} color={colors.bg} /> เพิ่มวัน
+        <LBtn small primary onClick={handleAddFieldVisit} disabled={create.isPending}>
+          <LIcon kind="plus" size={11} color={colors.bg} />{' '}
+          {create.isPending ? 'กำลังเพิ่ม…' : 'Add Field Visit'}
         </LBtn>
       </div>
 
-      {/* Add day form */}
-      {addingDay && (
-        <div
-          style={{
-            padding: '14px 18px',
-            borderBottom: `1px solid ${colors.line}`,
-            background: '#1d1f12',
-            display: 'flex',
-            gap: 10,
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <span style={{ fontSize: 12, color: colors.dimSoft }}>วันที่:</span>
-          <div style={{ minWidth: 180 }}>
-            <LInput type="date" value={newDayDate} onChange={setNewDayDate} />
-          </div>
-          <LBtn small primary onClick={handleAddDay} disabled={!newDayDate || create.isPending}>
-            {create.isPending ? 'กำลังเพิ่ม…' : 'เพิ่มวัน + จุดแรก'}
-          </LBtn>
-          <LBtn
-            small
-            ghost
-            onClick={() => {
-              setAddingDay(false);
-              setNewDayDate('');
-            }}
-          >
-            ยกเลิก
-          </LBtn>
-        </div>
-      )}
-
       {/* Days */}
-      {grouped.length === 0 && !addingDay && (
+      {grouped.length === 0 && (
         <div
           style={{
             padding: 40,
@@ -141,7 +108,10 @@ export function TripItinerary({ opportunityId }: TripItineraryProps) {
             background: colors.bgSoft,
           }}
         >
-          🗓 ยังไม่มี itinerary · กด <b style={{ color: colors.text }}>เพิ่มวัน</b> เพื่อเริ่ม
+          🗓 ยังไม่มีจุด · กด <b style={{ color: colors.text }}>+ Add Field Visit</b> ด้านบนเพื่อเริ่ม
+          <div style={{ marginTop: 8, fontSize: 11, color: colors.dim, lineHeight: 1.5 }}>
+            (1 trip มีหลายวันก็ได้ · แต่ละวันมีหลายจุด · เปลี่ยนวันที่ในจุดเพื่อจัดกลุ่ม)
+          </div>
         </div>
       )}
 
@@ -305,9 +275,12 @@ function StopRow({
 }) {
   const [draft, setDraft] = useState<TripStopUpdate>({});
 
-  // When entering edit mode, seed draft from current row
-  const startEdit = () => {
+  // Seed draft from current row whenever we enter edit mode (covers both
+  // "user clicked existing row" and "new row just created and auto-opened")
+  useEffect(() => {
+    if (!editing) return;
     setDraft({
+      day_date: stop.day_date,
       start_time: stop.start_time,
       end_time: stop.end_time,
       stop_type: stop.stop_type,
@@ -321,14 +294,29 @@ function StopRow({
       emphasis: stop.emphasis,
       notes: stop.notes,
     });
-    onStartEdit();
-  };
+    // Only re-seed when toggling edit mode on, or moving to a different stop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editing, stop.id]);
+
+  const startEdit = () => onStartEdit();
 
   const meta = STOP_TYPE_META[stop.stop_type];
 
   if (editing) {
     return (
       <div style={{ padding: '14px 18px', background: '#161812' }}>
+        {/* Date — top of the form (changes which day this stop belongs to) */}
+        <div style={{ marginBottom: 10 }}>
+          <LLabel>📅 วันที่ (เปลี่ยนได้เพื่อย้ายไปอีกวัน)</LLabel>
+          <div style={{ maxWidth: 200 }}>
+            <LInput
+              type="date"
+              value={draft.day_date ?? ''}
+              onChange={(v) => setDraft({ ...draft, day_date: v || draft.day_date })}
+            />
+          </div>
+        </div>
+
         <div style={{ display: 'grid', gridTemplateColumns: '120px 120px 1fr', gap: 10, marginBottom: 10 }}>
           <div>
             <LLabel>เริ่ม</LLabel>
