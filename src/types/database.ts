@@ -121,6 +121,24 @@ export type Database = {
         };
         Update: Partial<Database['public']['Tables']['opportunities']['Row']>;
       };
+      opportunity_team_assignments: {
+        Row: {
+          id: string;
+          opportunity_id: string;
+          team_member_id: string;
+          role: 'owner' | 'reviewer' | 'document_lead' | 'coordinator' | 'traveler' | 'support';
+          trip_stop_id: string | null;
+          note: string | null;
+          created_at: string;
+          created_by: string | null;
+        };
+        Insert: Partial<Database['public']['Tables']['opportunity_team_assignments']['Row']> & {
+          opportunity_id: string;
+          team_member_id: string;
+          role: 'owner' | 'reviewer' | 'document_lead' | 'coordinator' | 'traveler' | 'support';
+        };
+        Update: Partial<Database['public']['Tables']['opportunity_team_assignments']['Row']>;
+      };
       trip_stops: {
         Row: {
           id: string;

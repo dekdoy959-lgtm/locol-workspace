@@ -15,6 +15,7 @@ import { LCard, LH, LBtn, LChip, LField, LIcon, LNote, LAvatar, LSelect } from '
 import { NoteComposer } from '../../components/notes/NoteComposer';
 import { Timeline } from '../../components/notes/Timeline';
 import { OpportunityPeopleSection } from '../../components/opportunities/OpportunityPeopleSection';
+import { TeamAssignmentsSection } from '../../components/opportunities/TeamAssignmentsSection';
 import { TripItinerary } from '../../components/trips/TripItinerary';
 import { OpportunityDetailsView } from '../../components/opportunities/OpportunityDetailsView';
 import { ConfirmModal } from '../../components/modals/ConfirmModal';
@@ -296,6 +297,9 @@ export function OpportunityDetailPage() {
 
           {/* Trip itinerary — only for track='trip' */}
           {opp.track === 'trip' && <TripItinerary opportunityId={opp.id} />}
+
+          {/* Team — who's doing what */}
+          <TeamAssignmentsSection opportunityId={opp.id} />
 
           {/* People (Organizers + Attendees) */}
           <LCard padding={20}>
