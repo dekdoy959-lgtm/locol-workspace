@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { LCard, LBtn } from '../primitives';
 import { colors } from '../../styles/tokens';
 
@@ -21,6 +21,48 @@ export function ConfirmModal({
   danger = false,
   isLoading = false,
 }: ConfirmModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const confirmBtnRef = useRef<HTMLButtonElement>(null);
+  // Latest onCancel without re-running the focus effect on every render.
+  const onCancelRef = useRef(onCancel);
+  onCancelRef.current = onCancel;
+
+  // a11y (#24): focus the dialog on open, trap Tab within it, close on Escape,
+  // and return focus to the previously-focused element on close.
+  useEffect(() => {
+    const prevFocused = document.activeElement as HTMLElement | null;
+    confirmBtnRef.current?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onCancelRef.current();
+        return;
+      }
+      if (e.key === 'Tab') {
+        const focusables = dialogRef.current?.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (!focusables || focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      prevFocused?.focus?.();
+    };
+  }, []);
+
   return (
     <div
       onClick={onCancel}
@@ -35,7 +77,14 @@ export function ConfirmModal({
         padding: 24,
       }}
     >
-      <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: 400, width: '100%' }}>
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        onClick={(e) => e.stopPropagation()}
+        style={{ maxWidth: 400, width: '100%' }}
+      >
         <LCard padding={28}>
           <div
             style={{
@@ -56,6 +105,7 @@ export function ConfirmModal({
               ยกเลิก
             </LBtn>
             <button
+              ref={confirmBtnRef}
               type="button"
               onClick={onConfirm}
               disabled={isLoading}

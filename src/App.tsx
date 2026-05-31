@@ -3,6 +3,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { AuthProvider } from './contexts/AuthContext';
+import { ConfirmProvider } from './components/modals/ConfirmProvider';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import { OfflineBanner } from './components/layout/OfflineBanner';
@@ -83,6 +84,7 @@ export function App() {
       }}
     >
       <AuthProvider>
+        <ConfirmProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
@@ -128,6 +130,7 @@ export function App() {
           </Routes>
           <OfflineBanner />
         </BrowserRouter>
+        </ConfirmProvider>
       </AuthProvider>
     </PersistQueryClientProvider>
   );
