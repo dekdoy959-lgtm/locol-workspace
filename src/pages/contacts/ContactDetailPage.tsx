@@ -173,7 +173,6 @@ export function ContactDetailPage() {
                     lineHeight: 1.1,
                     letterSpacing: -0.5,
                     color: colors.text,
-                    textTransform: 'uppercase',
                   }}
                 >
                   {contactDisplayName(contact)}

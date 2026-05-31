@@ -174,7 +174,7 @@ function MemberRow({
               <LLabel>Initials (สูงสุด 3 ตัว · ใช้ใน avatar)</LLabel>
               <LInput
                 value={draft.initials ?? ''}
-                onChange={(v) => setDraft({ ...draft, initials: (v || '').slice(0, 3).toUpperCase() || null })}
+                onChange={(v) => setDraft({ ...draft, initials: Array.from(v || '').slice(0, 3).join('').toUpperCase() || null })}
                 placeholder="(auto จากชื่อถ้าเว้นว่าง)"
               />
             </div>

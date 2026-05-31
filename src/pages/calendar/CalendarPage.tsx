@@ -847,7 +847,7 @@ function TravelView({ items, onClickItem }: { items: CalendarItem[]; onClickItem
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       {grouped.map(([location, locItems]) => {
-        const isOnline = /online|virtual|zoom|meet|teams/i.test(location);
+        const isOnline = /online|virtual|zoom|meet|teams|ออนไลน์|ทางไกล/i.test(location);
         return (
           <LCard key={location} padding={0}>
             <div
