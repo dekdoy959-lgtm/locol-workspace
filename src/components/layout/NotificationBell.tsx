@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useOpportunities } from '../../hooks/useOpportunities';
 import { useContacts } from '../../hooks/useContacts';
 import { useAllMilestones } from '../../hooks/useAllMilestones';
+import { useAllOpenCommitments } from '../../hooks/useCalendarData';
 import { useTrackSettings, getStaleThreshold } from '../../hooks/useTrackSettings';
 import { useMyAlertPrefs } from '../../hooks/useUserAlertPrefs';
 import { useAuth } from '../../contexts/AuthContext';
@@ -33,6 +34,7 @@ export function NotificationBell() {
   const { data: opps = [] } = useOpportunities();
   const { data: contacts = [] } = useContacts();
   const { data: milestones = [] } = useAllMilestones();
+  const { data: commitments = [] } = useAllOpenCommitments();
   const { data: trackSettings = [] } = useTrackSettings();
   const { data: prefs } = useMyAlertPrefs();
 
@@ -146,8 +148,23 @@ export function NotificationBell() {
       });
     }
 
+    // Overdue commitments (open + past due_date)
+    if (!prefs || prefs.commitment_overdue)
+    for (const c of commitments) {
+      if (!c.due_date || c.due_date >= todayISO) continue;
+      const contact = contacts.find((ct) => ct.id === c.contact_id);
+      list.push({
+        id: `commit-${c.id}`,
+        kind: 'due',
+        title: c.description,
+        sub: `Commitment เลยกำหนด ${c.due_date}${contact ? ` · ${contactDisplayName(contact)}` : ''}`,
+        href: contact ? `/contacts/${c.contact_id}` : '/briefing',
+        ...(contact ? { contact } : {}),
+      });
+    }
+
     return list;
-  }, [opps, contacts, milestones, trackSettings, user, prefs]);
+  }, [opps, contacts, milestones, commitments, trackSettings, user, prefs]);
 
   const count = alerts.length;
 

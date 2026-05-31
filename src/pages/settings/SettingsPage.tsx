@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTrackSettings, useUpdateTrackSetting } from '../../hooks/useTrackSettings';
 import { useMyAlertPrefs, useUpdateMyAlertPrefs } from '../../hooks/useUserAlertPrefs';
 import { useAuth } from '../../contexts/AuthContext';
@@ -14,6 +14,14 @@ export function SettingsPage() {
   const updatePrefs = useUpdateMyAlertPrefs();
   const [editing, setEditing] = useState<Record<string, { stale: string; ping: boolean; email: boolean }>>({});
   const [savingTrack, setSavingTrack] = useState<TrackKey | null>(null);
+
+  // Scroll to the alerts section when arrived via /settings#alerts (SPA hash).
+  useEffect(() => {
+    if (window.location.hash === '#alerts') {
+      // Defer to ensure the section is rendered.
+      setTimeout(() => document.getElementById('alerts')?.scrollIntoView({ behavior: 'smooth' }), 50);
+    }
+  }, []);
 
   if (isLoading) {
     return <div style={{ padding: 40, textAlign: 'center', color: colors.dim }}>กำลังโหลด…</div>;
@@ -204,7 +212,7 @@ export function SettingsPage() {
       </LCard>
 
       {/* My Email Alert Preferences */}
-      <div style={{ marginTop: 28 }}>
+      <div id="alerts" style={{ marginTop: 28, scrollMarginTop: 80 }}>
         <LCard padding={0}>
           <div style={{ padding: '12px 18px', borderBottom: `1px solid ${colors.line}`, background: colors.bgSoft }}>
             <div
@@ -290,6 +298,14 @@ export function SettingsPage() {
                   checked={alertPrefs?.birthdays ?? true}
                   disabled={!alertPrefs?.enabled}
                   onChange={(v) => updatePrefs.mutate({ birthdays: v })}
+                />
+                <AlertRow
+                  icon="⏰"
+                  label="Commitment overdue"
+                  desc="commitment ที่เลยกำหนด due แล้วยังไม่ปิด"
+                  checked={alertPrefs?.commitment_overdue ?? true}
+                  disabled={!alertPrefs?.enabled}
+                  onChange={(v) => updatePrefs.mutate({ commitment_overdue: v })}
                 />
               </tbody>
             </table>
