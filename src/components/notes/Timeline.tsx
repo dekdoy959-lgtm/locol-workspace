@@ -1015,7 +1015,7 @@ function OpportunityRow({
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
           <KindChip color={meta.color.ink} bg={meta.color.soft} border={meta.color.chip}>
-            🎯 OPPORTUNITY · {meta.name}
+            <LIcon kind="target" size={10} color={meta.color.ink} /> OPPORTUNITY · {meta.name}
           </KindChip>
           <KindChip color={meta.color.ink} bg="transparent" border={meta.color.chip} dashed>
             {opp.stage}

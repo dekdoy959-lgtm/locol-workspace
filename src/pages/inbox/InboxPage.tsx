@@ -226,7 +226,7 @@ export function InboxPage() {
             SUMMARY
           </LBtn>
           <LBtn ghost onClick={() => navigate('/inbox/table')}>
-            📊 TABLE
+            <LIcon kind="graph" size={11} color={colors.dimSoft} /> TABLE
           </LBtn>
           <LBtn primary onClick={() => navigate('/inbox/new')}>
             <LIcon kind="plus" size={12} color={colors.bg} /> CAPTURE
@@ -816,7 +816,7 @@ function FocusView({
           lineHeight: 1.5,
         }}
       >
-        🎯 <b>FOCUS MODE</b> · แสดง {items.length} รายการที่ต้องการความสนใจของคุณวันนี้ ·
+        <LIcon kind="target" size={11} color={colors.danger} /> <b>FOCUS MODE</b> · แสดง {items.length} รายการที่ต้องการความสนใจของคุณวันนี้ ·
         จัดเรียง: stale ก่อน → priority สูง → due ใกล้
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: density === 'dense' ? 4 : density === 'compact' ? 6 : 10 }}>
