@@ -9,6 +9,7 @@ import {
 import { LBtn, LInput, LLabel, LIcon } from '../primitives';
 import { colors } from '../../styles/tokens';
 import { todayLocalISO } from '../../lib/dateUtil';
+import { useConfirm } from '../modals/ConfirmProvider';
 
 interface Props {
   contactId: string;
@@ -23,6 +24,7 @@ export function CommitmentsSection({ contactId }: Props) {
   const create = useCreateCommitment();
   const update = useUpdateCommitment();
   const del = useDeleteCommitment();
+  const confirm = useConfirm();
 
   const [addingDirection, setAddingDirection] = useState<'i_owe' | 'they_owe' | null>(null);
   const [description, setDescription] = useState('');
@@ -75,8 +77,8 @@ export function CommitmentsSection({ contactId }: Props) {
           commitments={iOwe}
           onAdd={() => setAddingDirection('i_owe')}
           onToggle={handleToggleStatus}
-          onDelete={(c) => {
-            if (confirm('ลบ commitment นี้?')) del.mutate({ id: c.id, contactId });
+          onDelete={async (c) => {
+            if (await confirm({ title: 'ลบ commitment นี้?', danger: true })) del.mutate({ id: c.id, contactId });
           }}
         />
         <CommitmentColumn
@@ -86,8 +88,8 @@ export function CommitmentsSection({ contactId }: Props) {
           commitments={theyOwe}
           onAdd={() => setAddingDirection('they_owe')}
           onToggle={handleToggleStatus}
-          onDelete={(c) => {
-            if (confirm('ลบ commitment นี้?')) del.mutate({ id: c.id, contactId });
+          onDelete={async (c) => {
+            if (await confirm({ title: 'ลบ commitment นี้?', danger: true })) del.mutate({ id: c.id, contactId });
           }}
         />
       </div>

@@ -11,6 +11,7 @@ import {
 import { useTeamMembers, teamMemberDisplayName, teamMemberInitials } from '../../hooks/useTeamMembers';
 import { LCard, LBtn, LIcon, LAvatar, LSelect } from '../primitives';
 import { colors } from '../../styles/tokens';
+import { useConfirm } from '../modals/ConfirmProvider';
 
 interface TeamAssignmentsSectionProps {
   opportunityId: string;
@@ -21,6 +22,7 @@ export function TeamAssignmentsSection({ opportunityId }: TeamAssignmentsSection
   const { data: team = [] } = useTeamMembers();
   const create = useCreateAssignment();
   const remove = useDeleteAssignment();
+  const confirm = useConfirm();
   const teamById = Object.fromEntries(team.map((t) => [t.id, t]));
 
   const grouped = groupAssignmentsByRole(assignments);
@@ -134,10 +136,10 @@ export function TeamAssignmentsSection({ opportunityId }: TeamAssignmentsSection
                         </span>
                         <button
                           type="button"
-                          onClick={() =>
-                            confirm('ลบคนนี้ออกจาก role นี้?') &&
-                            remove.mutate({ id: a.id, opportunityId })
-                          }
+                          onClick={async () => {
+                            if (await confirm({ title: 'ลบคนนี้ออกจาก role นี้?', danger: true }))
+                              remove.mutate({ id: a.id, opportunityId });
+                          }}
                           title="ลบ"
                           style={{
                             background: 'transparent',

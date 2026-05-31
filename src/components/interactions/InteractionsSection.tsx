@@ -10,6 +10,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { LBtn, LInput, LTextarea, LSelect, LLabel, LIcon } from '../primitives';
 import { colors } from '../../styles/tokens';
 import { todayLocalISO } from '../../lib/dateUtil';
+import { useConfirm } from '../modals/ConfirmProvider';
 
 interface Props {
   contactId: string;
@@ -24,6 +25,7 @@ export function InteractionsSection({ contactId }: Props) {
   const { data: interactions = [], isLoading } = useContactInteractions(contactId);
   const create = useCreateInteraction();
   const del = useDeleteInteraction();
+  const confirm = useConfirm();
 
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(todayISO());
@@ -177,8 +179,8 @@ export function InteractionsSection({ contactId }: Props) {
             <InteractionItem
               key={it.id}
               interaction={it}
-              onDelete={() => {
-                if (confirm('ลบ interaction นี้?')) del.mutate({ id: it.id, contactId });
+              onDelete={async () => {
+                if (await confirm({ title: 'ลบ interaction นี้?', danger: true })) del.mutate({ id: it.id, contactId });
               }}
             />
           ))}

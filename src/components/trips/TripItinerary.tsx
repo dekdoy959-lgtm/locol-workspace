@@ -19,6 +19,7 @@ import { useTeamMembers, teamMemberInitials, teamMemberDisplayName } from '../..
 import { LCard, LBtn, LIcon, LInput, LTextarea, LSelect, LLabel, LAvatar } from '../primitives';
 import { colors } from '../../styles/tokens';
 import { todayLocalISO } from '../../lib/dateUtil';
+import { useConfirm } from '../modals/ConfirmProvider';
 
 /** Google Maps deep link for a stop's place. Uses search query — falls back gracefully if location_name is empty. */
 function googleMapsUrl(stop: TripStopRow): string | null {
@@ -36,6 +37,7 @@ export function TripItinerary({ opportunityId }: TripItineraryProps) {
   const { data: stops = [], isLoading } = useTripStops(opportunityId);
   const create = useCreateTripStop();
   const update = useUpdateTripStop();
+  const confirm = useConfirm();
   const remove = useDeleteTripStop();
   const [editingStopId, setEditingStopId] = useState<string | null>(null);
 
@@ -147,8 +149,8 @@ export function TripItinerary({ opportunityId }: TripItineraryProps) {
                 { onSuccess: () => setEditingStopId(null) },
               );
             }}
-            onDelete={(id) => {
-              if (confirm('ลบจุดนี้?')) {
+            onDelete={async (id) => {
+              if (await confirm({ title: 'ลบจุดนี้?', danger: true })) {
                 remove.mutate({ id, opportunityId });
                 if (editingStopId === id) setEditingStopId(null);
               }

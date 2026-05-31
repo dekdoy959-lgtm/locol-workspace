@@ -4,6 +4,7 @@ import type { MilestoneRow, MilestoneSide } from '../../types/milestone';
 import { LInput, LTextarea, LBtn, LIcon } from '../primitives';
 import { colors } from '../../styles/tokens';
 import { todayLocalISO } from '../../lib/dateUtil';
+import { useConfirm } from '../modals/ConfirmProvider';
 
 interface MilestoneCardProps {
   milestone: MilestoneRow;
@@ -28,6 +29,7 @@ export function MilestoneCard({ milestone }: MilestoneCardProps) {
 
   const update = useUpdateMilestone();
   const del = useDeleteMilestone();
+  const confirm = useConfirm();
   const accent = SIDE_ACCENT[milestone.side];
 
   const handleSave = async () => {
@@ -50,7 +52,7 @@ export function MilestoneCard({ milestone }: MilestoneCardProps) {
   };
 
   const handleDelete = async () => {
-    if (!confirm('ลบ milestone นี้?')) return;
+    if (!(await confirm({ title: 'ลบ milestone นี้?', danger: true }))) return;
     await del.mutateAsync({ id: milestone.id, contactId: milestone.contact_id });
   };
 
