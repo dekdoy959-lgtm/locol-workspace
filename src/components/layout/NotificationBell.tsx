@@ -4,6 +4,7 @@ import { useOpportunities } from '../../hooks/useOpportunities';
 import { useContacts } from '../../hooks/useContacts';
 import { useAllMilestones } from '../../hooks/useAllMilestones';
 import { useTrackSettings, getStaleThreshold } from '../../hooks/useTrackSettings';
+import { useMyAlertPrefs } from '../../hooks/useUserAlertPrefs';
 import { useAuth } from '../../contexts/AuthContext';
 import { isStale, findTrack, type TrackKey } from '../../types/opportunity';
 import { contactDisplayName, contactInitials, type ContactRow } from '../../types/contact';
@@ -33,6 +34,7 @@ export function NotificationBell() {
   const { data: contacts = [] } = useContacts();
   const { data: milestones = [] } = useAllMilestones();
   const { data: trackSettings = [] } = useTrackSettings();
+  const { data: prefs } = useMyAlertPrefs();
 
   useEffect(() => {
     if (!open) return;
@@ -55,7 +57,11 @@ export function NotificationBell() {
     const sevenDaysISO = addDaysISO(todayISO, 7);
     const list: Alert[] = [];
 
+    // Respect the user's notification preferences (master + per-type).
+    if (prefs && !prefs.enabled) return list;
+
     // Stale opps owned by me
+    if (!prefs || prefs.stale_opportunities)
     for (const o of opps) {
       if (user && o.owner_id !== user.id && o.reviewer_id !== user.id) continue;
       if (isStale(o, getStaleThreshold(trackSettings, o.track as TrackKey))) {
@@ -84,6 +90,7 @@ export function NotificationBell() {
     }
 
     // Cold contacts (any ownership for now)
+    if (!prefs || prefs.cold_contacts)
     for (const c of contacts) {
       if (!c.last_contact_date || !c.freq_days) continue;
       const days = (Date.now() - new Date(c.last_contact_date).getTime()) / MS_PER_DAY;
@@ -102,6 +109,7 @@ export function NotificationBell() {
     // Birthdays in next 7 days
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    if (!prefs || prefs.birthdays)
     for (const c of contacts) {
       if (!c.birthday || !c.birthday_notification_enabled) continue;
       const [, mm, dd] = c.birthday.split('-');
@@ -123,6 +131,7 @@ export function NotificationBell() {
     }
 
     // Milestones due today
+    if (!prefs || prefs.reminder_notes)
     for (const m of milestones) {
       if (m.date !== todayISO || m.achieved) continue;
       const contact = contacts.find((c) => c.id === m.contact_id);
@@ -138,7 +147,7 @@ export function NotificationBell() {
     }
 
     return list;
-  }, [opps, contacts, milestones, trackSettings, user]);
+  }, [opps, contacts, milestones, trackSettings, user, prefs]);
 
   const count = alerts.length;
 
