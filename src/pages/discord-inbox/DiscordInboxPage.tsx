@@ -166,7 +166,14 @@ function InboxCard({
           if (error) throw error;
         }
         if (item.created_contact_id) {
-          const { error } = await db.from('contacts').update({ relationship_status: 'known' }).eq('id', item.created_contact_id);
+          // Only un-archive if the contact is STILL 'archived' (i.e. our cancel
+          // is what set it). Guarding on the current value prevents clobbering a
+          // status the user changed manually after cancelling.
+          const { error } = await db
+            .from('contacts')
+            .update({ relationship_status: 'known' })
+            .eq('id', item.created_contact_id)
+            .eq('relationship_status', 'archived');
           if (error) throw error;
         }
         const { error } = await db.from('discord_inbox').update({ processing_status: 'done' }).eq('id', item.id);

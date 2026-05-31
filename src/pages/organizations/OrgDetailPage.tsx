@@ -32,16 +32,21 @@ export function OrgDetailPage() {
   const peopleAtOrg = useMemo(() => {
     if (!org) return [];
     const orgName = org.name.toLowerCase().trim();
-    return allContacts.filter((c) =>
-      (c.orgs as OrgEntry[]).some((o) => o.org_name.toLowerCase().trim() === orgName),
-    );
+    // Match by org_id (stable across renames); fall back to name only for
+    // free-text org entries (org_id null).
+    const matches = (o: OrgEntry) =>
+      o.org_id ? o.org_id === org.id : o.org_name.toLowerCase().trim() === orgName;
+    return allContacts.filter((c) => (c.orgs as OrgEntry[]).some(matches));
   }, [org, allContacts]);
 
   const primaryContacts = useMemo(
     () =>
       peopleAtOrg.filter((c) =>
         (c.orgs as OrgEntry[]).some(
-          (o) => o.org_name.toLowerCase().trim() === org?.name.toLowerCase().trim() && o.is_primary,
+          (o) =>
+            (o.org_id
+              ? o.org_id === org?.id
+              : o.org_name.toLowerCase().trim() === org?.name.toLowerCase().trim()) && o.is_primary,
         ),
       ),
     [peopleAtOrg, org],

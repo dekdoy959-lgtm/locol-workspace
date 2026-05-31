@@ -60,9 +60,11 @@ export function useAllFutureNotes() {
  * Used by the /calendar page for workspace-wide schedule.
  */
 export function useWideCalendarEvents() {
-  const { providerToken } = useAuth();
+  const { providerToken, user } = useAuth();
   return useQuery({
-    queryKey: ['calendar', 'wide'],
+    // Partition by user.id so a shared device can't serve User A's cached
+    // calendar events to User B (PII leak).
+    queryKey: ['calendar', 'wide', user?.id],
     enabled: !!providerToken,
     staleTime: 5 * 60 * 1000,
     queryFn: async (): Promise<CalendarEvent[]> => {

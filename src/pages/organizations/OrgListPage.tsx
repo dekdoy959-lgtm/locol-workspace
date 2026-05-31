@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useOrganizations } from '../../hooks/useOrganizations';
 import { useContacts } from '../../hooks/useContacts';
 import { orgInitials } from '../../types/organization';
-import { RELATIONSHIP_STATUS_META, type RelationshipStatus } from '../../types/contact';
+import { RELATIONSHIP_STATUS_META, type RelationshipStatus, type OrgEntry } from '../../types/contact';
 import { LCard, LH, LBtn, LIcon, LInput, LNote, LChip } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
 
@@ -14,15 +14,21 @@ export function OrgListPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<RelationshipStatus | 'all'>('all');
 
-  const peopleCountByOrgName = useMemo(() => {
-    const counts: Record<string, number> = {};
+  // Roll up people per org by org_id (stable across renames). Entries with a
+  // null org_id are free-text orgs — fall back to name-matching for those only.
+  const peopleCountByOrg = useMemo(() => {
+    const byId: Record<string, number> = {};
+    const byName: Record<string, number> = {};
     for (const c of contacts) {
-      for (const o of c.orgs as { org_name: string }[]) {
-        const key = o.org_name.toLowerCase().trim();
-        counts[key] = (counts[key] ?? 0) + 1;
+      for (const o of c.orgs as OrgEntry[]) {
+        if (o.org_id) byId[o.org_id] = (byId[o.org_id] ?? 0) + 1;
+        else {
+          const key = o.org_name.toLowerCase().trim();
+          byName[key] = (byName[key] ?? 0) + 1;
+        }
       }
     }
-    return counts;
+    return { byId, byName };
   }, [contacts]);
 
   const filtered = useMemo(() => {
@@ -114,7 +120,9 @@ export function OrgListPage() {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 14 }}>
           {filtered.map((o) => {
-            const peopleCount = peopleCountByOrgName[o.name.toLowerCase().trim()] ?? 0;
+            const peopleCount =
+              (peopleCountByOrg.byId[o.id] ?? 0) +
+              (peopleCountByOrg.byName[o.name.toLowerCase().trim()] ?? 0);
             return (
               <LCard
                 key={o.id}

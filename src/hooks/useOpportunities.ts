@@ -132,6 +132,62 @@ export function useDuplicateOpportunity() {
         }
       }
 
+      // 4. Copy linked people (organizers / attendees / orgs)
+      const { data: people, error: pErr } = await supabase
+        .from('opportunity_people')
+        .select('contact_id, org_id, role, status, note')
+        .eq('opportunity_id', sourceId);
+      if (pErr) throw pErr;
+      const typedPeople = (people ?? []) as Array<{
+        contact_id: string | null;
+        org_id: string | null;
+        role: string;
+        status: string | null;
+        note: string | null;
+      }>;
+      if (typedPeople.length > 0) {
+        const peopleInsert = typedPeople.map((p) => ({
+          opportunity_id: newOpp.id,
+          contact_id: p.contact_id,
+          org_id: p.org_id,
+          role: p.role,
+          status: p.status,
+          note: p.note,
+        }));
+        const { error: insErr } = await supabase
+          .from('opportunity_people')
+          .insert(peopleInsert as never);
+        if (insErr) throw insErr;
+      }
+
+      // 5. Copy internal team assignments. trip_stop_id is intentionally dropped:
+      //    the new opp has fresh trip_stops with new ids, so old stop refs are invalid.
+      const { data: team, error: tErr } = await supabase
+        .from('opportunity_team_assignments')
+        .select('team_member_id, role, note')
+        .eq('opportunity_id', sourceId);
+      if (tErr) throw tErr;
+      const typedTeam = (team ?? []) as Array<{
+        team_member_id: string;
+        role: string;
+        note: string | null;
+      }>;
+      if (typedTeam.length > 0) {
+        const teamInsert = typedTeam.map((t) => ({
+          opportunity_id: newOpp.id,
+          team_member_id: t.team_member_id,
+          role: t.role,
+          note: t.note,
+        }));
+        const { error: insErr } = await supabase
+          .from('opportunity_team_assignments')
+          .insert(teamInsert as never);
+        if (insErr) throw insErr;
+      }
+
+      // NOTE: best-effort, not a DB transaction. A mid-way failure leaves a
+      // partially-copied opp (recoverable by the user). A fully atomic copy
+      // would require a Postgres RPC — tracked as a follow-up.
       return newOpp;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: OPP_KEY }),
