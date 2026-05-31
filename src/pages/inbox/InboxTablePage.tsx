@@ -326,7 +326,7 @@ export function InboxTablePage() {
                 <Th>📋 ผู้จัด</Th>
                 <Th>📝 ผู้ทำเอกสาร</Th>
                 <Th>🤝 ผู้ประสาน</Th>
-                <Th>✈ ผู้ไป</Th>
+                <Th><LIcon kind="plane" size={10} color={colors.dim} /> ผู้ไป</Th>
                 <Th>เปิดรับ</Th>
                 <Th>ปิดรับ</Th>
                 <Th>ส่งเอกสาร</Th>

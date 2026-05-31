@@ -125,7 +125,7 @@ export function LocalItineraryEditor({ stops, onChange }: LocalItineraryEditorPr
       >
         <div>
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: colors.olive, textTransform: 'uppercase' }}>
-            ✈ ITINERARY · แผนเดินทาง
+            <LIcon kind="plane" size={11} color={colors.olive} /> ITINERARY · แผนเดินทาง
           </div>
           <div style={{ fontSize: 11.5, color: colors.dimSoft, marginTop: 4 }}>
             {grouped.length === 0

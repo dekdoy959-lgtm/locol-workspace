@@ -100,7 +100,7 @@ export function TripItinerary({ opportunityId }: TripItineraryProps) {
       >
         <div>
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: colors.olive, textTransform: 'uppercase' }}>
-            ✈ ITINERARY · แผนเดินทาง
+            <LIcon kind="plane" size={11} color={colors.olive} /> ITINERARY · แผนเดินทาง
           </div>
           <div style={{ fontSize: 11.5, color: colors.dimSoft, marginTop: 4 }}>
             {grouped.length === 0
@@ -590,7 +590,7 @@ function StopRow({
               onMouseLeave={(e) => ((e.target as HTMLElement).style.color = colors.olive)}
               title="เปิดใน Google Maps"
             >
-              📍 MAP ↗
+              <LIcon kind="pin" size={10} color={colors.olive} /> MAP ↗
             </a>
           )}
         </div>
@@ -663,7 +663,7 @@ function PerStopTravelers({
       onClick={(e) => e.stopPropagation()}
     >
       <div style={{ fontSize: 9, color: colors.dim, letterSpacing: 0.8, textTransform: 'uppercase', fontWeight: 600 }}>
-        ✈ ใครไปจุดนี้
+        <LIcon kind="plane" size={9} color={colors.dim} /> ใครไปจุดนี้
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
         {myStopAssignments.map((a) => {
