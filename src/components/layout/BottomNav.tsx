@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { colors, layout } from '../../styles/tokens';
+import { colors, layout, z } from '../../styles/tokens';
 import { LIcon } from '../primitives/LIcon';
 import type { IconKind } from '../primitives/LIcon';
 import { useAuth } from '../../contexts/AuthContext';
@@ -72,7 +72,7 @@ export function BottomNav({ onSearchOpen }: BottomNavProps) {
           display: 'flex',
           alignItems: 'stretch',
           justifyContent: 'space-around',
-          zIndex: 100,
+          zIndex: z.bottomNav,
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
         }}
@@ -149,7 +149,7 @@ export function BottomNav({ onSearchOpen }: BottomNavProps) {
               position: 'fixed',
               inset: 0,
               background: 'rgba(0,0,0,0.7)',
-              zIndex: 200,
+              zIndex: z.modalBackdrop,
               animation: 'l-fade-in 150ms ease-out',
             }}
           />
@@ -164,7 +164,7 @@ export function BottomNav({ onSearchOpen }: BottomNavProps) {
               background: colors.bgCard,
               borderTop: `1px solid ${colors.lineHi}`,
               borderRadius: '20px 0 0 0',
-              zIndex: 201,
+              zIndex: z.modal,
               maxHeight: '85vh',
               overflowY: 'auto',
               padding: '8px 0 16px',

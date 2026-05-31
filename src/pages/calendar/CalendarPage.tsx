@@ -8,7 +8,7 @@ import { useAllTripStops } from '../../hooks/useTripStops';
 import { useAuth } from '../../contexts/AuthContext';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { LCard, LH, LBtn, LIcon, LNote } from '../../components/primitives';
-import { colors } from '../../styles/tokens';
+import { colors, z } from '../../styles/tokens';
 import {
   aggregateCalendarItems,
   KIND_META,
@@ -957,7 +957,7 @@ function DayPanel({
           position: 'fixed',
           inset: 0,
           background: 'rgba(0,0,0,0.5)',
-          zIndex: 200,
+          zIndex: z.modalBackdrop,
           animation: 'l-fade-in 150ms ease-out',
         }}
       />
@@ -972,7 +972,7 @@ function DayPanel({
           background: colors.bgCard,
           border: `1px solid ${colors.lineHi}`,
           borderRadius: '14px 0 0 14px',
-          zIndex: 201,
+          zIndex: z.modal,
           overflowY: 'auto',
           animation: 'l-slide-right 200ms ease-out',
           boxShadow: '-12px 0 32px rgba(0,0,0,0.55)',

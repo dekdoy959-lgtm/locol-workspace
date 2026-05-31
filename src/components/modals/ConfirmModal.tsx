@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { LCard, LBtn } from '../primitives';
-import { colors } from '../../styles/tokens';
+import { colors, z } from '../../styles/tokens';
 
 interface ConfirmModalProps {
   title: string;
@@ -73,7 +73,7 @@ export function ConfirmModal({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 200,
+        zIndex: z.modalBackdrop,
         padding: 24,
       }}
     >

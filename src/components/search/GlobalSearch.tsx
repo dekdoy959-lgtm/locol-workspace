@@ -9,7 +9,7 @@ import { orgInitials, type OrgRow } from '../../types/organization';
 import { findTrack, formatDueRelative, type OpportunityRow } from '../../types/opportunity';
 import type { GroupRow } from '../../types/group';
 import { LIcon, LAvatar } from '../primitives';
-import { colors } from '../../styles/tokens';
+import { colors, z } from '../../styles/tokens';
 
 interface GlobalSearchProps {
   open: boolean;
@@ -236,7 +236,7 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
         inset: 0,
         background: 'rgba(0, 0, 0, 0.7)',
         backdropFilter: 'blur(4px)',
-        zIndex: 200,
+        zIndex: z.modalBackdrop,
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',

@@ -8,7 +8,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { isStale, findTrack, type TrackKey } from '../../types/opportunity';
 import { contactDisplayName, contactInitials, type ContactRow } from '../../types/contact';
 import { LAvatar, LIcon } from '../primitives';
-import { colors } from '../../styles/tokens';
+import { colors, z } from '../../styles/tokens';
 import { todayLocalISO, addDaysISO } from '../../lib/dateUtil';
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -202,7 +202,7 @@ export function NotificationBell() {
             border: `1px solid ${colors.lineHi}`,
             borderRadius: '14px 0 14px 0',
             boxShadow: '0 12px 32px rgba(0,0,0,0.55)',
-            zIndex: 1000,
+            zIndex: z.dropdown,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',

@@ -5,7 +5,7 @@ import { LChrome, LBtn, LIcon } from '../primitives';
 import { GlobalSearch } from '../search/GlobalSearch';
 import { useRealtimeSync } from '../../hooks/useRealtimeSync';
 import { useIsMobile } from '../../hooks/useMediaQuery';
-import { colors, layout } from '../../styles/tokens';
+import { colors, layout, z } from '../../styles/tokens';
 import { MiniL } from '../primitives/Decorations';
 import { BottomNav } from './BottomNav';
 import { InstallPrompt } from './InstallPrompt';
@@ -73,7 +73,7 @@ export function AppLayout() {
             background: colors.bg,
             position: 'sticky',
             top: 0,
-            zIndex: 50,
+            zIndex: z.header,
             backdropFilter: 'blur(8px)',
             WebkitBackdropFilter: 'blur(8px)',
           }}

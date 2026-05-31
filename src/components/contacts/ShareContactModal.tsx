@@ -3,7 +3,7 @@ import type { ContactRow } from '../../types/contact';
 import { contactDisplayName } from '../../types/contact';
 import { downloadVCard, formatContactAsPlainText, generateVCard } from '../../lib/vcard';
 import { LCard, LH, LBtn, LIcon } from '../primitives';
-import { colors } from '../../styles/tokens';
+import { colors, z } from '../../styles/tokens';
 
 interface ShareContactModalProps {
   contact: ContactRow;
@@ -44,7 +44,7 @@ export function ShareContactModal({ contact, onClose }: ShareContactModalProps) 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 100,
+        zIndex: z.modalBackdrop,
         padding: 24,
       }}
     >

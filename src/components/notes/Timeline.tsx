@@ -30,7 +30,7 @@ import {
   messageTime,
   parseAddress,
 } from '../../lib/google-gmail';
-import { colors } from '../../styles/tokens';
+import { colors, z } from '../../styles/tokens';
 import { useConfirm } from '../modals/ConfirmProvider';
 import { LIcon, LAvatar } from '../primitives';
 import { todayLocalISO } from '../../lib/dateUtil';
@@ -502,7 +502,7 @@ function BulkConfirmModal({
         position: 'fixed',
         inset: 0,
         background: 'rgba(0,0,0,0.7)',
-        zIndex: 500,
+        zIndex: z.toast,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

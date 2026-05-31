@@ -58,6 +58,21 @@ export const space = {
   '7xl': 44,
 } as const;
 
+// ─── z-index scale ──────────────────────────────────────────────────
+// Semantic layers so stacking is predictable instead of scattered raw numbers.
+// Ordering: content < sticky header < bottom nav < banner < modal < toast < dropdown.
+export const z = {
+  raised: 10,
+  sticky: 20,
+  header: 50,
+  bottomNav: 100,
+  banner: 150,
+  modalBackdrop: 200,
+  modal: 201,
+  toast: 500,
+  dropdown: 1000,
+} as const;
+
 // ─── Breakpoints (mobile-first) ─────────────────────────────────────
 export const breakpoints = {
   mobile: 0,      // < 640px

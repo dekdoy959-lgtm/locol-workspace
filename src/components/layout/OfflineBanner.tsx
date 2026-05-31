@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
-import { colors, layout } from '../../styles/tokens';
+import { colors, layout, z } from '../../styles/tokens';
 
 /**
  * OfflineBanner — slim sticky bar when navigator.onLine === false.
@@ -52,7 +52,7 @@ export function OfflineBanner() {
       style={{
         position: 'fixed',
         ...positionStyle,
-        zIndex: 150,
+        zIndex: z.banner,
         background: bg,
         color: fg,
         border: `1px solid ${border}`,
