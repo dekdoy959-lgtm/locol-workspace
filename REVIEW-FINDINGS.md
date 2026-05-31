@@ -26,7 +26,14 @@
   - **→ Bench 3 ครบทุกข้อที่ทำได้แล้ว** (เหลือเฉพาะ follow-up เล็ก: prompt 1 + alert 3 จุด, และ ⏭️ ข้าม #25/#27/#34/#46)
   - 🔲 follow-up เล็ก: window.prompt 1 จุด (duplicate-trip day-shift — ต้องมี input modal) + alert() 3 จุดใน mutation onError (ควรเป็น toast)
   - ⏭️ ข้าม (ไม่ใช่ bug ชัด): #25 commitment_overdue = feature ใหม่ (ต้องมี runner) · #27 '5 tracks' subtitle หาไม่เจอ · #34 relations incoming label ต้องมี reverse-label semantics · #46 /team nav = product decision
-- **Bench 4 · Cleanup (nice-to-have)** — 🔲 ยังไม่เริ่ม (49 ข้อ)
+- **Bench 4 · Cleanup (nice-to-have)** — ⏳ ~15/49 (`88954a1`, `4359fd0`, `af85a0b`, `8f82ab0`)
+  - ✅ #15 (regex มี Thai อยู่แล้ว) · #18 Feb29 birthday→Feb28 · #19 online regex ไทย · #20 ICS export disable เมื่อ 0 · #23 (done ก่อนหน้า) · #32 initials slice code-point · #34 ลบ void hacks · #35 Audience ternary · #36 source_url ellipsis · #37 contact name ไม่ force uppercase · #38 (Bench1) · #40 LAvatar default '?' · #42 ลบ Placeholder.tsx · #43 ลบ dead span · #44 stale comment · #45 (Bench1 calendar key)
+  - 🔲 เหลือ ~33 — group ไว้ให้ทำต่อ:
+    - **dead code/token:** #4 dead tokens (trackColors/statusColors/fontSize/radius) · #5 hardcoded hex → tokens · #6 z-index ไม่สม่ำเสมอ · #9 teamById/contactById นอก useMemo · #16 RelationshipGraph index ทุก render · #22 MonthGrid cell key remount · #49 BottomNav popstate dead listener
+    - **i18n/UX เล็ก:** #1 trip ใช้ icon 'cal' (ต้องเพิ่ม plane SVG ใน LIcon) · #2 emoji vs LIcon · #3 Thai/Eng chip · #7 agenda \n collapse · #13 tier chip null label 'TIER' · #24 form step '4→4.5→5' · #26 Login deco · #29 InboxTable PriorityChip tooltip/colorblind · #39 emoji headings mono
+    - **calendar/มือถือ:** #17/#41 today hover · #21 DayPanel keyframe l-fade-in · #28 Brief PDF page-break trip table · #30 BottomNav 44px safe-area · #46 OfflineBanner setTimeout pile-up · #48 trip same-day CONFLICT badge
+    - **misc:** #8 storage URL helper · #10/#11 migration RLS/rollback comments · #12 stale error text · #14 RuleEditor 'between' pre-fill · #25 LocalItineraryEditor edit mode · #27 print brand color · #31 provider token leak · #33 TeamPage delete full_name no warn · #47 Brief PDF trip team section
+- **Bench 5 · Polish (animation)** — 🔲 ยังไม่เริ่ม (15 ข้อ)
 - **Bench 5 · Polish (animation)** — 🔲 ยังไม่เริ่ม (15 ข้อ)
 
 ---
