@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { LPage, LCard, LChip, LH, LNote, LBtn } from '../../components/primitives';
@@ -152,6 +152,10 @@ function InboxCard({
       setShowDeleteConfirm(false);
       invalidate();
     },
+    onError: (e) => {
+      const msg = e instanceof Error ? e.message : 'Unknown error';
+      window.alert(`Delete failed: ${msg}`);
+    },
   });
 
   // Cancels (archives) the linked opportunity or contact, then marks inbox as cancelled.
@@ -205,6 +209,7 @@ function InboxCard({
     },
   });
 
+  const navigate = useNavigate();
   const opmsLink = item.created_opportunity_id
     ? `/inbox/${item.created_opportunity_id}`
     : item.created_contact_id
@@ -283,9 +288,12 @@ function InboxCard({
           {/* Actions */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flexShrink: 0, alignItems: 'stretch' }}>
             {opmsLink && (
-              <Link to={opmsLink}>
-                <LBtn style={{ whiteSpace: 'nowrap', width: '100%' }}>ดูใน OPMS →</LBtn>
-              </Link>
+              <LBtn
+                style={{ whiteSpace: 'nowrap', width: '100%' }}
+                onClick={() => navigate(opmsLink)}
+              >
+                ดูใน OPMS →
+              </LBtn>
             )}
             <button
               type="button"
