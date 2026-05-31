@@ -101,7 +101,7 @@ export function ContactListPage() {
                 textTransform: 'uppercase',
               }}
             >
-              {t === null ? 'Tier' : `T${t}`}
+              {t === null ? 'ทั้งหมด' : `T${t}`}
             </button>
           ))}
         </div>
