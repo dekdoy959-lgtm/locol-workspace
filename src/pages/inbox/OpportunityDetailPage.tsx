@@ -11,7 +11,7 @@ import {
   isStale,
   type TrackKey,
 } from '../../types/opportunity';
-import { LCard, LH, LBtn, LChip, LField, LIcon, LNote, LAvatar, LSelect } from '../../components/primitives';
+import { LCard, LH, LBtn, LChip, LField, LIcon, LNote, LAvatar } from '../../components/primitives';
 import { NoteComposer } from '../../components/notes/NoteComposer';
 import { Timeline } from '../../components/notes/Timeline';
 import { OpportunityPeopleSection } from '../../components/opportunities/OpportunityPeopleSection';
@@ -377,13 +377,43 @@ export function OpportunityDetailPage() {
               >
                 Stage
               </div>
-              <LSelect
-                value={opp.stage}
-                onChange={handleStageChange}
-                options={meta.stages.map((s) => ({ value: s, label: s }))}
-              />
+              {/* Segmented pipeline — shows the full stage journey with progress. */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3 }} role="group" aria-label="Stage">
+                {meta.stages.map((s, i) => {
+                  const currentIdx = meta.stages.indexOf(opp.stage);
+                  const done = i <= currentIdx;
+                  const isCurrent = s === opp.stage;
+                  return (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => handleStageChange(s)}
+                      aria-current={isCurrent ? 'step' : undefined}
+                      style={{
+                        flex: '1 1 auto',
+                        minWidth: 0,
+                        padding: '7px 6px',
+                        fontSize: 10.5,
+                        fontWeight: isCurrent ? 700 : 500,
+                        letterSpacing: 0.2,
+                        fontFamily: 'inherit',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                        color: isCurrent ? colors.bg : done ? colors.green : colors.dimSoft,
+                        background: isCurrent ? colors.green : done ? colors.greenBg : 'transparent',
+                        border: `1px solid ${done ? colors.greenDk : colors.lineHi}`,
+                        borderRadius:
+                          i === 0 ? '8px 0 0 0' : i === meta.stages.length - 1 ? '0 8px 0 8px' : '0',
+                        transition: 'background 200ms ease, color 200ms ease, border-color 200ms ease',
+                      }}
+                    >
+                      {s}
+                    </button>
+                  );
+                })}
+              </div>
               <div style={{ fontSize: 10, color: colors.dim, marginTop: 4, letterSpacing: 0.3 }}>
-                เปลี่ยน stage = update timestamp อัตโนมัติ
+                คลิกเพื่อเปลี่ยน stage · update timestamp อัตโนมัติ
               </div>
             </div>
 
