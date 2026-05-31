@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useOpportunities, useUpdateOpportunity } from '../../hooks/useOpportunities';
@@ -73,6 +73,9 @@ export function InboxPage() {
   const update = useUpdateOpportunity();
   const [tab, setTab] = useState<Tab>('all');
   const [dragOverTrack, setDragOverTrack] = useState<TrackKey | null>(null);
+  // Id of the card most recently moved via keyboard — used to restore focus to
+  // it after it re-renders in the destination column.
+  const [lastMovedId, setLastMovedId] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('newest');
   const [groupByStage, setGroupByStage] = useState(true);
   // Card density (A)
@@ -104,6 +107,18 @@ export function InboxPage() {
     // Move to new track → reset stage to that track's default
     const newStage = findTrack(newTrack).defaultStage;
     update.mutate({ id: oppId, patch: { track: newTrack, stage: newStage } });
+  };
+
+  // Keyboard equivalent of the drag: move a card to the adjacent track column.
+  const handleMoveCard = (oppId: string, dir: -1 | 1) => {
+    const opp = opps.find((o) => o.id === oppId);
+    if (!opp) return;
+    const idx = TRACKS.findIndex((t) => t.key === opp.track);
+    const nextIdx = idx + dir;
+    if (nextIdx < 0 || nextIdx >= TRACKS.length) return;
+    const newTrack = TRACKS[nextIdx].key;
+    setLastMovedId(oppId);
+    update.mutate({ id: oppId, patch: { track: newTrack, stage: findTrack(newTrack).defaultStage } });
   };
 
   const teamById = useMemo(() => {
@@ -447,6 +462,8 @@ export function InboxPage() {
                 isMobile={isMobile}
                 onCardClick={(id) => navigate(`/inbox/${id}`)}
                 onAddClick={() => navigate(`/inbox/new?track=${t.key}`)}
+                onMoveCard={handleMoveCard}
+                movedId={lastMovedId}
                 isDragOver={dragOverTrack === t.key}
                 onDragOver={(e) => {
                   e.preventDefault();
@@ -828,6 +845,8 @@ function TrackColumn({
   isMobile,
   onCardClick,
   onAddClick,
+  onMoveCard,
+  movedId,
   isDragOver,
   onDragOver,
   onDragLeave,
@@ -841,6 +860,8 @@ function TrackColumn({
   isMobile: boolean;
   onCardClick: (id: string) => void;
   onAddClick: () => void;
+  onMoveCard?: (id: string, dir: -1 | 1) => void;
+  movedId?: string | null;
   isDragOver?: boolean;
   onDragOver?: (e: React.DragEvent) => void;
   onDragLeave?: () => void;
@@ -937,6 +958,8 @@ function TrackColumn({
             staleThreshold={staleThreshold}
             density={density}
             onClick={() => onCardClick(o.id)}
+            onMove={onMoveCard ? (dir) => onMoveCard(o.id, dir) : undefined}
+            autoFocus={o.id === movedId}
           />
         ))}
         <button
@@ -983,6 +1006,8 @@ function OpportunityCard({
   density = 'spacious',
   onClick,
   wide = false,
+  onMove,
+  autoFocus,
 }: {
   opp: OpportunityRow;
   teamById: Record<string, ReturnType<typeof useTeamMembers>['data'] extends (infer T)[] | undefined ? T : never>;
@@ -990,6 +1015,10 @@ function OpportunityCard({
   density?: Density;
   onClick: () => void;
   wide?: boolean;
+  /** Move this card to the previous (-1) / next (+1) track column via keyboard. */
+  onMove?: (dir: -1 | 1) => void;
+  /** Restore focus to this card after a keyboard move re-renders it. */
+  autoFocus?: boolean;
 }) {
   const meta = findTrack(opp.track);
   const owner = opp.owner_id ? teamById[opp.owner_id] : null;
@@ -1000,10 +1029,44 @@ function OpportunityCard({
     opp.track === 'event' ? 'cal' : opp.track === 'trip' ? 'cal' : opp.track === 'apply' ? 'doc' : 'clock';
   const fromDiscord = !!(opp.details as Record<string, unknown>)?.discord_message_id;
 
+  // ─── a11y (#3): make the card keyboard-operable. Enter/Space opens it;
+  // Ctrl/⌘ + ←/→ moves it to the adjacent track column (keyboard drag-drop).
+  const cardRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (autoFocus) cardRef.current?.focus();
+  }, [autoFocus]);
+
+  const ariaLabel = `${opp.title} · ${meta.name} · stage ${opp.stage}${stale ? ' · stale' : ''}`;
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    } else if (onMove && (e.ctrlKey || e.metaKey) && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+      e.preventDefault();
+      onMove(e.key === 'ArrowRight' ? 1 : -1);
+    }
+  };
+  const interactiveProps = {
+    role: 'button' as const,
+    tabIndex: 0,
+    'aria-label': ariaLabel,
+    onKeyDown: handleKeyDown,
+    // Guarantee a visible keyboard focus ring even if global CSS removes outlines.
+    onFocus: (e: React.FocusEvent<HTMLDivElement>) => {
+      e.currentTarget.style.outline = `2px solid ${colors.green}`;
+      e.currentTarget.style.outlineOffset = '2px';
+    },
+    onBlur: (e: React.FocusEvent<HTMLDivElement>) => {
+      e.currentTarget.style.outline = 'none';
+    },
+  };
+
   // ─── Dense mode: single-line row ──────────────────────────────────
   if (density === 'dense') {
     return (
       <div
+        ref={cardRef}
+        {...interactiveProps}
         onClick={onClick}
         draggable
         onDragStart={(e) => {
@@ -1077,6 +1140,8 @@ function OpportunityCard({
   if (density === 'compact') {
     return (
       <div
+        ref={cardRef}
+        {...interactiveProps}
         onClick={onClick}
         draggable
         onDragStart={(e) => {
@@ -1172,6 +1237,8 @@ function OpportunityCard({
   // ─── Spacious mode: original full card ────────────────────────────
   return (
     <div
+      ref={cardRef}
+      {...interactiveProps}
       onClick={onClick}
       draggable
       onDragStart={(e) => {
