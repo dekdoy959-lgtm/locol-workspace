@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useOpportunities, useUpdateOpportunity } from '../../hooks/useOpportunities';
 import { withViewTransition } from '../../lib/viewTransition';
+import { FirstRunTip } from '../../components/layout/FirstRunTip';
 import { useTeamMembers, teamMemberInitials } from '../../hooks/useTeamMembers';
 import { useTrackSettings, getStaleThreshold } from '../../hooks/useTrackSettings';
 import { useIsMobile } from '../../hooks/useMediaQuery';
@@ -411,6 +412,13 @@ export function InboxPage() {
           {filtered.length} items
         </span>
       </div>
+
+      <FirstRunTip id="inbox-tracks" title="ยินดีต้อนรับสู่ Inbox">
+        งานทั้งหมดแบ่งเป็น 4 <b style={{ color: colors.text }}>tracks</b>: <b style={{ color: colors.text }}>apply</b> (ขอทุน/งานแข่ง) ·{' '}
+        <b style={{ color: colors.text }}>watch</b> (ติดตามข่าว) · <b style={{ color: colors.text }}>event</b> (อีเวนต์) ·{' '}
+        <b style={{ color: colors.text }}>trip</b> (ลงพื้นที่) — ลากการ์ดข้าม column เพื่อเปลี่ยน track ได้ ·
+        ใช้ปุ่ม <b style={{ color: colors.text }}>CAPTURE</b> เพิ่มงานใหม่ · แท็บ <b style={{ color: colors.text }}>Focus</b> โชว์งานที่ต้องสนใจวันนี้
+      </FirstRunTip>
 
       {isLoading ? (
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)', gap: 14 }}>
