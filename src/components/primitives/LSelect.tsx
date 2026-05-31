@@ -15,9 +15,12 @@ interface LSelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'on
 }
 
 export function LSelect({ value, onChange, options, placeholder, style = {}, ...rest }: LSelectProps) {
+  const ariaLabel =
+    rest['aria-label'] ?? (rest.id || rest['aria-labelledby'] ? undefined : placeholder);
   return (
     <select
       {...rest}
+      aria-label={ariaLabel}
       value={value}
       onChange={(e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
       style={{

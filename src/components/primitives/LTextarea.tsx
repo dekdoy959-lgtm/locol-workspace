@@ -8,9 +8,12 @@ interface LTextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement
 }
 
 export function LTextarea({ value, onChange, style = {}, rows = 3, ...rest }: LTextareaProps) {
+  const ariaLabel =
+    rest['aria-label'] ?? (rest.id || rest['aria-labelledby'] ? undefined : rest.placeholder);
   return (
     <textarea
       {...rest}
+      aria-label={ariaLabel}
       rows={rows}
       value={value}
       onChange={(e: ChangeEvent<HTMLTextAreaElement>) => onChange(e.target.value)}

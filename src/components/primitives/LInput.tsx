@@ -8,9 +8,15 @@ interface LInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onCha
 }
 
 export function LInput({ value, onChange, style = {}, ...rest }: LInputProps) {
+  // Ensure an accessible name even when no <label htmlFor> is wired: fall back
+  // to the placeholder. Skipped when an id / aria-labelledby is set (assumed
+  // already associated) so we never override a real label.
+  const ariaLabel =
+    rest['aria-label'] ?? (rest.id || rest['aria-labelledby'] ? undefined : rest.placeholder);
   return (
     <input
       {...rest}
+      aria-label={ariaLabel}
       value={value}
       onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
       style={{
