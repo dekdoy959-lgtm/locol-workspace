@@ -37,7 +37,8 @@
     - ✅ verify: 3 icon ใหม่ DOM-checked + app run healthy หลัง HMR ทุก change + build เขียวทุก commit
     - 🔲 **เหลือ (ไม่ทำ — เหตุผลชัด):** (a) mixed-group ที่บาง emoji ไม่มี icon (🔥🌐🚗 ใน CalendarPage smart sections → swap บางตัวจะปน) · (b) tab/chip ที่สีเปลี่ยนตาม active state (icon สีคงที่จะไม่ตาม) · (c) data form-field labels (เก็บ emoji ได้) · (d) decorative 💡🙏⭐🎉🐄☕🎂 (เก็บไว้)
     - 💡 วิธี verify: `preview_start` dev → temp public route render icon → `preview_eval` เช็ค getBoundingClientRect/children (screenshot tool เพี้ยนเป็นเส้นบาง ใช้ eval แทน)
-  - 🔲 **#3 chip labels → อังกฤษ:** judgment sweep ต่อ label (เลือกคำแปลรายตัว)
+  - ✅ **#3 chip labels:** ตรวจแล้ว — chip/option labels เป็นอังกฤษอยู่แล้ว (T1·Inner, Strong/Bridge/Weak, VVIP/Speaker, High, CAPTURE, STALE); Thai อยู่แค่ subtitle/help ซึ่งถูกต้องสำหรับ Thai UI → ไม่ต้องแก้
+  - **→ ทุก decision ที่ user อนุมัติ (16 ข้อ) ทำครบ/addressed แล้ว** · #5 hex sweep ครบทั้ง semantic family ใหม่ + token เดิม
   - เก่า (subjective ที่ยังไม่ถาม): —
     - **subjective/design:** #2 emoji vs LIcon · #3 Thai/Eng chip · #5 hardcoded hex → tokens · #6 z-index scale · #24 form step '4→4.5→5' · #26 Login deco · #27 print brand color (อาจตั้งใจเพื่อ contrast) · #39 emoji headings mono
     - **ต้อง asset/feature:** #1 trip plane icon (ต้องวาด SVG ใน LIcon) · #47 Brief PDF trip team section · #28 Brief PDF page-break trip table · #48 trip same-day CONFLICT badge
