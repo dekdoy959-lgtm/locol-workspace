@@ -937,6 +937,7 @@ function TrackColumn({
 
       {/* Cards — with column-scoped scroll on desktop (B) */}
       <div
+        className="l-stagger"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -1049,6 +1050,7 @@ function OpportunityCard({
   const interactiveProps = {
     role: 'button' as const,
     tabIndex: 0,
+    className: 'l-lift',
     'aria-label': ariaLabel,
     onKeyDown: handleKeyDown,
     // Guarantee a visible keyboard focus ring even if global CSS removes outlines.

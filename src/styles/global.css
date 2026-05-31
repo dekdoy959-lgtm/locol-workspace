@@ -167,6 +167,62 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   table.l-rtable td.l-rtable-hide-mobile { display: none !important; }
 }
 
+/* ─── Calm choreography (animation) ─────────────────────────────────
+   Every state change gets ONE motion/color cue, then settles. All motion is
+   gated behind prefers-reduced-motion so it never fights accessibility. */
+
+/* Skeleton shimmer — shape-matched loading placeholders (#9) */
+.l-skeleton {
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--line) 37%, var(--bg-card) 63%);
+  background-size: 200% 100%;
+  border-radius: 8px 0 8px 0;
+}
+
+/* Card lift + soft shadow on hover (#8). Hover-capable pointers only. */
+.l-lift { transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease; }
+@media (hover: hover) {
+  .l-lift:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes l-rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes l-shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+  }
+  @keyframes l-pulse-ring {
+    0%   { box-shadow: 0 0 0 0 rgba(153, 206, 36, 0.45); }
+    70%  { box-shadow: 0 0 0 7px rgba(153, 206, 36, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(153, 206, 36, 0); }
+  }
+  @keyframes l-bell-bounce {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    30%      { transform: translateY(-3px) rotate(-9deg); }
+    60%      { transform: translateY(0) rotate(7deg); }
+  }
+
+  .l-skeleton { animation: l-shimmer 1.4s ease-in-out infinite; }
+  .l-rise { animation: l-rise 260ms ease-out backwards; }
+  .l-pulse-ring { animation: l-pulse-ring 2s ease-out infinite; }
+  .l-bell-bounce { animation: l-bell-bounce 600ms ease; }
+
+  /* Stagger-in list children (#3) — apply .l-stagger to the container. */
+  .l-stagger > * { animation: l-rise 280ms ease-out backwards; }
+  .l-stagger > *:nth-child(1)  { animation-delay: 0ms; }
+  .l-stagger > *:nth-child(2)  { animation-delay: 30ms; }
+  .l-stagger > *:nth-child(3)  { animation-delay: 60ms; }
+  .l-stagger > *:nth-child(4)  { animation-delay: 90ms; }
+  .l-stagger > *:nth-child(5)  { animation-delay: 120ms; }
+  .l-stagger > *:nth-child(6)  { animation-delay: 150ms; }
+  .l-stagger > *:nth-child(7)  { animation-delay: 180ms; }
+  .l-stagger > *:nth-child(8)  { animation-delay: 210ms; }
+  .l-stagger > *:nth-child(9)  { animation-delay: 240ms; }
+  .l-stagger > *:nth-child(n+10) { animation-delay: 270ms; }
+}
+
 /* Smooth momentum scrolling for kanban etc. */
 .l-scroll-x {
   overflow-x: auto;
