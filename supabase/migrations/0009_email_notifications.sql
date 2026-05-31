@@ -66,7 +66,6 @@ create policy "auth read alert_log"
 drop policy if exists "service write alert_log" on public.alert_log;
 create policy "service write alert_log"
   on public.alert_log for insert
-  using (true)
   with check (true);
 
 -- ─── Auto-create default prefs for every existing team_member ─────
