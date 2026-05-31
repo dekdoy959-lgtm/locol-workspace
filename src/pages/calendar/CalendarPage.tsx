@@ -472,7 +472,7 @@ function SmartSection({
             <div style={{ flex: 1, fontSize: 13, color: colors.text, fontWeight: 500 }}>
               {i.title}
               {i.location && (
-                <div style={{ fontSize: 11, color: colors.dimSoft, marginTop: 2 }}>📍 {i.location}</div>
+                <div style={{ fontSize: 11, color: colors.dimSoft, marginTop: 2 }}><LIcon kind="pin" size={10} color={colors.dimSoft} /> {i.location}</div>
               )}
             </div>
             <span style={{ color: colors.dim }}>
@@ -809,7 +809,7 @@ function AgendaRow({ item, isConflict, onClick }: { item: CalendarItem; isConfli
         <div style={{ fontSize: 13.5, color: colors.text, fontWeight: 500, lineHeight: 1.3 }}>{item.title}</div>
         {(item.location || item.cost) && (
           <div style={{ fontSize: 11, color: colors.dimSoft, marginTop: 3, display: 'flex', gap: 10 }}>
-            {item.location && <span>📍 {item.location}</span>}
+            {item.location && <span><LIcon kind="pin" size={10} color={colors.dimSoft} /> {item.location}</span>}
             {item.cost && (
               <span>
                 💸 {item.cost.amount.toLocaleString()} {item.cost.currency}
@@ -1062,7 +1062,7 @@ function DayPanel({
                     </div>
                     <div style={{ fontSize: 13, color: colors.text, fontWeight: 500, lineHeight: 1.3 }}>{i.title}</div>
                     {i.location && (
-                      <div style={{ fontSize: 11, color: colors.dimSoft }}>📍 {i.location}</div>
+                      <div style={{ fontSize: 11, color: colors.dimSoft }}><LIcon kind="pin" size={10} color={colors.dimSoft} /> {i.location}</div>
                     )}
                     {i.cost && (
                       <div style={{ fontSize: 11, color: colors.dimSoft }}>

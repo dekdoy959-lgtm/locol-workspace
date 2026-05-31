@@ -785,7 +785,7 @@ function MeetingRow({
         </div>
 
         {event.location && (
-          <div style={{ fontSize: 12, color: colors.dimSoft, marginTop: 4 }}>📍 {event.location}</div>
+          <div style={{ fontSize: 12, color: colors.dimSoft, marginTop: 4 }}><LIcon kind="pin" size={10} color={colors.dimSoft} /> {event.location}</div>
         )}
 
         {meetLink && (

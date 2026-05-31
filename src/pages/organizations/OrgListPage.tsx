@@ -201,7 +201,7 @@ export function OrgListPage() {
                   <span>
                     <b style={{ color: colors.text, fontFamily: "'IBM Plex Mono', monospace" }}>{peopleCount}</b> people
                   </span>
-                  {o.hq && <span>📍 {o.hq}</span>}
+                  {o.hq && <span><LIcon kind="pin" size={10} color={colors.dim} /> {o.hq}</span>}
                 </div>
               </LCard>
             );
