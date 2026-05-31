@@ -212,6 +212,9 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   @keyframes l-ink-sweep { from { transform: scaleX(0); } to { transform: scaleX(1); } }
   .l-ink-sweep { transform-origin: left center; animation: l-ink-sweep 600ms ease-out backwards; }
 
+  @keyframes l-slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .l-slide-up { animation: l-slide-up 220ms ease-out; }
+
   /* Stagger-in list children (#3) — apply .l-stagger to the container. */
   .l-stagger > * { animation: l-rise 280ms ease-out backwards; }
   .l-stagger > *:nth-child(1)  { animation-delay: 0ms; }

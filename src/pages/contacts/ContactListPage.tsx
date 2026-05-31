@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContacts } from '../../hooks/useContacts';
 import {
@@ -8,6 +8,7 @@ import {
   type PhoneEntry,
   type EmailEntry,
   type RelationshipStatus,
+  type ContactRow,
 } from '../../types/contact';
 import { LCard, LH, LBtn, LIcon, LInput, LAvatar, LChip, LStatus, LNote, LSkeletonCard, LEmptyState } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
@@ -24,6 +25,16 @@ export function ContactListPage() {
   const { data: contacts, isLoading, error } = useContacts();
   const [search, setSearch] = useState('');
   const [tierFilter, setTierFilter] = useState<number | null>(null);
+  // Long-press → quick-action sheet (#13, mobile)
+  const [sheetContact, setSheetContact] = useState<ContactRow | null>(null);
+  const lpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lpStart = useRef<{ x: number; y: number } | null>(null);
+  const lpFired = useRef(false);
+  const clearLp = () => {
+    if (lpTimer.current) clearTimeout(lpTimer.current);
+    lpTimer.current = null;
+    lpStart.current = null;
+  };
   const [statusFilter, setStatusFilter] = useState<RelationshipStatus | 'all'>('all');
 
   const filtered = useMemo(() => {
@@ -186,7 +197,32 @@ export function ContactListPage() {
                 return (
                   <tr
                     key={c.id}
-                    onClick={() => navigate(`/contacts/${c.id}`)}
+                    onClick={() => {
+                      if (lpFired.current) {
+                        lpFired.current = false;
+                        return;
+                      }
+                      navigate(`/contacts/${c.id}`);
+                    }}
+                    onPointerDown={(e) => {
+                      if (e.pointerType === 'mouse') return;
+                      lpFired.current = false;
+                      lpStart.current = { x: e.clientX, y: e.clientY };
+                      lpTimer.current = setTimeout(() => {
+                        lpFired.current = true;
+                        setSheetContact(c);
+                      }, 500);
+                    }}
+                    onPointerMove={(e) => {
+                      if (
+                        lpStart.current &&
+                        (Math.abs(e.clientX - lpStart.current.x) > 10 ||
+                          Math.abs(e.clientY - lpStart.current.y) > 10)
+                      )
+                        clearLp();
+                    }}
+                    onPointerUp={clearLp}
+                    onPointerLeave={clearLp}
                     style={{
                       borderBottom: `1px solid ${colors.line}`,
                       cursor: 'pointer',
@@ -303,6 +339,71 @@ export function ContactListPage() {
             </tbody>
           </table>
         </LCard>
+      )}
+
+      {/* Long-press quick-action sheet (#13, mobile) */}
+      {sheetContact && (
+        <div
+          onClick={() => setSheetContact(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.6)',
+            zIndex: 300,
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            className="safe-bottom l-slide-up"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: 480,
+              background: colors.bgCard,
+              borderRadius: '20px 0 0 0',
+              border: `1px solid ${colors.lineHi}`,
+              padding: '8px 0 12px',
+            }}
+          >
+            <div style={{ width: 40, height: 4, background: colors.line, borderRadius: 2, margin: '6px auto 10px' }} />
+            <div style={{ padding: '6px 20px 10px', borderBottom: `1px solid ${colors.line}`, fontWeight: 600, color: colors.text }}>
+              {contactDisplayName(sheetContact)}
+            </div>
+            {(
+              [
+                { label: 'ดูโปรไฟล์', icon: 'user' as const, to: `/contacts/${sheetContact.id}` },
+                { label: 'แก้ไข', icon: 'doc' as const, to: `/contacts/${sheetContact.id}/edit` },
+              ]
+            ).map((a) => (
+              <button
+                key={a.label}
+                type="button"
+                onClick={() => {
+                  navigate(a.to);
+                  setSheetContact(null);
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 14,
+                  width: '100%',
+                  padding: '14px 20px',
+                  background: 'transparent',
+                  border: 'none',
+                  color: colors.text,
+                  fontSize: 15,
+                  fontFamily: 'inherit',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                <LIcon kind={a.icon} size={18} color={colors.dimSoft} /> {a.label}
+              </button>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
