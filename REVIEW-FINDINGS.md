@@ -30,8 +30,8 @@
   - ✅ #4 (ลบ trackColors/statusColors dead) · #8 (Bench1 DiscordAttachment) · #9 teamById memo · #12 stale reviewer msg · #13 tier 'all' chip · #15 · #16 · #17/#41 today hover · #18 Feb29 · #19 online regex · #20 ICS disable · #21 l-fade-in keyframe · #22 MonthGrid key · #23 · #29 PriorityChip tooltip · #30 BottomNav safe-area · #32 initials · #34 void hacks · #35 ternary · #36 ellipsis · #37 name casing · #38 · #40 LAvatar · #42 Placeholder · #43 span · #44 comment · #45 · #46 OfflineBanner timer · #49 BottomNav useLocation
   - ✅ (รอบ user-decided) #1 plane icon · #6 z-index scale · #7 agenda newline · #10/#11 mig comments · #12 reviewer msg · #14 RuleEditor between · #24 form step · #26 login deco · #28 PDF page-break · #31 token by user.id · #33 full_name required · #47 (มีอยู่แล้ว) · #48 trip conflict badge — **~43/49**
   - ⏭️ #27 คงไว้ (print contrast — user เลือกไม่แก้)
-  - 🔲 เหลือ 3 **sweep ใหญ่** (user อนุมัติแล้ว · ทำใน session สด context เต็ม):
-    - **#5 hex → token (ทั้งหมด):** มี hardcoded hex 50+ จุด (#d96a66 danger, #E8B923 warn ฯลฯ) → เพิ่มเข้า colors token แล้ว replace ทุกจุด
+  - ✅ **#5 hex → token เสร็จ** (`c31edc5` `674be80` `6aa7ef0`) — เพิ่ม semantic tokens (danger/warn/olive/greenBg/discord) + replace hex ทุกจุดนอก tokens.ts (quoted · JSX props · compound border strings · 251 modules build เขียว)
+  - 🔲 เหลือ 2 **sweep ใหญ่** (user อนุมัติแล้ว · ทำใน session สด context เต็ม):
     - **#2/#39 emoji → LIcon:** แทน functional emoji (📅📍💰🎯) ด้วย LIcon · heading icons ด้วย (บาง emoji เช่น 🐄☕🎉 ต้องวาด SVG ใหม่)
     - **#3 chip labels → อังกฤษเป็นหลัก:** ทำ chip/label ให้เป็นอังกฤษสม่ำเสมอ
   - เก่า (subjective ที่ยังไม่ถาม): —
