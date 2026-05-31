@@ -32,8 +32,9 @@
   - ⏭️ #27 คงไว้ (print contrast — user เลือกไม่แก้)
   - ✅ **#5 hex → token เสร็จ** (`c31edc5` `674be80` `6aa7ef0`) — เพิ่ม semantic tokens (danger/warn/olive/greenBg/discord) + replace hex ทุกจุดนอก tokens.ts (quoted · JSX props · compound border strings · 251 modules build เขียว)
   - ⏳ **#2/#39 emoji → LIcon** (`eabeed7` `13f0eb7`): icon foundation + verified workflow พร้อม
-    - ✅ เพิ่ม pin/camera/palette เข้า LIcon · **verify render ใน browser แล้ว** (temp /icon-test route → DOM ยืนยัน geometry ถูก → ลบ route) · swap 📍→pin 5 จุด (CalendarPage×3, OrgList, Timeline) build เขียว
-    - 🔲 **เหลือ (mechanical ตาม pattern เดิม):** swap emoji ที่เหลือ — ✈→plane, 📅→cal, 💰→money, 🎯→target, 👥→users, 📸→camera, 🎨→palette (หลายอันอยู่ใน title/label string props → ต้องปรับ prop รับ ReactNode) · icon รูปยาก 🐄☕🎉 (วาด+verify)
+    - ✅ เพิ่ม pin/camera/palette เข้า LIcon · **verify ใน browser** (temp /icon-test → DOM ยืนยัน geometry → ลบ route)
+    - ✅ swap **10 จุด**: 📍→pin (CalendarPage×3, OrgList, Timeline) · ✈→plane + 📍→pin (TripItinerary×3, LocalItineraryEditor, InboxTable) — build เขียว (`13f0eb7` `45174f4`)
+    - 🔲 **เหลือ (mechanical):** 📅→cal · 💰→money · 🎯→target · 👥→users · 📸→camera · 🎨→palette — **ส่วนใหญ่อยู่ใน Section title=\"...\" / label string props → ต้องปรับ prop ให้รับ ReactNode ก่อน** (structural ราย component) · icon รูปยาก 🐄☕🎉 (วาด+verify)
     - 💡 วิธี verify: `preview_start` dev → temp public route render icon → `preview_eval` เช็ค getBoundingClientRect/children (screenshot tool เพี้ยนเป็นเส้นบาง ใช้ eval แทน)
   - 🔲 **#3 chip labels → อังกฤษ:** judgment sweep ต่อ label (เลือกคำแปลรายตัว)
   - เก่า (subjective ที่ยังไม่ถาม): —
