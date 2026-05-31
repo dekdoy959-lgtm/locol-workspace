@@ -8,6 +8,21 @@
 
 ---
 
+## 📈 PROGRESS LOG (post-Sprint, bench-based)
+
+> ทำงานต่อเป็น "Bench" เรียงตามผลกระทบ × ความเสี่ยง · build เขียว + push ทุก batch
+
+- **Bench 0 · Migrations** (`ad138e9`) — run 0009→0016→0017→0018 บน cloud (0009 ไม่เคยรัน + แก้ bug INSERT policy `using(true)`)
+- **Bench 1 · Security + Data** (`a105bc3`, `b1a549d`) — ✅ should #11,13,14,20 · sec #10(mitigated) · nice #38,45
+  - #6 calendar queryKey by user.id · #13 org roll-up by org_id · #14 duplicate copies people+team assignments · #20 discord restore ไม่ clobber status · #11 discord bucket private + signed URLs (migration 0018)
+- **Bench 2 · Correctness** (`26afb2a`, `6d28cd6`, `1c2c842`) — ✅ should #5,15,16,17,19,32,36,37,39,40,42,43,44 (13/14)
+  - #18 (avatar) = N/A: เป็น URL text input (`type="url"`) ไม่ใช่ file upload — premise ของ finding ไม่ตรงโค้ดจริง
+- **Bench 3 · a11y + UX** — 🔲 ยังไม่เริ่ม (should #3,4,21,22,24,25,27,28,29,30,33,34,41,46,47,48)
+- **Bench 4 · Cleanup (nice-to-have)** — 🔲 ยังไม่เริ่ม (49 ข้อ)
+- **Bench 5 · Polish (animation)** — 🔲 ยังไม่เริ่ม (15 ข้อ)
+
+---
+
 ## 🔴 MUST-FIX (10) — ทั้งหมดแก้แล้ว ✅
 
 | # | สถานะ | Effort | ปัญหา |
