@@ -46,6 +46,7 @@ export function TripBudgetCard({ opp }: TripBudgetCardProps) {
   const initialActual = asNumber(details.actual_cost);
 
   const [editing, setEditing] = useState(false);
+  const [justSaved, setJustSaved] = useState(false);
   const [actualDraft, setActualDraft] = useState<string>(initialActual?.toString() ?? '');
 
   useEffect(() => {
@@ -77,7 +78,13 @@ export function TripBudgetCard({ opp }: TripBudgetCardProps) {
           details: { ...latestDetails, actual_cost: newActual },
         },
       },
-      { onSuccess: () => setEditing(false) },
+      {
+        onSuccess: () => {
+          setEditing(false);
+          setJustSaved(true);
+          setTimeout(() => setJustSaved(false), 1800);
+        },
+      },
     );
   };
 
@@ -138,6 +145,14 @@ export function TripBudgetCard({ opp }: TripBudgetCardProps) {
           }}
         >
           <LIcon kind="money" size={11} color={colors.green} /> BUDGET TRACKING
+          {justSaved && (
+            <span
+              className="l-rise"
+              style={{ marginLeft: 8, color: colors.green, fontSize: 10, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 3 }}
+            >
+              <LIcon kind="check" size={10} color={colors.green} /> บันทึกแล้ว
+            </span>
+          )}
         </div>
         {!editing && (
           <LBtn small ghost onClick={() => setEditing(true)}>
