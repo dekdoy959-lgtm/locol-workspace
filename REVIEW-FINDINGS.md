@@ -33,8 +33,9 @@
   - ✅ **#5 hex → token เสร็จ** (`c31edc5` `674be80` `6aa7ef0`) — เพิ่ม semantic tokens (danger/warn/olive/greenBg/discord) + replace hex ทุกจุดนอก tokens.ts (quoted · JSX props · compound border strings · 251 modules build เขียว)
   - ⏳ **#2/#39 emoji → LIcon** (`eabeed7` `13f0eb7`): icon foundation + verified workflow พร้อม
     - ✅ เพิ่ม pin/camera/palette เข้า LIcon · **verify ใน browser** (temp /icon-test → DOM ยืนยัน geometry → ลบ route)
-    - ✅ swap **10 จุด**: 📍→pin (CalendarPage×3, OrgList, Timeline) · ✈→plane + 📍→pin (TripItinerary×3, LocalItineraryEditor, InboxTable) — build เขียว (`13f0eb7` `45174f4`)
-    - 🔲 **เหลือ (mechanical):** 📅→cal · 💰→money · 🎯→target · 👥→users · 📸→camera · 🎨→palette — **ส่วนใหญ่อยู่ใน Section title=\"...\" / label string props → ต้องปรับ prop ให้รับ ReactNode ก่อน** (structural ราย component) · icon รูปยาก 🐄☕🎉 (วาด+verify)
+    - ✅ swap **~33 จุด** functional emoji → LIcon ทั่ว UI + Brief PDF (`13f0eb7`→`d9d58dc`): 📍→pin · ✈→plane · 👤→user · 👥→users · 💰→money · 🔔→bell · 📅→cal · 🎯→target · 📋→doc · 📊→graph · เพิ่ม icon prop ให้ Brief Section (cal/pin/users/palette/plane)
+    - ✅ verify: 3 icon ใหม่ DOM-checked + app run healthy หลัง HMR ทุก change + build เขียวทุก commit
+    - 🔲 **เหลือ (ไม่ทำ — เหตุผลชัด):** (a) mixed-group ที่บาง emoji ไม่มี icon (🔥🌐🚗 ใน CalendarPage smart sections → swap บางตัวจะปน) · (b) tab/chip ที่สีเปลี่ยนตาม active state (icon สีคงที่จะไม่ตาม) · (c) data form-field labels (เก็บ emoji ได้) · (d) decorative 💡🙏⭐🎉🐄☕🎂 (เก็บไว้)
     - 💡 วิธี verify: `preview_start` dev → temp public route render icon → `preview_eval` เช็ค getBoundingClientRect/children (screenshot tool เพี้ยนเป็นเส้นบาง ใช้ eval แทน)
   - 🔲 **#3 chip labels → อังกฤษ:** judgment sweep ต่อ label (เลือกคำแปลรายตัว)
   - เก่า (subjective ที่ยังไม่ถาม): —
