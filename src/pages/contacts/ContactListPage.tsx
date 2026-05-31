@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContacts } from '../../hooks/useContacts';
 import {
@@ -25,6 +25,10 @@ export function ContactListPage() {
   const { data: contacts, isLoading, error } = useContacts();
   const [search, setSearch] = useState('');
   const [tierFilter, setTierFilter] = useState<number | null>(null);
+  // Client-side pagination (#26) — render in pages of 50 to avoid a DOM cliff
+  // on large lists. All rows are fetched; only the rendered count grows.
+  const PAGE = 50;
+  const [visible, setVisible] = useState(PAGE);
   // Long-press → quick-action sheet (#13, mobile)
   const [sheetContact, setSheetContact] = useState<ContactRow | null>(null);
   const lpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -49,6 +53,9 @@ export function ContactListPage() {
       return name.includes(q) || orgs.includes(q);
     });
   }, [contacts, search, tierFilter, statusFilter]);
+
+  // Reset the page size whenever the filtered set changes.
+  useEffect(() => setVisible(PAGE), [search, tierFilter, statusFilter]);
 
   const statusCounts = useMemo(() => {
     const m: Record<string, number> = { all: contacts?.length ?? 0, known: 0, prospect: 0, cold: 0, archived: 0 };
@@ -187,7 +194,7 @@ export function ContactListPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((c) => {
+              {filtered.slice(0, visible).map((c) => {
                 const orgs = c.orgs as { org_name: string; is_primary: boolean }[];
                 const primaryOrg = orgs.find((o) => o.is_primary) ?? orgs[0];
                 const phones = c.phones as PhoneEntry[];
@@ -338,6 +345,13 @@ export function ContactListPage() {
               })}
             </tbody>
           </table>
+          {filtered.length > visible && (
+            <div style={{ padding: 14, textAlign: 'center', borderTop: `1px solid ${colors.line}` }}>
+              <LBtn ghost onClick={() => setVisible((v) => v + PAGE)}>
+                แสดงเพิ่ม · เหลืออีก {filtered.length - visible}
+              </LBtn>
+            </div>
+          )}
         </LCard>
       )}
 

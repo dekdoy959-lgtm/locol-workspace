@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOpportunities } from '../../hooks/useOpportunities';
 import { useTeamMembers } from '../../hooks/useTeamMembers';
@@ -196,6 +196,9 @@ export function InboxTablePage() {
   const [trackFilter, setTrackFilter] = useState<'all' | TrackKey>('all');
   const [sortField, setSortField] = useState<SortField>('eventDate');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
+  // Client-side pagination (#26) — render in pages of 50.
+  const PAGE = 50;
+  const [visible, setVisible] = useState(PAGE);
 
   const filtered = useMemo(() => {
     let result = allRows;
@@ -242,6 +245,8 @@ export function InboxTablePage() {
     });
     return sorted;
   }, [allRows, trackFilter, search, sortField, sortDir]);
+
+  useEffect(() => setVisible(PAGE), [trackFilter, search, sortField, sortDir]);
 
   const toggleSort = (field: SortField) => {
     if (sortField === field) {
@@ -344,7 +349,7 @@ export function InboxTablePage() {
                   </td>
                 </tr>
               )}
-              {filtered.map((r) => {
+              {filtered.slice(0, visible).map((r) => {
                 const t = findTrack(r.opp.track as TrackKey);
                 return (
                   <tr
@@ -403,6 +408,13 @@ export function InboxTablePage() {
             </tbody>
           </table>
         </div>
+        {filtered.length > visible && (
+          <div style={{ padding: 14, textAlign: 'center', borderTop: `1px solid ${colors.line}` }}>
+            <LBtn ghost onClick={() => setVisible((v) => v + PAGE)}>
+              แสดงเพิ่ม · เหลืออีก {filtered.length - visible}
+            </LBtn>
+          </div>
+        )}
       </LCard>
 
       <div style={{ marginTop: 12, fontSize: 11, color: colors.dim }}>
