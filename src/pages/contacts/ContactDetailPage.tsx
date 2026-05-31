@@ -267,7 +267,7 @@ export function ContactDetailPage() {
           )}
 
           {/* Contact methods */}
-          {(phones.length > 0 || emails.length > 0) && (
+          {(phones.length > 0 || emails.length > 0 || addresses.length > 0 || socials.length > 0) && (
             <LCard padding={20}>
               <LH level={5} accent={false} color={colors.green}>
                 CONTACT METHODS

@@ -61,7 +61,7 @@ function wrap(title, bodyHtml, ctaLabel, ctaUrl) {
 }
 
 // ─── Stale opportunity ──────────────────────────────────────────────
-export function staleOpportunityEmail({ recipientName, opp, daysSinceUpdate, trackLabel }) {
+export function staleOpportunityEmail({ recipientName, opp, daysSinceUpdate, threshold, trackLabel }) {
   const subject = `⚠ Stale · ${opp.title}`;
   const url = `${APP_URL}/inbox/${opp.id}`;
   const body = `
@@ -74,7 +74,7 @@ export function staleOpportunityEmail({ recipientName, opp, daysSinceUpdate, tra
     <p style="margin:0 0 16px;font-size:14px;color:${DIM};line-height:1.55;">
       สวัสดี ${escapeHtml(recipientName)},<br/><br/>
       Opportunity นี้ไม่ได้ update มา <b style="color:#d96a66;">${daysSinceUpdate} วัน</b> แล้ว
-      ในขณะที่ stale threshold ของ <b style="color:${TEXT};">${trackLabel}</b> track ตั้งไว้ที่ ${daysSinceUpdate - 1} วัน
+      ในขณะที่ stale threshold ของ <b style="color:${TEXT};">${trackLabel}</b> track ตั้งไว้ที่ ${threshold} วัน
     </p>
     <table cellpadding="6" cellspacing="0" style="background:#181818;border:1px solid ${LINE};border-radius:10px 0 10px 0;width:100%;font-size:13px;color:${TEXT};">
       <tr><td style="color:${DIM};width:120px;">Track</td><td><b>${trackLabel}</b></td></tr>

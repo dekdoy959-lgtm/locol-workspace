@@ -34,8 +34,11 @@ export function useCreateMilestone() {
       if (error) throw error;
       return data as MilestoneRow;
     },
-    onSuccess: (_, vars) => {
-      qc.invalidateQueries({ queryKey: [...MILESTONES_KEY, vars.contact_id] });
+    onSuccess: () => {
+      // Invalidate the whole 'milestones' prefix so both the contact view and
+      // the workspace-wide list (useAllMilestones) refresh — don't rely on
+      // realtime alone (it's lost if the socket drops).
+      qc.invalidateQueries({ queryKey: MILESTONES_KEY });
     },
   });
 }
@@ -53,8 +56,8 @@ export function useUpdateMilestone() {
       if (error) throw error;
       return data as MilestoneRow;
     },
-    onSuccess: (data) => {
-      qc.invalidateQueries({ queryKey: [...MILESTONES_KEY, data.contact_id] });
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: MILESTONES_KEY });
     },
   });
 }
@@ -67,8 +70,8 @@ export function useDeleteMilestone() {
       if (error) throw error;
       return { id, contactId };
     },
-    onSuccess: ({ contactId }) => {
-      qc.invalidateQueries({ queryKey: [...MILESTONES_KEY, contactId] });
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: MILESTONES_KEY });
     },
   });
 }

@@ -184,6 +184,7 @@ async function processStaleOpportunities() {
       recipientName: owner.full_name ?? owner.email.split('@')[0],
       opp,
       daysSinceUpdate: Math.floor(ageDays),
+      threshold,
       trackLabel: TRACK_LABELS[opp.track] ?? opp.track,
     });
 

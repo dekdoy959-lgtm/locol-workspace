@@ -24,21 +24,10 @@ export function useContactCommitments(contactId: string | undefined) {
   });
 }
 
-/** Open commitments across all contacts — for briefing/dashboard */
-export function useAllOpenCommitments() {
-  return useQuery({
-    queryKey: [...KEY, 'all-open'],
-    queryFn: async (): Promise<CommitmentRow[]> => {
-      const { data, error } = await supabase
-        .from('commitments')
-        .select('*')
-        .eq('status', 'open')
-        .order('due_date', { ascending: true, nullsFirst: false });
-      if (error) throw error;
-      return data ?? [];
-    },
-  });
-}
+// NOTE: useAllOpenCommitments lives in useCalendarData.ts (the only consumer is
+// the calendar page). A second copy used to live here with the SAME query key
+// ['commitments','all-open'] but a different filter — a cache-collision waiting
+// to happen — so it was removed. Import it from useCalendarData if needed.
 
 export function useCreateCommitment() {
   const qc = useQueryClient();

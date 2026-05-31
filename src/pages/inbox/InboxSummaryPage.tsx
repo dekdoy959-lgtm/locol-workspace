@@ -56,9 +56,12 @@ export function InboxSummaryPage() {
     for (const opp of opps) {
       if (isStale(opp, getStaleThreshold(trackSettings, opp.track as TrackKey))) stale.push(opp);
 
-      // Events bucketed by due_date
-      if (opp.track === 'event' && opp.due_date) {
-        const due = startOfDay(new Date(opp.due_date));
+      // Events bucketed by their actual event date (details.event_date_start),
+      // falling back to due_date. Events store their date in details, not due_date.
+      const eventDateRaw =
+        (opp.details as { event_date_start?: string } | null)?.event_date_start ?? opp.due_date;
+      if (opp.track === 'event' && eventDateRaw) {
+        const due = startOfDay(new Date(eventDateRaw));
         if (due >= thisWeekStart && due < nextWeekStart) upcomingEventsThis.push(opp);
         else if (due >= nextWeekStart && due < weekAfterStart) upcomingEventsNext.push(opp);
         else if (due >= weekAfterStart) upcomingEventsLater.push(opp);
