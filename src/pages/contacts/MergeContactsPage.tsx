@@ -5,6 +5,7 @@ import { useMergeContacts } from '../../hooks/useMergeContacts';
 import { contactDisplayName, contactInitials, type ContactRow, type ContactUpdate } from '../../types/contact';
 import { LCard, LH, LBtn, LNote, LIcon, LAvatar, LSelect } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
+import { useConfirm } from '../../components/modals/ConfirmProvider';
 
 type Side = 'A' | 'B';
 
@@ -237,6 +238,7 @@ export function MergeContactsPage() {
   const { id: keptId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const confirm = useConfirm();
 
   const sourceIdFromQuery = searchParams.get('with');
 
@@ -349,9 +351,13 @@ export function MergeContactsPage() {
   };
 
   const handleMerge = async () => {
-    if (!confirm(`ยืนยัน merge?\n\n"${contactDisplayName(sourceContact)}" จะถูกลบ และข้อมูลทั้งหมด (notes, milestones, ฯลฯ) จะย้ายไปอยู่ใต้ "${contactDisplayName(keptContact)}"\n\nการลบจะไม่สามารถย้อนคืนได้`)) {
-      return;
-    }
+    const ok = await confirm({
+      title: 'ยืนยัน merge?',
+      body: `"${contactDisplayName(sourceContact)}" จะถูกลบ และข้อมูลทั้งหมด (notes, milestones, ฯลฯ) จะย้ายไปอยู่ใต้ "${contactDisplayName(keptContact)}" · การลบจะไม่สามารถย้อนคืนได้`,
+      confirmLabel: 'Merge',
+      danger: true,
+    });
+    if (!ok) return;
     setError(null);
 
     const pickedStr = <K extends keyof MergeState>(key: K, fieldName: keyof ContactRow): ContactRow[keyof ContactRow] => {

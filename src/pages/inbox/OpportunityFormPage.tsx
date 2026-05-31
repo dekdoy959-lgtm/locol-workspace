@@ -15,6 +15,7 @@ import { OpportunityDetailsForm } from '../../components/opportunities/Opportuni
 import { LocalItineraryEditor, type LocalStop } from '../../components/trips/LocalItineraryEditor';
 import { supabase } from '../../lib/supabase';
 import { colors } from '../../styles/tokens';
+import { useConfirm } from '../../components/modals/ConfirmProvider';
 
 export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const { id } = useParams<{ id: string }>();
@@ -33,6 +34,7 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const create = useCreateOpportunity();
   const update = useUpdateOpportunity();
   const del = useDeleteOpportunity();
+  const confirm = useConfirm();
 
   const [track, setTrack] = useState<TrackKey>(initialTrack);
   // Trip-only: in-memory stops collected before opp is created
@@ -164,7 +166,7 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
 
   const handleDelete = async () => {
     if (!id) return;
-    if (!confirm('ลบ opportunity นี้?')) return;
+    if (!(await confirm({ title: 'ลบ opportunity นี้?', danger: true }))) return;
     try {
       await del.mutateAsync(id);
       navigate('/inbox');

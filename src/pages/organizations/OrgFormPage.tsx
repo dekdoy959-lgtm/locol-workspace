@@ -12,6 +12,7 @@ import { LCard, LH, LBtn, LInput, LSelect, LLabel, LTextarea, LNote, LIcon } fro
 import { TagsField } from '../../components/forms/TagsField';
 import { FormSection } from '../../components/forms/FormSection';
 import { colors } from '../../styles/tokens';
+import { useConfirm } from '../../components/modals/ConfirmProvider';
 
 export function OrgFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,7 @@ export function OrgFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const create = useCreateOrganization();
   const update = useUpdateOrganization();
   const del = useDeleteOrganization();
+  const confirm = useConfirm();
 
   const [name, setName] = useState('');
   const [industry, setIndustry] = useState('');
@@ -87,7 +89,7 @@ export function OrgFormPage({ mode }: { mode: 'create' | 'edit' }) {
 
   const handleDelete = async () => {
     if (!id) return;
-    if (!confirm('ลบ organization นี้?')) return;
+    if (!(await confirm({ title: 'ลบ organization นี้?', danger: true }))) return;
     try {
       await del.mutateAsync(id);
       navigate('/organizations');

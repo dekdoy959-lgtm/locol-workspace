@@ -26,6 +26,7 @@ import { FrequencyField } from '../../components/forms/FrequencyField';
 import { AvatarUpload } from '../../components/forms/AvatarUpload';
 import { contactInitials } from '../../types/contact';
 import { colors } from '../../styles/tokens';
+import { useConfirm } from '../../components/modals/ConfirmProvider';
 import {
   CHANNEL_OPTIONS,
   EMAIL_LABEL_OPTIONS,
@@ -135,6 +136,7 @@ export function ContactFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const createMutation = useCreateContact();
   const updateMutation = useUpdateContact();
   const deleteMutation = useDeleteContact();
+  const confirm = useConfirm();
 
   const [form, setForm] = useState<FormState>(emptyForm);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -228,7 +230,7 @@ export function ContactFormPage({ mode }: { mode: 'create' | 'edit' }) {
 
   const handleDelete = async () => {
     if (!id) return;
-    if (!confirm('ลบ contact คนนี้? การลบจะไม่สามารถย้อนคืนได้')) return;
+    if (!(await confirm({ title: 'ลบ contact คนนี้?', body: 'การลบจะไม่สามารถย้อนคืนได้', danger: true }))) return;
     try {
       await deleteMutation.mutateAsync(id);
       navigate('/contacts');

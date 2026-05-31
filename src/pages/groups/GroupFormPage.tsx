@@ -13,6 +13,7 @@ import { FormSection } from '../../components/forms/FormSection';
 import { RuleEditor } from '../../components/groups/RuleEditor';
 import { EMPTY_RULE, type Rule } from '../../lib/smartGroupRules';
 import { colors } from '../../styles/tokens';
+import { useConfirm } from '../../components/modals/ConfirmProvider';
 
 export function GroupFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +24,7 @@ export function GroupFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const create = useCreateGroup();
   const update = useUpdateGroup();
   const del = useDeleteGroup();
+  const confirm = useConfirm();
 
   const [name, setName] = useState('');
   const [parentId, setParentId] = useState<string>('');
@@ -115,7 +117,7 @@ export function GroupFormPage({ mode }: { mode: 'create' | 'edit' }) {
 
   const handleDelete = async () => {
     if (!id) return;
-    if (!confirm('ลบ group นี้? Members จะไม่ถูกลบ แต่จะหลุดออกจาก group')) return;
+    if (!(await confirm({ title: 'ลบ group นี้?', body: 'Members จะไม่ถูกลบ แต่จะหลุดออกจาก group', danger: true }))) return;
     try {
       await del.mutateAsync(id);
       navigate('/groups');
