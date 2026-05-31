@@ -17,10 +17,13 @@
   - #6 calendar queryKey by user.id · #13 org roll-up by org_id · #14 duplicate copies people+team assignments · #20 discord restore ไม่ clobber status · #11 discord bucket private + signed URLs (migration 0018)
 - **Bench 2 · Correctness** (`26afb2a`, `6d28cd6`, `1c2c842`) — ✅ should #5,15,16,17,19,32,36,37,39,40,42,43,44 (13/14)
   - #18 (avatar) = N/A: เป็น URL text input (`type="url"`) ไม่ใช่ file upload — premise ของ finding ไม่ตรงโค้ดจริง
-- **Bench 3 · a11y + UX** — ⏳ บางส่วน (`a26a661`, `04ca935`, `6a632de`)
+- **Bench 3 · a11y + UX** — ⏳ ส่วนใหญ่เสร็จ (`a26a661`, `04ca935`, `6a632de`, `ed1a4e2`, `09ef115`, `eaf372f`, `69156ff`)
   - ✅ #47 Thai IME (MultiValueField stable keys) · #28 trip time inputs type=time · #29 budget variance · #21 nested button-in-Link · #48 delete onError · #30 AlertRow inert เมื่อ master off · #33 MergeContactsPage useMemo→useEffect
-  - 🔲 เหลือ — **งานใหญ่ ควรทำ batch เฉพาะ (context เต็ม):** #4 ConfirmModal (17 จุด window.confirm/alert/prompt — stateful refactor + วาง infra promise-based confirm) · #24 modal focus trap/Escape/aria-modal · #3 kanban keyboard a11y · #22 LLabel htmlFor (หลายฟอร์ม)
-  - ⏭️ ข้าม (ไม่ใช่ bug ชัด): #25 commitment_overdue = feature ใหม่ (ต้องมี runner) · #27 '5 tracks' subtitle หาไม่เจอ (น่าจะแก้แล้ว) · #34 relations incoming label ต้องมี reverse-label semantics · #46 /team nav = product decision (Goals→/milestones ถูกแล้ว)
+  - ✅ **#24 modal focus trap** — ConfirmModal: focus trap + Escape + role=dialog/aria-modal/aria-label + autofocus + focus-return
+  - ✅ **#4 ConfirmModal** — วาง `ConfirmProvider` + `useConfirm()` (promise-based, mount ที่ root) แล้วแปลง **ครบทั้ง 14 จุด** window.confirm → modal (components + 5 ฟอร์ม + sub-components)
+  - 🔲 เหลือ — **งานใหญ่:** #3 kanban keyboard a11y (drag-drop keyboard-accessible) · #22 LLabel htmlFor + input id (หลายฟอร์ม)
+  - 🔲 follow-up เล็ก: window.prompt 1 จุด (duplicate-trip day-shift — ต้องมี input modal) + alert() 3 จุดใน mutation onError (ควรเป็น toast)
+  - ⏭️ ข้าม (ไม่ใช่ bug ชัด): #25 commitment_overdue = feature ใหม่ (ต้องมี runner) · #27 '5 tracks' subtitle หาไม่เจอ · #34 relations incoming label ต้องมี reverse-label semantics · #46 /team nav = product decision
 - **Bench 4 · Cleanup (nice-to-have)** — 🔲 ยังไม่เริ่ม (49 ข้อ)
 - **Bench 5 · Polish (animation)** — 🔲 ยังไม่เริ่ม (15 ข้อ)
 
