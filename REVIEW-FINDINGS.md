@@ -31,9 +31,9 @@
   - ✅ (รอบ user-decided) #1 plane icon · #6 z-index scale · #7 agenda newline · #10/#11 mig comments · #12 reviewer msg · #14 RuleEditor between · #24 form step · #26 login deco · #28 PDF page-break · #31 token by user.id · #33 full_name required · #47 (มีอยู่แล้ว) · #48 trip conflict badge — **~43/49**
   - ⏭️ #27 คงไว้ (print contrast — user เลือกไม่แก้)
   - ✅ **#5 hex → token เสร็จ** (`c31edc5` `674be80` `6aa7ef0`) — เพิ่ม semantic tokens (danger/warn/olive/greenBg/discord) + replace hex ทุกจุดนอก tokens.ts (quoted · JSX props · compound border strings · 251 modules build เขียว)
-  - 🔲 เหลือ 2 **sweep ใหญ่** (user อนุมัติแล้ว · ทำใน session สด context เต็ม):
-    - **#2/#39 emoji → LIcon:** แทน functional emoji (📅📍💰🎯) ด้วย LIcon · heading icons ด้วย (บาง emoji เช่น 🐄☕🎉 ต้องวาด SVG ใหม่)
-    - **#3 chip labels → อังกฤษเป็นหลัก:** ทำ chip/label ให้เป็นอังกฤษสม่ำเสมอ
+  - ⏳ **#2/#39 emoji → LIcon** (เริ่มแล้ว `eabeed7`): icon foundation พร้อม — เพิ่ม pin/camera/palette เข้า LIcon (📍📸🎨) + ของเดิม cal/money/target/users/doc ครอบ functional emoji ส่วนใหญ่
+    - 🔲 **เหลือ:** (1) JSX text swap จริง (แทน emoji ใน title/label ทั่ว app — **ต้องเห็น browser verify ว่า render สวย**) · (2) icon รูปภาพยาก 🐄☕🎉 (ต้องวาด+verify ใน browser)
+  - 🔲 **#3 chip labels → อังกฤษ:** judgment sweep ต่อ label (เลือกคำแปลรายตัว)
   - เก่า (subjective ที่ยังไม่ถาม): —
     - **subjective/design:** #2 emoji vs LIcon · #3 Thai/Eng chip · #5 hardcoded hex → tokens · #6 z-index scale · #24 form step '4→4.5→5' · #26 Login deco · #27 print brand color (อาจตั้งใจเพื่อ contrast) · #39 emoji headings mono
     - **ต้อง asset/feature:** #1 trip plane icon (ต้องวาด SVG ใน LIcon) · #47 Brief PDF trip team section · #28 Brief PDF page-break trip table · #48 trip same-day CONFLICT badge
