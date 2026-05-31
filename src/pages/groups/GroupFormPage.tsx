@@ -194,8 +194,8 @@ export function GroupFormPage({ mode }: { mode: 'create' | 'edit' }) {
               style={{
                 flex: 1,
                 padding: '14px 16px',
-                background: isSmart ? '#241a06' : 'transparent',
-                border: `1px solid ${isSmart ? '#5a3f10' : colors.line}`,
+                background: isSmart ? colors.warnBg : 'transparent',
+                border: `1px solid ${isSmart ? colors.warnDk : colors.line}`,
                 borderRadius: '10px 0 10px 0',
                 cursor: 'pointer',
                 textAlign: 'left',
@@ -206,7 +206,7 @@ export function GroupFormPage({ mode }: { mode: 'create' | 'edit' }) {
                 style={{
                   fontSize: 13,
                   fontWeight: 700,
-                  color: isSmart ? '#E8B923' : colors.text,
+                  color: isSmart ? colors.warn : colors.text,
                   letterSpacing: 0.5,
                   textTransform: 'uppercase',
                   marginBottom: 4,

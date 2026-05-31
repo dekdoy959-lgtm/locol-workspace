@@ -1,3 +1,4 @@
+import { colors } from '../../styles/tokens';
 /**
  * Calendar utils — aggregate every date-stamped item across the workspace
  * into a unified CalendarItem feed for the /calendar page.
@@ -406,18 +407,18 @@ export const KIND_META: Record<
   CalendarItemKind,
   { label: string; color: string; bg: string; border: string; icon: string }
 > = {
-  event:                 { label: 'EVENT',          color: '#d96a66', bg: '#2a1212', border: '#5a1a18', icon: '📅' },
-  registration_deadline: { label: 'REGISTER BY',    color: '#E8B923', bg: '#241a06', border: '#5a3f10', icon: '⏰' },
-  apply_deadline:        { label: 'APPLY BY',       color: '#E8B923', bg: '#241a06', border: '#5a3f10', icon: '📝' },
-  decision_date:         { label: 'DECISION',       color: '#99CE24', bg: '#19250a', border: '#6e9618', icon: '🎯' },
-  contract_renewal:      { label: 'RENEW',          color: '#9aa56a', bg: '#1d1f12', border: '#3a3f1f', icon: '🔄' },
-  contract_effective:    { label: 'START',          color: '#9aa56a', bg: '#1d1f12', border: '#3a3f1f', icon: '📜' },
+  event:                 { label: 'EVENT',          color: colors.danger, bg: '#2a1212', border: colors.dangerDk, icon: '📅' },
+  registration_deadline: { label: 'REGISTER BY',    color: colors.warn, bg: colors.warnBg, border: colors.warnDk, icon: '⏰' },
+  apply_deadline:        { label: 'APPLY BY',       color: colors.warn, bg: colors.warnBg, border: colors.warnDk, icon: '📝' },
+  decision_date:         { label: 'DECISION',       color: '#99CE24', bg: colors.greenBg, border: '#6e9618', icon: '🎯' },
+  contract_renewal:      { label: 'RENEW',          color: colors.olive, bg: colors.oliveBg, border: colors.oliveDk, icon: '🔄' },
+  contract_effective:    { label: 'START',          color: colors.olive, bg: colors.oliveBg, border: colors.oliveDk, icon: '📜' },
   due:                   { label: 'DUE',            color: '#d99a66', bg: '#2a1d10', border: '#6a3f1c', icon: '⏳' },
-  milestone:             { label: 'MILESTONE',      color: '#99CE24', bg: '#19250a', border: '#6e9618', icon: '🎯' },
+  milestone:             { label: 'MILESTONE',      color: '#99CE24', bg: colors.greenBg, border: '#6e9618', icon: '🎯' },
   commitment:            { label: 'COMMITMENT',     color: '#d99a66', bg: '#2a1d10', border: '#6a3f1c', icon: '🤝' },
-  reminder:              { label: 'REMINDER',       color: '#99CE24', bg: '#19250a', border: '#6e9618', icon: '🔔' },
-  birthday:              { label: 'BIRTHDAY',       color: '#99CE24', bg: '#19250a', border: '#6e9618', icon: '🎂' },
-  meeting:               { label: 'MEETING',        color: '#d96a66', bg: '#241010', border: '#5a1a18', icon: '📅' },
+  reminder:              { label: 'REMINDER',       color: '#99CE24', bg: colors.greenBg, border: '#6e9618', icon: '🔔' },
+  birthday:              { label: 'BIRTHDAY',       color: '#99CE24', bg: colors.greenBg, border: '#6e9618', icon: '🎂' },
+  meeting:               { label: 'MEETING',        color: colors.danger, bg: colors.dangerBg, border: colors.dangerDk, icon: '📅' },
 };
 
 export function daysFromToday(dateISO: string): number {

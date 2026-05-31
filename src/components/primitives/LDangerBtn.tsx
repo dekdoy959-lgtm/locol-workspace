@@ -1,3 +1,4 @@
+import { colors } from '../../styles/tokens';
 import type { ReactNode } from 'react';
 import { LIcon } from './LIcon';
 
@@ -16,7 +17,7 @@ export function LDangerBtn({ children, onClick, disabled, small }: LDangerBtnPro
       disabled={disabled}
       style={{
         background: 'transparent',
-        color: '#d96a66',
+        color: colors.danger,
         border: '1px solid #5a1a18',
         padding: small ? '5px 12px' : '8px 16px',
         borderRadius: '10px 0 10px 0',

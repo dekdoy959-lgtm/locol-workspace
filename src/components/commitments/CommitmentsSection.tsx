@@ -100,7 +100,7 @@ export function CommitmentsSection({ contactId }: Props) {
             marginTop: 14,
             padding: 14,
             background: colors.bgSoft,
-            border: `1px solid ${addingDirection === 'i_owe' ? colors.greenDk : '#5a1a18'}`,
+            border: `1px solid ${addingDirection === 'i_owe' ? colors.greenDk : colors.dangerDk}`,
             borderRadius: '12px 0 12px 0',
             display: 'flex',
             flexDirection: 'column',
@@ -113,7 +113,7 @@ export function CommitmentsSection({ contactId }: Props) {
               fontWeight: 700,
               letterSpacing: 1,
               textTransform: 'uppercase',
-              color: addingDirection === 'i_owe' ? colors.green : '#d96a66',
+              color: addingDirection === 'i_owe' ? colors.green : colors.danger,
             }}
           >
             {addingDirection === 'i_owe' ? '+ Add: ฉันสัญญาว่าจะทำให้เขา' : '+ Add: เขาสัญญาว่าจะให้ฉัน'}
@@ -137,10 +137,10 @@ export function CommitmentsSection({ contactId }: Props) {
             <div
               style={{
                 padding: 8,
-                background: '#241010',
+                background: colors.dangerBg,
                 border: '1px solid #5a1a18',
                 borderRadius: '6px 0 6px 0',
-                color: '#d96a66',
+                color: colors.danger,
                 fontSize: 12,
               }}
             >
@@ -208,7 +208,7 @@ function CommitmentColumn({
           <div style={{ fontSize: 10.5, color: colors.dim, marginTop: 2 }}>
             {subtitle} · {commitments.length} total
             {overdueCount > 0 && (
-              <span style={{ color: '#d96a66', marginLeft: 6, fontWeight: 700 }}>· {overdueCount} OVERDUE</span>
+              <span style={{ color: colors.danger, marginLeft: 6, fontWeight: 700 }}>· {overdueCount} OVERDUE</span>
             )}
           </div>
         </div>
@@ -242,7 +242,7 @@ function CommitmentColumn({
                 style={{
                   padding: '8px 10px',
                   background: colors.bgSoft,
-                  border: `1px solid ${isOverdue ? '#5a1a18' : colors.line}`,
+                  border: `1px solid ${isOverdue ? colors.dangerDk : colors.line}`,
                   borderRadius: '8px 0 8px 0',
                   display: 'flex',
                   alignItems: 'flex-start',
@@ -288,7 +288,7 @@ function CommitmentColumn({
                   <div
                     style={{
                       fontSize: 10,
-                      color: isOverdue ? '#d96a66' : colors.dim,
+                      color: isOverdue ? colors.danger : colors.dim,
                       marginTop: 2,
                       fontFamily: "'IBM Plex Mono', monospace",
                       letterSpacing: 0.3,
@@ -309,7 +309,7 @@ function CommitmentColumn({
                     padding: 0,
                     flexShrink: 0,
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#d96a66')}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = colors.danger)}
                   onMouseLeave={(e) => (e.currentTarget.style.color = colors.dim)}
                 >
                   ×

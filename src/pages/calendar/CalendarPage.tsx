@@ -328,11 +328,11 @@ export function CalendarPage() {
           style={{
             marginBottom: 12,
             padding: '8px 12px',
-            background: '#241a06',
+            background: colors.warnBg,
             border: '1px solid #5a3f10',
             borderRadius: '6px 0 6px 0',
             fontSize: 11,
-            color: '#E8B923',
+            color: colors.warn,
           }}
         >
           ⚠ Google Calendar access หมดอายุ — logout + login ใหม่ (meetings ส่วน Gmail/Calendar จะไม่แสดง)
@@ -595,7 +595,7 @@ function MonthGrid({
               style={{
                 minHeight: 96,
                 padding: 6,
-                background: isToday ? '#19250a' : isWeekend ? colors.bg : 'transparent',
+                background: isToday ? colors.greenBg : isWeekend ? colors.bg : 'transparent',
                 border: 'none',
                 borderRight: (idx + 1) % 7 === 0 ? 'none' : `1px solid ${colors.line}`,
                 borderBottom: idx < 35 ? `1px solid ${colors.line}` : 'none',
@@ -614,7 +614,7 @@ function MonthGrid({
                 e.currentTarget.style.background = isToday ? '#22310d' : colors.bgSoft;
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = isToday ? '#19250a' : isWeekend ? colors.bg : 'transparent';
+                e.currentTarget.style.background = isToday ? colors.greenBg : isWeekend ? colors.bg : 'transparent';
               }}
             >
               <div
@@ -638,7 +638,7 @@ function MonthGrid({
                       fontSize: 9.5,
                       color: meta.color,
                       background: meta.bg,
-                      border: `1px solid ${isConflict ? '#d96a66' : meta.border}`,
+                      border: `1px solid ${isConflict ? colors.danger : meta.border}`,
                       borderRadius: '4px 0 4px 0',
                       padding: '1px 4px',
                       whiteSpace: 'nowrap',
@@ -764,7 +764,7 @@ function AgendaRow({ item, isConflict, onClick }: { item: CalendarItem; isConfli
         gap: 14,
         padding: '10px 14px',
         background: colors.bgCard,
-        border: `1px solid ${isConflict ? '#5a1a18' : colors.line}`,
+        border: `1px solid ${isConflict ? colors.dangerDk : colors.line}`,
         borderLeft: `3px solid ${meta.color}`,
         borderRadius: '8px 0 8px 0',
         cursor: 'pointer',
@@ -773,7 +773,7 @@ function AgendaRow({ item, isConflict, onClick }: { item: CalendarItem; isConfli
         transition: 'border-color 100ms',
       }}
       onMouseEnter={(e) => (e.currentTarget.style.borderColor = meta.border)}
-      onMouseLeave={(e) => (e.currentTarget.style.borderColor = isConflict ? '#5a1a18' : colors.line)}
+      onMouseLeave={(e) => (e.currentTarget.style.borderColor = isConflict ? colors.dangerDk : colors.line)}
     >
       <div style={{ minWidth: 70 }}>
         <div style={{ fontSize: 12, color: colors.text, fontWeight: 600 }}>{formatDateShort(item.date)}</div>
@@ -800,7 +800,7 @@ function AgendaRow({ item, isConflict, onClick }: { item: CalendarItem; isConfli
             {meta.icon} {meta.label}
           </span>
           {isConflict && (
-            <span style={{ fontSize: 9.5, color: '#d96a66', fontWeight: 700, letterSpacing: 0.5 }}>⚠ CONFLICT</span>
+            <span style={{ fontSize: 9.5, color: colors.danger, fontWeight: 700, letterSpacing: 0.5 }}>⚠ CONFLICT</span>
           )}
           {item.status && (
             <span style={{ fontSize: 10, color: colors.dim, letterSpacing: 0.3 }}>· {item.status}</span>

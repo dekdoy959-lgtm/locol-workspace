@@ -203,10 +203,10 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
         <div
           style={{
             padding: 12,
-            background: '#241010',
+            background: colors.dangerBg,
             border: '1px solid #5a1a18',
             borderRadius: '10px 0 10px 0',
-            color: '#d96a66',
+            color: colors.danger,
             fontSize: 13,
             marginBottom: 16,
           }}
@@ -354,7 +354,7 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
               disabled={del.isPending}
               style={{
                 background: 'transparent',
-                color: '#d96a66',
+                color: colors.danger,
                 border: `1px solid #5a1a18`,
                 padding: '8px 16px',
                 borderRadius: '10px 0 10px 0',

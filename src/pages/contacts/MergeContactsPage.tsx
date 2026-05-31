@@ -80,7 +80,7 @@ function SidePick({
   onClick: () => void;
   sameVal: boolean;
 }) {
-  const accent = tone === 'A' ? colors.green : '#E8B923';
+  const accent = tone === 'A' ? colors.green : colors.warn;
   return (
     <button
       type="button"
@@ -267,7 +267,7 @@ export function MergeContactsPage() {
   }, [keptContact, sourceContact, state]);
 
   if (loadingKept) return <div style={{ padding: 40, color: colors.dim }}>กำลังโหลด…</div>;
-  if (!keptContact) return <div style={{ padding: 40, color: '#d96a66' }}>ไม่พบ contact</div>;
+  if (!keptContact) return <div style={{ padding: 40, color: colors.danger }}>ไม่พบ contact</div>;
 
   // No second contact picked yet — show picker
   if (!sourceContact) {
@@ -319,7 +319,7 @@ export function MergeContactsPage() {
               paddingTop: 18,
             }}
           >
-            <div style={{ fontSize: 10, color: '#E8B923', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
+            <div style={{ fontSize: 10, color: colors.warn, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
               จะถูกลบ · DELETE (ข้อมูลจะย้ายมารวมที่คนแรก)
             </div>
             <LSelect
@@ -423,10 +423,10 @@ export function MergeContactsPage() {
         <div
           style={{
             padding: 12,
-            background: '#241010',
+            background: colors.dangerBg,
             border: '1px solid #5a1a18',
             borderRadius: '10px 0 10px 0',
-            color: '#d96a66',
+            color: colors.danger,
             fontSize: 13,
             marginBottom: 16,
           }}
@@ -593,7 +593,7 @@ export function MergeContactsPage() {
 }
 
 function ContactHeader({ contact, tone, label }: { contact: ContactRow; tone: Side; label: string }) {
-  const accent = tone === 'A' ? colors.green : '#E8B923';
+  const accent = tone === 'A' ? colors.green : colors.warn;
   return (
     <LCard padding={14} bg={colors.bgCard} border={accent}>
       <div style={{ fontSize: 10, color: accent, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8, fontWeight: 700 }}>
@@ -699,7 +699,7 @@ function ArrayPicker({
           style={{
             padding: '10px 12px',
             background: colors.bgSoft,
-            border: `1px solid ${mode === 'B' || mode === 'union' ? '#E8B923' : colors.line}`,
+            border: `1px solid ${mode === 'B' || mode === 'union' ? colors.warn : colors.line}`,
             borderRadius: '10px 0 10px 0',
             opacity: mode === 'A' ? 0.4 : 1,
           }}

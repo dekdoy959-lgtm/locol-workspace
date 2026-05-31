@@ -57,7 +57,7 @@ export function GroupDetailPage() {
     return (
       <div style={{ padding: 40 }}>
         <LCard padding={24} bg="#241010" border="#5a1a18">
-          <div style={{ color: '#d96a66', marginBottom: 16 }}>ไม่พบ group</div>
+          <div style={{ color: colors.danger, marginBottom: 16 }}>ไม่พบ group</div>
           <LBtn ghost onClick={() => navigate('/groups')}>← กลับ</LBtn>
         </LCard>
       </div>
@@ -120,12 +120,12 @@ export function GroupDetailPage() {
           style={{
             marginBottom: 18,
             padding: 14,
-            background: '#241a06',
+            background: colors.warnBg,
             border: '1px solid #5a3f10',
             borderRadius: '12px 0 12px 0',
           }}
         >
-          <div style={{ fontSize: 10, letterSpacing: 1.2, color: '#E8B923', fontWeight: 700, marginBottom: 6 }}>
+          <div style={{ fontSize: 10, letterSpacing: 1.2, color: colors.warn, fontWeight: 700, marginBottom: 6 }}>
             ⚡ SMART RULE
           </div>
           <div style={{ fontSize: 13, color: colors.surface, fontFamily: "'IBM Plex Mono', monospace", lineHeight: 1.5 }}>
@@ -277,7 +277,7 @@ export function GroupDetailPage() {
                         fontSize: 13,
                         padding: 4,
                       }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = '#d96a66')}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = colors.danger)}
                       onMouseLeave={(e) => (e.currentTarget.style.color = colors.dim)}
                     >
                       ×

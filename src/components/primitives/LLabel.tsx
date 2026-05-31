@@ -23,7 +23,7 @@ export function LLabel({ children, required, htmlFor }: LLabelProps) {
       }}
     >
       {children}
-      {required && <span style={{ color: '#d96a66', marginLeft: 4 }}>*</span>}
+      {required && <span style={{ color: colors.danger, marginLeft: 4 }}>*</span>}
     </label>
   );
 }

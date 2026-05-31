@@ -125,7 +125,7 @@ function GroupNode({
           style={{
             width: 8,
             height: 8,
-            background: node.rule ? '#E8B923' : colors.green,
+            background: node.rule ? colors.warn : colors.green,
             borderRadius: 99,
             flexShrink: 0,
             opacity: node.depth === 0 ? 1 : 0.4,
@@ -148,8 +148,8 @@ function GroupNode({
               style={{
                 marginLeft: 8,
                 fontSize: 9,
-                color: '#E8B923',
-                background: '#241a06',
+                color: colors.warn,
+                background: colors.warnBg,
                 border: '1px solid #5a3f10',
                 padding: '1px 5px',
                 borderRadius: '4px 0 4px 0',
@@ -169,7 +169,7 @@ function GroupNode({
               fontSize: 10.5,
               color: colors.green,
               fontFamily: "'IBM Plex Mono', monospace",
-              background: '#19250a',
+              background: colors.greenBg,
               border: `1px solid ${colors.greenDk}`,
               padding: '2px 8px',
               borderRadius: '5px 0 5px 0',

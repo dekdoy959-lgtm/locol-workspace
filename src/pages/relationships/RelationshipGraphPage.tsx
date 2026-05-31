@@ -353,7 +353,7 @@ export function RelationshipGraphPage() {
                 </span>
                 {showTwoHop && (
                   <span style={{ fontSize: 10.5, color: colors.dim }}>
-                    · 2-hop: <b style={{ color: '#E8B923' }}>{twoHopCount}</b>
+                    · 2-hop: <b style={{ color: colors.warn }}>{twoHopCount}</b>
                   </span>
                 )}
                 {Object.keys(customPositions).length > 0 && (
@@ -552,9 +552,9 @@ export function RelationshipGraphPage() {
                 } else if (n.entityKind === 'org' && n.org) {
                   label = n.org.name;
                   initials = orgInitials(n.org.name);
-                  fillColor = '#1d1f12';
+                  fillColor = colors.oliveBg;
                   strokeColor = '#695935';
-                  labelColor = '#9aa56a';
+                  labelColor = colors.olive;
                   typeBadge = 'ORG';
                 } else if (n.entityKind === 'opportunity' && n.opportunity) {
                   label = n.opportunity.title;
@@ -814,7 +814,7 @@ export function RelationshipGraphPage() {
                         key={n.id}
                         style={{
                           padding: '8px 10px',
-                          background: '#241a06',
+                          background: colors.warnBg,
                           border: '1px solid #5a3f10',
                           borderRadius: '8px 0 8px 0',
                           display: 'flex',
@@ -831,7 +831,7 @@ export function RelationshipGraphPage() {
                             {contactDisplayName(contact)}
                           </div>
                           {bridge && (
-                            <div style={{ fontSize: 10, color: '#E8B923', marginTop: 2, letterSpacing: 0.3 }}>
+                            <div style={{ fontSize: 10, color: colors.warn, marginTop: 2, letterSpacing: 0.3 }}>
                               ผ่าน <b style={{ color: colors.text }}>{contactDisplayName(bridge)}</b>
                             </div>
                           )}

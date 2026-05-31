@@ -415,7 +415,7 @@ function ResultRow({
       return opp ? findTrack(opp.track).color.ink : colors.green;
     }
     if (result.kind === 'contact') return colors.green;
-    if (result.kind === 'organization') return '#9aa56a';
+    if (result.kind === 'organization') return colors.olive;
     return colors.dimSoft;
   })();
 
@@ -521,9 +521,9 @@ function ResultIcon({ result }: { result: SearchResult }) {
         style={{
           width: 28,
           height: 28,
-          background: '#1d1f12',
+          background: colors.oliveBg,
           border: `1px solid #3a3f1f`,
-          color: '#9aa56a',
+          color: colors.olive,
           fontSize: 11,
           fontWeight: 700,
           borderRadius: '7px 0 7px 0',
@@ -568,7 +568,7 @@ function ResultIcon({ result }: { result: SearchResult }) {
       style={{
         width: 28,
         height: 28,
-        background: '#19250a',
+        background: colors.greenBg,
         border: `1px solid ${colors.greenDk}`,
         color: colors.green,
         fontSize: 13,

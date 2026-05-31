@@ -273,9 +273,9 @@ function PeopleGroup({
                       style={{
                         width: 22,
                         height: 22,
-                        background: '#1d1f12',
+                        background: colors.oliveBg,
                         border: `1px solid #3a3f1f`,
-                        color: '#9aa56a',
+                        color: colors.olive,
                         fontSize: 10,
                         fontWeight: 700,
                         borderRadius: '5px 0 5px 0',
@@ -356,9 +356,9 @@ function PeopleGroup({
                     style={{
                       width: 28,
                       height: 28,
-                      background: '#1d1f12',
+                      background: colors.oliveBg,
                       border: `1px solid #3a3f1f`,
-                      color: '#9aa56a',
+                      color: colors.olive,
                       fontSize: 11,
                       fontWeight: 700,
                       borderRadius: '7px 0 7px 0',
@@ -425,7 +425,7 @@ function PeopleGroup({
                     padding: 4,
                     fontSize: 14,
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#d96a66')}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = colors.danger)}
                   onMouseLeave={(e) => (e.currentTarget.style.color = colors.dim)}
                 >
                   ×

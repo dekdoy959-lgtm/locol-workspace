@@ -93,9 +93,9 @@ export function LinkedOpportunities({ opportunities, title = 'CROSS-LAYER · OPP
                   <span
                     style={{
                       fontSize: 9,
-                      color: opp.link_role === 'organizer' ? colors.green : '#E8B923',
-                      border: `1px solid ${opp.link_role === 'organizer' ? colors.greenDk : '#5a3f10'}`,
-                      background: opp.link_role === 'organizer' ? '#19250a' : '#241a06',
+                      color: opp.link_role === 'organizer' ? colors.green : colors.warn,
+                      border: `1px solid ${opp.link_role === 'organizer' ? colors.greenDk : colors.warnDk}`,
+                      background: opp.link_role === 'organizer' ? colors.greenBg : colors.warnBg,
                       padding: '1px 6px',
                       borderRadius: '4px 0 4px 0',
                       fontWeight: 700,

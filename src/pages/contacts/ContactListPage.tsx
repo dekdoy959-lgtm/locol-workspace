@@ -13,10 +13,10 @@ import { LCard, LH, LBtn, LIcon, LInput, LAvatar, LChip, LStatus, LNote } from '
 import { colors } from '../../styles/tokens';
 
 const HEALTH_COLORS: Record<string, { fg: string; bg: string; border: string }> = {
-  'On Track':   { fg: '#99CE24', bg: '#19250a', border: '#6e9618' },
-  Watch:        { fg: '#E8B923', bg: '#241a06', border: '#5a3f10' },
+  'On Track':   { fg: '#99CE24', bg: colors.greenBg, border: '#6e9618' },
+  Watch:        { fg: colors.warn, bg: colors.warnBg, border: colors.warnDk },
   'Going Cold': { fg: '#d99a66', bg: '#2a1d10', border: '#6a3f1c' },
-  Overdue:      { fg: '#d96a66', bg: '#241010', border: '#5a1a18' },
+  Overdue:      { fg: colors.danger, bg: colors.dangerBg, border: colors.dangerDk },
 };
 
 export function ContactListPage() {
@@ -49,7 +49,7 @@ export function ContactListPage() {
     return (
       <div style={{ padding: 40 }}>
         <LCard padding={24} bg="#241010" border="#5a1a18">
-          <div style={{ color: '#d96a66' }}>Error loading contacts: {String(error)}</div>
+          <div style={{ color: colors.danger }}>Error loading contacts: {String(error)}</div>
         </LCard>
       </div>
     );

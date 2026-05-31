@@ -232,7 +232,7 @@ export function SettingsPage() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '12px 14px',
-                background: alertPrefs?.enabled ? '#19250a' : colors.bgSoft,
+                background: alertPrefs?.enabled ? colors.greenBg : colors.bgSoft,
                 border: `1px solid ${alertPrefs?.enabled ? colors.greenDk : colors.line}`,
                 borderRadius: '10px 0 10px 0',
                 marginBottom: 18,
@@ -297,8 +297,8 @@ export function SettingsPage() {
         </LCard>
       </div>
 
-      <div style={{ marginTop: 24, padding: 14, background: '#241a06', border: '1px solid #5a3f10', borderRadius: '10px 0 10px 0' }}>
-        <div style={{ fontSize: 11, color: '#E8B923', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>
+      <div style={{ marginTop: 24, padding: 14, background: colors.warnBg, border: '1px solid #5a3f10', borderRadius: '10px 0 10px 0' }}>
+        <div style={{ fontSize: 11, color: colors.warn, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>
           <LIcon kind="warn" size={11} color="#E8B923" /> Email setup
         </div>
         <div style={{ fontSize: 12, color: colors.surface, lineHeight: 1.55 }}>

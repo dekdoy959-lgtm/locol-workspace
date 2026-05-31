@@ -71,7 +71,7 @@ export function ContactDetailPage() {
     return (
       <div style={{ padding: 40 }}>
         <LCard padding={24} bg="#241010" border="#5a1a18">
-          <div style={{ color: '#d96a66', marginBottom: 16 }}>ไม่พบ contact หรือเกิด error</div>
+          <div style={{ color: colors.danger, marginBottom: 16 }}>ไม่พบ contact หรือเกิด error</div>
           <LBtn ghost onClick={() => navigate('/contacts')}>← กลับไปหน้า Contacts</LBtn>
         </LCard>
       </div>
@@ -124,11 +124,11 @@ export function ContactDetailPage() {
               {contact.tie_type && <LChip ink={colors.surface}>{contact.tie_type}</LChip>}
               {contact.priority && (
                 <LChip
-                  ink={contact.priority === 'High' ? '#d96a66' : colors.dimSoft}
-                  bg={contact.priority === 'High' ? '#241010' : 'transparent'}
-                  border={contact.priority === 'High' ? '#5a1a18' : colors.lineHi}
+                  ink={contact.priority === 'High' ? colors.danger : colors.dimSoft}
+                  bg={contact.priority === 'High' ? colors.dangerBg : 'transparent'}
+                  border={contact.priority === 'High' ? colors.dangerDk : colors.lineHi}
                 >
-                  <LIcon kind="flag" size={10} color={contact.priority === 'High' ? '#d96a66' : colors.dimSoft} />{' '}
+                  <LIcon kind="flag" size={10} color={contact.priority === 'High' ? colors.danger : colors.dimSoft} />{' '}
                   {contact.priority.toUpperCase()}
                 </LChip>
               )}
@@ -205,7 +205,7 @@ export function ContactDetailPage() {
             <LCard padding={20} style={{ borderLeft: '3px solid #5865F2' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 10, letterSpacing: 1.2, color: '#5865F2', fontWeight: 700 }}>
+                  <span style={{ fontSize: 10, letterSpacing: 1.2, color: colors.discord, fontWeight: 700 }}>
                     DISCORD SOURCE
                   </span>
                   <span style={{ fontSize: 11, color: colors.dim }}>
@@ -213,7 +213,7 @@ export function ContactDetailPage() {
                   </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <a href="/discord-inbox" style={{ fontSize: 11, color: '#5865F2', textDecoration: 'none' }}>
+                  <a href="/discord-inbox" style={{ fontSize: 11, color: colors.discord, textDecoration: 'none' }}>
                     ดู inbox →
                   </a>
                   <button
@@ -222,7 +222,7 @@ export function ContactDetailPage() {
                     style={{
                       background: 'transparent',
                       border: `1px solid #5a1a18`,
-                      color: '#d96a66',
+                      color: colors.danger,
                       borderRadius: '6px 0 6px 0',
                       padding: '3px 10px',
                       fontSize: 11,

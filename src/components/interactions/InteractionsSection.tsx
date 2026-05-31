@@ -127,10 +127,10 @@ export function InteractionsSection({ contactId }: Props) {
             <div
               style={{
                 padding: 8,
-                background: '#241010',
+                background: colors.dangerBg,
                 border: '1px solid #5a1a18',
                 borderRadius: '6px 0 6px 0',
-                color: '#d96a66',
+                color: colors.danger,
                 fontSize: 12,
               }}
             >
@@ -191,7 +191,7 @@ export function InteractionsSection({ contactId }: Props) {
 }
 
 function InteractionItem({ interaction: it, onDelete }: { interaction: InteractionRow; onDelete: () => void }) {
-  const dirColor = it.direction === 'outbound' ? colors.green : '#E8B923';
+  const dirColor = it.direction === 'outbound' ? colors.green : colors.warn;
   const dirSym = it.direction === 'outbound' ? '→' : '←';
 
   return (
@@ -244,7 +244,7 @@ function InteractionItem({ interaction: it, onDelete }: { interaction: Interacti
             fontSize: 13,
             padding: 2,
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#d96a66')}
+          onMouseEnter={(e) => (e.currentTarget.style.color = colors.danger)}
           onMouseLeave={(e) => (e.currentTarget.style.color = colors.dim)}
         >
           ×

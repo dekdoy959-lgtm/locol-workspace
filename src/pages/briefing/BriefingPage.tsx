@@ -157,11 +157,11 @@ export function BriefingPage() {
             style={{
               marginTop: 12,
               padding: '10px 14px',
-              background: '#241a06',
+              background: colors.warnBg,
               border: '1px solid #5a3f10',
               borderRadius: '10px 0 10px 0',
               fontSize: 12,
-              color: '#E8B923',
+              color: colors.warn,
               lineHeight: 1.5,
             }}
           >

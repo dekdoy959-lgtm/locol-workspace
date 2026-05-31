@@ -290,7 +290,7 @@ function MemberRow({
 function RoleBadge({ role }: { role: 'admin' | 'member' }) {
   const meta =
     role === 'admin'
-      ? { label: '🛡 Admin',  color: '#E8B923', bg: '#241a06', border: '#5a3f10' }
+      ? { label: '🛡 Admin',  color: colors.warn, bg: colors.warnBg, border: colors.warnDk }
       : { label: '👤 Member', color: colors.dimSoft, bg: colors.bgSoft, border: colors.lineHi };
   return (
     <span

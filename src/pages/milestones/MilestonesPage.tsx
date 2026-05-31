@@ -17,9 +17,9 @@ type StatusFilter = 'all' | 'open' | 'done';
 type GroupMode = 'tier' | 'date';
 
 const SIDE_COLORS: Record<MilestoneSide, string> = {
-  them: '#E8B923',
+  them: colors.warn,
   us: colors.green,
-  shared: '#9aa56a',
+  shared: colors.olive,
 };
 
 interface TierMeta {
@@ -31,9 +31,9 @@ interface TierMeta {
 }
 
 const TIER_META: TierMeta[] = [
-  { tier: 1, label: 'T1 · INNER',  sublabel: 'คนสำคัญที่สุด · cadence สั้น', color: colors.green, soft: '#19250a' },
-  { tier: 2, label: 'T2 · ACTIVE', sublabel: 'คนที่ดูแลแบบ active',          color: '#E8B923',    soft: '#241a06' },
-  { tier: 3, label: 'T3 · WIDE',   sublabel: 'เครือข่ายกว้าง',                color: '#9aa56a',    soft: '#1d1f12' },
+  { tier: 1, label: 'T1 · INNER',  sublabel: 'คนสำคัญที่สุด · cadence สั้น', color: colors.green, soft: colors.greenBg },
+  { tier: 2, label: 'T2 · ACTIVE', sublabel: 'คนที่ดูแลแบบ active',          color: colors.warn,    soft: colors.warnBg },
+  { tier: 3, label: 'T3 · WIDE',   sublabel: 'เครือข่ายกว้าง',                color: colors.olive,    soft: colors.oliveBg },
   { tier: 'none', label: 'NO TIER', sublabel: 'ยังไม่ได้กำหนด tier',          color: colors.dim,   soft: colors.bgSoft },
 ];
 
@@ -415,7 +415,7 @@ function MilestoneItem({
       style={{
         padding: 12,
         background: colors.bgSoft,
-        border: `1px solid ${isOverdue ? '#5a1a18' : colors.line}`,
+        border: `1px solid ${isOverdue ? colors.dangerDk : colors.line}`,
         borderRadius: '10px 0 10px 0',
         display: 'flex',
         alignItems: 'flex-start',

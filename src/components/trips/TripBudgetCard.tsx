@@ -210,7 +210,7 @@ export function TripBudgetCard({ opp }: TripBudgetCardProps) {
                   style={{
                     fontSize: 22,
                     fontWeight: 600,
-                    color: variance > 0 ? '#d96a66' : variance < 0 ? colors.green : colors.text,
+                    color: variance > 0 ? colors.danger : variance < 0 ? colors.green : colors.text,
                     fontFamily: "'IBM Plex Mono', monospace",
                   }}
                 >

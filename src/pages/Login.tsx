@@ -68,10 +68,10 @@ export function LoginPage() {
               style={{
                 marginTop: 18,
                 padding: 12,
-                background: '#241010',
+                background: colors.dangerBg,
                 border: '1px solid #5a1a18',
                 borderRadius: '10px 0 10px 0',
-                color: '#d96a66',
+                color: colors.danger,
                 fontSize: 13,
               }}
             >

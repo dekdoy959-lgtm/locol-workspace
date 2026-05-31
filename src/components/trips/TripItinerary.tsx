@@ -99,7 +99,7 @@ export function TripItinerary({ opportunityId }: TripItineraryProps) {
         }}
       >
         <div>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: '#9aa56a', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: colors.olive, textTransform: 'uppercase' }}>
             ✈ ITINERARY · แผนเดินทาง
           </div>
           <div style={{ fontSize: 11.5, color: colors.dimSoft, marginTop: 4 }}>
@@ -212,7 +212,7 @@ function DaySection({
       <div
         style={{
           padding: '10px 18px',
-          background: '#1d1f12',
+          background: colors.oliveBg,
           borderBottom: `1px solid ${colors.line}`,
           display: 'flex',
           alignItems: 'center',
@@ -221,7 +221,7 @@ function DaySection({
       >
         <span
           style={{
-            background: '#9aa56a',
+            background: colors.olive,
             color: colors.bg,
             padding: '2px 8px',
             fontSize: 11,
@@ -241,7 +241,7 @@ function DaySection({
             style={{
               fontSize: 10,
               fontWeight: 700,
-              color: '#d96a66',
+              color: colors.danger,
               letterSpacing: 0.4,
               background: '#2a1212',
               border: '1px solid #5a1a18',
@@ -292,7 +292,7 @@ function DaySection({
             transition: 'color 100ms, background 100ms',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = '#9aa56a';
+            e.currentTarget.style.color = colors.olive;
             e.currentTarget.style.background = colors.bgSoft;
           }}
           onMouseLeave={(e) => {
@@ -496,7 +496,7 @@ function StopRow({
               padding: '5px 12px',
               background: 'transparent',
               border: '1px solid #5a1a18',
-              color: '#d96a66',
+              color: colors.danger,
               borderRadius: '6px 0 6px 0',
               fontSize: 11,
               fontWeight: 600,
@@ -577,17 +577,17 @@ function StopRow({
               onClick={(e) => e.stopPropagation()}
               style={{
                 fontSize: 10.5,
-                color: '#9aa56a',
+                color: colors.olive,
                 textDecoration: 'none',
                 padding: '1px 6px',
-                background: '#1d1f12',
+                background: colors.oliveBg,
                 border: '1px solid #3a3f1f',
                 borderRadius: '4px 0 4px 0',
                 letterSpacing: 0.4,
                 fontWeight: 600,
               }}
               onMouseEnter={(e) => ((e.target as HTMLElement).style.color = colors.green)}
-              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = '#9aa56a')}
+              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = colors.olive)}
               title="เปิดใน Google Maps"
             >
               📍 MAP ↗
@@ -609,10 +609,10 @@ function StopRow({
           <div
             style={{
               fontSize: 11,
-              color: '#9aa56a',
+              color: colors.olive,
               marginTop: 4,
               padding: '2px 8px',
-              background: '#1d1f12',
+              background: colors.oliveBg,
               border: '1px solid #3a3f1f',
               borderRadius: '4px 0 4px 0',
               display: 'inline-block',

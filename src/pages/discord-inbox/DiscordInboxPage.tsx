@@ -11,18 +11,18 @@ import type { Database } from '../../types/database';
 type InboxRow = Database['public']['Tables']['discord_inbox']['Row'];
 
 const CATEGORY_LABELS: Record<string, { label: string; color: string }> = {
-  apply:   { label: 'ขอทุน/งานแข่ง', color: '#E8B923' },
+  apply:   { label: 'ขอทุน/งานแข่ง', color: colors.warn },
   watch:   { label: 'ติดตามข่าว',     color: '#747474' },
-  event:   { label: 'อีเวนต์',        color: '#d96a66' },
+  event:   { label: 'อีเวนต์',        color: colors.danger },
   contact: { label: 'Contact',         color: '#57a0d3' },
 };
 
 const STATUS_COLORS: Record<string, string> = {
   done:          colors.green,
-  pending:       '#E8B923',
+  pending:       colors.warn,
   processing:    '#57a0d3',
-  failed:        '#d96a66',
-  review_needed: '#E8B923',
+  failed:        colors.danger,
+  review_needed: colors.warn,
   cancelled:     colors.dim,
   dismissed:     colors.dim,
 };
@@ -322,7 +322,7 @@ function InboxCard({
               style={{
                 background: 'transparent',
                 border: `1px solid #5a1a18`,
-                color: '#d96a66',
+                color: colors.danger,
                 borderRadius: '8px 0 8px 0',
                 padding: '5px 12px',
                 fontSize: 11.5,

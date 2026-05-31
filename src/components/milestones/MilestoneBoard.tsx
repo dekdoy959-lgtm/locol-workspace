@@ -11,9 +11,9 @@ interface MilestoneBoardProps {
 }
 
 const SIDE_ACCENT: Record<MilestoneSide, string> = {
-  them: '#E8B923',
+  them: colors.warn,
   us: colors.green,
-  shared: '#9aa56a',
+  shared: colors.olive,
 };
 
 export function MilestoneBoard({ contactId, currentUserId }: MilestoneBoardProps) {

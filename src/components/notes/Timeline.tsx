@@ -223,11 +223,11 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
           style={{
             marginBottom: 10,
             padding: '6px 12px',
-            background: externalAuthError ? '#241a06' : colors.bgSoft,
-            border: `1px solid ${externalAuthError ? '#5a3f10' : colors.line}`,
+            background: externalAuthError ? colors.warnBg : colors.bgSoft,
+            border: `1px solid ${externalAuthError ? colors.warnDk : colors.line}`,
             borderRadius: '6px 0 6px 0',
             fontSize: 11,
-            color: externalAuthError ? '#E8B923' : colors.dim,
+            color: externalAuthError ? colors.warn : colors.dim,
             letterSpacing: 0.3,
             display: 'flex',
             gap: 10,
@@ -251,7 +251,7 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
           style={{
             marginBottom: 12,
             padding: '10px 14px',
-            background: '#19250a',
+            background: colors.greenBg,
             border: `1px solid ${colors.greenDk}`,
             borderRadius: '10px 0 10px 0',
             display: 'flex',
@@ -589,11 +589,11 @@ function ExternalAuthNotice() {
       style={{
         marginTop: 10,
         padding: '8px 12px',
-        background: '#241a06',
+        background: colors.warnBg,
         border: '1px solid #5a3f10',
         borderRadius: '6px 0 6px 0',
         fontSize: 11,
-        color: '#E8B923',
+        color: colors.warn,
       }}
     >
       ⚠ Google Calendar / Gmail access หมดอายุ — logout + login ใหม่
@@ -674,7 +674,7 @@ function NoteRowItem({
               padding: 0,
               opacity: 0.6,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#d96a66')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = colors.danger)}
             onMouseLeave={(e) => (e.currentTarget.style.color = colors.dim)}
           >
             <LIcon kind="warn" size={11} color="currentColor" />
@@ -726,7 +726,7 @@ function MeetingRow({
   const time = eventTime(event);
   const meetLink = eventMeetLink(event);
   const opacity = isFuture ? 0.85 : 1;
-  const accent = '#d96a66';
+  const accent = colors.danger;
 
   return (
     <div style={{ display: 'flex', gap: 12, opacity }}>
@@ -818,7 +818,7 @@ function MeetingRow({
                   padding: '1px 6px',
                   border: `1px solid ${colors.line}`,
                   borderRadius: '4px 0 4px 0',
-                  background: a.organizer ? '#19250a' : 'transparent',
+                  background: a.organizer ? colors.greenBg : 'transparent',
                 }}
               >
                 {a.displayName ?? a.email.split('@')[0]}
@@ -881,7 +881,7 @@ function EmailRow({
   sharePending: boolean;
   onShare: () => void;
 }) {
-  const accent = '#9aa56a'; // olive
+  const accent = colors.olive; // olive
   const outgoing = myEmail && isOutgoing(message, myEmail);
 
   const from = parseAddress(getHeader(message, 'From'))[0];
@@ -1021,9 +1021,9 @@ function OpportunityRow({
             {opp.stage}
           </KindChip>
           <KindChip
-            color={opp.link_role === 'organizer' ? colors.green : '#E8B923'}
-            bg={opp.link_role === 'organizer' ? '#19250a' : '#241a06'}
-            border={opp.link_role === 'organizer' ? colors.greenDk : '#5a3f10'}
+            color={opp.link_role === 'organizer' ? colors.green : colors.warn}
+            bg={opp.link_role === 'organizer' ? colors.greenBg : colors.warnBg}
+            border={opp.link_role === 'organizer' ? colors.greenDk : colors.warnDk}
           >
             {opp.link_role}
           </KindChip>
@@ -1115,28 +1115,28 @@ function InteractionRowView({
   // Choose visual based on source/channel
   const sourceMeta = (() => {
     if (interaction.source === 'gmail') {
-      return { accent: '#9aa56a', bg: '#1d1f12', border: '#3a3f1f', icon: '✉', label: 'EMAIL (TEAM)' };
+      return { accent: colors.olive, bg: colors.oliveBg, border: colors.oliveDk, icon: '✉', label: 'EMAIL (TEAM)' };
     }
     if (interaction.source === 'calendar') {
-      return { accent: '#d96a66', bg: '#241010', border: '#5a1a18', icon: '📅', label: 'MEETING (TEAM)' };
+      return { accent: colors.danger, bg: colors.dangerBg, border: colors.dangerDk, icon: '📅', label: 'MEETING (TEAM)' };
     }
     // Manual entries
     if (interaction.channel === 'Email') {
-      return { accent: '#9aa56a', bg: '#1d1f12', border: '#3a3f1f', icon: '✉', label: 'EMAIL' };
+      return { accent: colors.olive, bg: colors.oliveBg, border: colors.oliveDk, icon: '✉', label: 'EMAIL' };
     }
     if (interaction.channel === 'Phone') {
-      return { accent: '#E8B923', bg: '#241a06', border: '#5a3f10', icon: '📞', label: 'PHONE' };
+      return { accent: colors.warn, bg: colors.warnBg, border: colors.warnDk, icon: '📞', label: 'PHONE' };
     }
     if (interaction.channel === 'Line') {
-      return { accent: '#99CE24', bg: '#19250a', border: '#6e9618', icon: '💬', label: 'LINE' };
+      return { accent: '#99CE24', bg: colors.greenBg, border: '#6e9618', icon: '💬', label: 'LINE' };
     }
     if (interaction.channel === 'In Person') {
       return { accent: '#d99a66', bg: '#2a1d10', border: '#6a3f1c', icon: '🤝', label: 'IN PERSON' };
     }
     if (interaction.channel === 'Video Call') {
-      return { accent: '#d96a66', bg: '#241010', border: '#5a1a18', icon: '🎥', label: 'VIDEO CALL' };
+      return { accent: colors.danger, bg: colors.dangerBg, border: colors.dangerDk, icon: '🎥', label: 'VIDEO CALL' };
     }
-    return { accent: colors.green, bg: '#19250a', border: colors.greenDk, icon: '·', label: 'INTERACTION' };
+    return { accent: colors.green, bg: colors.greenBg, border: colors.greenDk, icon: '·', label: 'INTERACTION' };
   })();
 
   return (
@@ -1234,7 +1234,7 @@ function ShareButton({
           textTransform: 'uppercase',
           fontWeight: 600,
           padding: '2px 6px',
-          background: '#19250a',
+          background: colors.greenBg,
           border: `1px solid ${colors.greenDk}`,
           borderRadius: '4px 0 4px 0',
           whiteSpace: 'nowrap',
@@ -1294,7 +1294,7 @@ function renderNoteText(text: string) {
     }
     if (part.startsWith('@')) {
       return (
-        <span key={i} style={{ color: '#E8B923', fontWeight: 500 }}>
+        <span key={i} style={{ color: colors.warn, fontWeight: 500 }}>
           {part}
         </span>
       );

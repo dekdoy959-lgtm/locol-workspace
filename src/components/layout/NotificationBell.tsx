@@ -171,7 +171,7 @@ export function NotificationBell() {
               minWidth: 14,
               height: 14,
               padding: '0 4px',
-              background: '#d96a66',
+              background: colors.danger,
               color: '#fff',
               fontSize: 9,
               fontWeight: 700,
@@ -329,8 +329,8 @@ function AlertRow({ alert, onClick }: { alert: Alert; onClick: () => void }) {
   }[alert.kind];
 
   const color = {
-    stale: '#d96a66',
-    due: '#E8B923',
+    stale: colors.danger,
+    due: colors.warn,
     cold: '#d99a66',
     birthday: colors.green,
     reminder: colors.green,

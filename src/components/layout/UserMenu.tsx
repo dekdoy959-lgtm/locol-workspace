@@ -171,7 +171,7 @@ function MenuItem({
         width: '100%',
         background: 'transparent',
         border: 'none',
-        color: danger ? '#d96a66' : colors.text,
+        color: danger ? colors.danger : colors.text,
         fontSize: 13,
         fontWeight: 500,
         cursor: 'pointer',
@@ -180,13 +180,13 @@ function MenuItem({
         transition: 'background 100ms',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.background = danger ? '#241010' : colors.bgSoft;
+        e.currentTarget.style.background = danger ? colors.dangerBg : colors.bgSoft;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.background = 'transparent';
       }}
     >
-      <LIcon kind={icon} size={14} color={danger ? '#d96a66' : colors.dimSoft} />
+      <LIcon kind={icon} size={14} color={danger ? colors.danger : colors.dimSoft} />
       <div style={{ flex: 1 }}>
         <div>{label}</div>
         {sub && (

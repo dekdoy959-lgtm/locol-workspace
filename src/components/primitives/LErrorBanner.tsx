@@ -1,3 +1,4 @@
+import { colors } from '../../styles/tokens';
 import type { ReactNode } from 'react';
 import { LIcon } from './LIcon';
 
@@ -8,9 +9,9 @@ interface LErrorBannerProps {
 }
 
 export function LErrorBanner({ children, onRetry, variant = 'error' }: LErrorBannerProps) {
-  const color = variant === 'warning' ? '#E8B923' : '#d96a66';
-  const bg = variant === 'warning' ? '#241a06' : '#241010';
-  const border = variant === 'warning' ? '#5a3f10' : '#5a1a18';
+  const color = variant === 'warning' ? colors.warn : colors.danger;
+  const bg = variant === 'warning' ? colors.warnBg : colors.dangerBg;
+  const border = variant === 'warning' ? colors.warnDk : colors.dangerDk;
 
   return (
     <div

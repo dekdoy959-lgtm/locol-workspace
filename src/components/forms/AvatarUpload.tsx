@@ -138,7 +138,7 @@ export function AvatarUpload({ value, onChange, initials, contactId }: AvatarUpl
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: '#d96a66',
+                color: colors.danger,
                 padding: '4px 0',
                 fontFamily: 'inherit',
                 fontSize: 11,
@@ -162,10 +162,10 @@ export function AvatarUpload({ value, onChange, initials, contactId }: AvatarUpl
           style={{
             marginTop: 8,
             padding: '6px 10px',
-            background: '#241010',
+            background: colors.dangerBg,
             border: '1px solid #5a1a18',
             borderRadius: '6px 0 6px 0',
-            color: '#d96a66',
+            color: colors.danger,
             fontSize: 12,
           }}
         >

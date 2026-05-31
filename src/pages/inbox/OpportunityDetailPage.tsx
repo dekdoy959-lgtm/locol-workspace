@@ -63,7 +63,7 @@ export function OpportunityDetailPage() {
     return (
       <div style={{ padding: 40 }}>
         <LCard padding={24} bg="#241010" border="#5a1a18">
-          <div style={{ color: '#d96a66', marginBottom: 16 }}>ไม่พบ opportunity</div>
+          <div style={{ color: colors.danger, marginBottom: 16 }}>ไม่พบ opportunity</div>
           <LBtn ghost onClick={() => navigate('/inbox')}>← กลับ</LBtn>
         </LCard>
       </div>
@@ -142,14 +142,14 @@ export function OpportunityDetailPage() {
               )}
               {opp.priority && (
                 <LChip
-                  ink={opp.priority === 'High' ? '#d96a66' : colors.dimSoft}
-                  bg={opp.priority === 'High' ? '#241010' : 'transparent'}
-                  border={opp.priority === 'High' ? '#5a1a18' : colors.lineHi}
+                  ink={opp.priority === 'High' ? colors.danger : colors.dimSoft}
+                  bg={opp.priority === 'High' ? colors.dangerBg : 'transparent'}
+                  border={opp.priority === 'High' ? colors.dangerDk : colors.lineHi}
                 >
                   <LIcon
                     kind="flag"
                     size={10}
-                    color={opp.priority === 'High' ? '#d96a66' : colors.dimSoft}
+                    color={opp.priority === 'High' ? colors.danger : colors.dimSoft}
                   />
                   {opp.priority.toUpperCase()}
                 </LChip>
@@ -218,7 +218,7 @@ export function OpportunityDetailPage() {
                   borderRadius: '8px 0 8px 0',
                   border: '1px solid #5a1a18',
                   background: '#1e0a0a',
-                  color: '#d96a66',
+                  color: colors.danger,
                   fontSize: 12.5,
                   fontWeight: 700,
                   cursor: 'pointer',
@@ -256,14 +256,14 @@ export function OpportunityDetailPage() {
             <LCard padding={20} style={{ borderLeft: '3px solid #5865F2' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 10, letterSpacing: 1.2, color: '#5865F2', fontWeight: 700 }}>
+                  <span style={{ fontSize: 10, letterSpacing: 1.2, color: colors.discord, fontWeight: 700 }}>
                     DISCORD SOURCE
                   </span>
                   <span style={{ fontSize: 11, color: colors.dim }}>
                     @{discordSource.author_name} · {new Date(discordSource.created_at).toLocaleDateString('th-TH')}
                   </span>
                 </div>
-                <a href="/discord-inbox" style={{ fontSize: 11, color: '#5865F2', textDecoration: 'none' }}>
+                <a href="/discord-inbox" style={{ fontSize: 11, color: colors.discord, textDecoration: 'none' }}>
                   ดู inbox →
                 </a>
               </div>

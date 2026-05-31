@@ -68,9 +68,9 @@ export function OpportunityDetailsView({ track, details }: OpportunityDetailsVie
                   style={{
                     width: 22,
                     height: 22,
-                    background: '#1d1f12',
+                    background: colors.oliveBg,
                     border: `1px solid #3a3f1f`,
-                    color: '#9aa56a',
+                    color: colors.olive,
                     fontSize: 10,
                     fontWeight: 700,
                     borderRadius: '5px 0 5px 0',

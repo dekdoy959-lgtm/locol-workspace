@@ -1,3 +1,4 @@
+import { colors } from '../styles/tokens';
 import type { Database } from './database';
 import { daysFromTodayISO } from '../lib/dateUtil';
 
@@ -42,7 +43,7 @@ export const TRACKS: TrackMeta[] = [
     cadence: 'ตาม deadline',
     stages: ['Spotted', 'Fit check', 'Drafting', 'Submitted', 'Won', 'Lost'],
     defaultStage: 'Spotted',
-    color: { ink: '#E8B923', soft: '#3a2a0a', chip: '#BD8E23' },
+    color: { ink: colors.warn, soft: '#3a2a0a', chip: '#BD8E23' },
     examples: ['Climate Curve $200k', 'NIA Open Innovation', 'Banpu Champions for Change'],
   },
   {
@@ -65,7 +66,7 @@ export const TRACKS: TrackMeta[] = [
     cadence: 'ตามวันที่งาน',
     stages: ['Spotted', 'Decide attend', 'Registered', 'Attended', 'Follow-ups'],
     defaultStage: 'Spotted',
-    color: { ink: '#d96a66', soft: '#2a1212', chip: '#A12F2D' },
+    color: { ink: colors.danger, soft: '#2a1212', chip: '#A12F2D' },
     examples: ['SIAL Asia 2026', 'ASEAN Climate Summit', 'Thaifex 2026'],
   },
   {
@@ -76,7 +77,7 @@ export const TRACKS: TrackMeta[] = [
     cadence: 'ตามแผนทริป',
     stages: ['Planned', 'Confirmed', 'Departed', 'Completed', 'Follow-ups'],
     defaultStage: 'Planned',
-    color: { ink: '#9aa56a', soft: '#1d1f12', chip: '#695935' },
+    color: { ink: colors.olive, soft: colors.oliveBg, chip: '#695935' },
     examples: ['ไปฟาร์ม ก. เชียงราย', 'ตรวจคุณภาพโคที่ พิจิตร', 'ดู supply chain แม่ฮ่องสอน'],
   },
 ];

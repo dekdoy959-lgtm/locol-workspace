@@ -76,7 +76,7 @@ export function TagsField({ value, onChange, placeholder = 'พิมพ์เ�
               alignItems: 'center',
               gap: 4,
               padding: '3px 8px',
-              background: '#19250a',
+              background: colors.greenBg,
               border: `1px solid ${colors.greenDk}`,
               color: colors.green,
               borderRadius: '6px 0 6px 0',
@@ -150,7 +150,7 @@ export function TagsField({ value, onChange, placeholder = 'พิมพ์เ�
               style={{
                 width: '100%',
                 padding: '10px 14px',
-                background: '#19250a',
+                background: colors.greenBg,
                 border: 'none',
                 color: colors.green,
                 cursor: 'pointer',

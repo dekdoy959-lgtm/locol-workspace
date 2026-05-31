@@ -222,7 +222,7 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
                         width: '100%',
                         textAlign: 'left',
                         padding: '8px 10px',
-                        background: pickedId === r.id ? '#19250a' : 'transparent',
+                        background: pickedId === r.id ? colors.greenBg : 'transparent',
                         border: 'none',
                         color: colors.text,
                         cursor: 'pointer',
@@ -366,7 +366,7 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
                     fontSize: 13,
                     padding: 4,
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#d96a66')}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = colors.danger)}
                   onMouseLeave={(e) => (e.currentTarget.style.color = colors.dim)}
                 >
                   ×
@@ -407,9 +407,9 @@ function TargetIcon({ kind, data }: { kind: TargetKind; data?: ContactRow | OrgR
         style={{
           width: 26,
           height: 26,
-          background: '#1d1f12',
+          background: colors.oliveBg,
           border: '1px solid #3a3f1f',
-          color: '#9aa56a',
+          color: colors.olive,
           fontSize: 10,
           fontWeight: 700,
           borderRadius: '6px 0 6px 0',

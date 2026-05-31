@@ -124,7 +124,7 @@ export function InboxSummaryPage() {
         <BigStat
           label="Stale ⚠"
           value={buckets.stale.length}
-          color={buckets.stale.length > 0 ? '#d96a66' : colors.text}
+          color={buckets.stale.length > 0 ? colors.danger : colors.text}
         />
         <BigStat label="Events Soon" value={buckets.upcomingEventsThis.length + buckets.upcomingEventsNext.length} color="#d96a66" />
         <BigStat label="Applying" value={buckets.applying.length} color="#E8B923" />
@@ -367,7 +367,7 @@ function WeekColumn({
           style={{
             fontSize: 12,
             fontWeight: 700,
-            color: emphasized ? '#d96a66' : colors.text,
+            color: emphasized ? colors.danger : colors.text,
             letterSpacing: 0.8,
             textTransform: 'uppercase',
           }}

@@ -38,7 +38,7 @@ export function RuleEditor({ value, onChange }: RuleEditorProps) {
         style={{
           marginTop: 14,
           padding: '10px 14px',
-          background: '#19250a',
+          background: colors.greenBg,
           border: `1px solid ${colors.greenDk}`,
           borderRadius: '10px 0 10px 0',
           display: 'flex',
@@ -91,7 +91,7 @@ function CombinatorEditor({
     setRule({ ...rule, rules: [...rule.rules, newGroup] });
   };
 
-  const accent = rule.combinator === 'all' ? colors.green : '#E8B923';
+  const accent = rule.combinator === 'all' ? colors.green : colors.warn;
 
   return (
     <div
@@ -143,7 +143,7 @@ function CombinatorEditor({
               fontSize: 14,
               padding: 0,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#d96a66')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = colors.danger)}
             onMouseLeave={(e) => (e.currentTarget.style.color = colors.dim)}
           >
             × Remove group
@@ -319,7 +319,7 @@ function LeafEditor({ leaf, onChange }: { leaf: LeafRule; onChange: (next: Rule 
           fontSize: 16,
           padding: '0 4px',
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = '#d96a66')}
+        onMouseEnter={(e) => (e.currentTarget.style.color = colors.danger)}
         onMouseLeave={(e) => (e.currentTarget.style.color = colors.dim)}
       >
         ×

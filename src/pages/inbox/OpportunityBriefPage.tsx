@@ -221,7 +221,7 @@ export function OpportunityBriefPage() {
                   style={{
                     fontSize: 13,
                     fontWeight: 700,
-                    color: '#9aa56a',
+                    color: colors.olive,
                     letterSpacing: 1,
                     textTransform: 'uppercase',
                     marginBottom: 8,
@@ -265,7 +265,7 @@ export function OpportunityBriefPage() {
                           <Td>
                             <div className="brief-text" style={{ fontWeight: 600 }}>{place || '—'}</div>
                             {stopTravelers.length > 0 && (
-                              <div className="brief-muted" style={{ fontSize: 11, color: '#9aa56a', marginTop: 3 }}>
+                              <div className="brief-muted" style={{ fontSize: 11, color: colors.olive, marginTop: 3 }}>
                                 ✈ {stopTravelers.join(', ')}
                               </div>
                             )}

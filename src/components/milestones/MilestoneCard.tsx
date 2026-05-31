@@ -16,9 +16,9 @@ function formatDate(iso: string): string {
 }
 
 const SIDE_ACCENT: Record<MilestoneSide, { ink: string; bg: string; border: string }> = {
-  them: { ink: '#E8B923', bg: '#241a06', border: '#5a3f10' },
-  us: { ink: colors.green, bg: '#19250a', border: colors.greenDk },
-  shared: { ink: '#9aa56a', bg: '#1d1f12', border: '#695935' },
+  them: { ink: colors.warn, bg: colors.warnBg, border: colors.warnDk },
+  us: { ink: colors.green, bg: colors.greenBg, border: colors.greenDk },
+  shared: { ink: colors.olive, bg: colors.oliveBg, border: '#695935' },
 };
 
 export function MilestoneCard({ milestone }: MilestoneCardProps) {
@@ -181,7 +181,7 @@ export function MilestoneCard({ milestone }: MilestoneCardProps) {
               padding: 4,
               fontSize: 11,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#d96a66')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = colors.danger)}
             onMouseLeave={(e) => (e.currentTarget.style.color = colors.dim)}
           >
             <LIcon kind="warn" size={13} color="currentColor" />

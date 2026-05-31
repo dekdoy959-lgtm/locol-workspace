@@ -7,14 +7,14 @@ interface LStatusProps {
 
 const map: Record<string, { ink: string; bg: string; border: string }> = {
   New:      { ink: colors.text,    bg: colors.bgCard, border: colors.lineHi },
-  Triage:   { ink: '#E8B923',      bg: '#241a06',     border: '#5a3f10' },
+  Triage:   { ink: colors.warn,      bg: colors.warnBg,     border: colors.warnDk },
   Assigned: { ink: colors.surface, bg: colors.bgCard, border: colors.lineHi },
-  Pursuing: { ink: colors.green,   bg: '#19250a',     border: colors.greenDk },
+  Pursuing: { ink: colors.green,   bg: colors.greenBg,     border: colors.greenDk },
   Decision: { ink: colors.bg,      bg: colors.green,  border: colors.green },
-  Won:      { ink: colors.green,   bg: '#19250a',     border: colors.greenDk },
-  Lost:     { ink: '#d96a66',      bg: '#241010',     border: '#5a1a18' },
+  Won:      { ink: colors.green,   bg: colors.greenBg,     border: colors.greenDk },
+  Lost:     { ink: colors.danger,      bg: colors.dangerBg,     border: colors.dangerDk },
   Archived: { ink: colors.dim,     bg: colors.bgSoft, border: colors.line },
-  Stale:    { ink: '#d96a66',      bg: '#241010',     border: '#5a1a18' },
+  Stale:    { ink: colors.danger,      bg: colors.dangerBg,     border: colors.dangerDk },
 };
 
 export function LStatus({ status }: LStatusProps) {

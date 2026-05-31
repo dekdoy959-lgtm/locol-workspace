@@ -253,7 +253,7 @@ export function InboxPage() {
           active={tab === 'focus'}
           onClick={() => setTab('focus')}
           color="#d96a66"
-          dotColor={focusItems.length > 0 ? '#d96a66' : colors.dim}
+          dotColor={focusItems.length > 0 ? colors.danger : colors.dim}
         />
         <TabBtn
           label="ALL"
@@ -807,12 +807,12 @@ function FocusView({
       <div
         style={{
           padding: '10px 14px',
-          background: '#241010',
+          background: colors.dangerBg,
           border: '1px solid #5a1a18',
           borderRadius: '12px 0 12px 0',
           marginBottom: 12,
           fontSize: 12,
-          color: '#d96a66',
+          color: colors.danger,
           lineHeight: 1.5,
         }}
       >
@@ -1080,8 +1080,8 @@ function OpportunityCard({
           gap: 8,
           padding: '6px 10px',
           background: colors.bgCard,
-          border: `1px solid ${stale ? '#5a1a18' : colors.lineHi}`,
-          borderLeft: `3px solid ${stale ? '#d96a66' : meta.color.ink}`,
+          border: `1px solid ${stale ? colors.dangerDk : colors.lineHi}`,
+          borderLeft: `3px solid ${stale ? colors.danger : meta.color.ink}`,
           borderRadius: '6px 0 6px 0',
           cursor: 'grab',
           transition: 'border-color 150ms',
@@ -1092,7 +1092,7 @@ function OpportunityCard({
           if (!stale) e.currentTarget.style.borderColor = meta.color.chip;
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = stale ? '#5a1a18' : colors.lineHi;
+          e.currentTarget.style.borderColor = stale ? colors.dangerDk : colors.lineHi;
         }}
       >
         <LPri level={pri as 'hi' | 'med' | 'low'} />
@@ -1113,13 +1113,13 @@ function OpportunityCard({
           {opp.stage}
         </span>
         {fromDiscord && (
-          <span style={{ fontSize: 9, color: '#5865F2', fontWeight: 700, letterSpacing: 0.3, flexShrink: 0 }}>DC</span>
+          <span style={{ fontSize: 9, color: colors.discord, fontWeight: 700, letterSpacing: 0.3, flexShrink: 0 }}>DC</span>
         )}
         {stale && (
           <span
             style={{
               fontSize: 9,
-              color: '#d96a66',
+              color: colors.danger,
               fontWeight: 700,
               letterSpacing: 0.5,
               flexShrink: 0,
@@ -1151,7 +1151,7 @@ function OpportunityCard({
         style={{
           padding: '8px 10px',
           background: colors.bgCard,
-          border: `1px solid ${stale ? '#5a1a18' : colors.lineHi}`,
+          border: `1px solid ${stale ? colors.dangerDk : colors.lineHi}`,
           borderRadius: '10px 0 10px 0',
           cursor: 'grab',
           transition: 'border-color 150ms',
@@ -1161,7 +1161,7 @@ function OpportunityCard({
           if (!stale) e.currentTarget.style.borderColor = meta.color.chip;
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = stale ? '#5a1a18' : colors.lineHi;
+          e.currentTarget.style.borderColor = stale ? colors.dangerDk : colors.lineHi;
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
@@ -1178,14 +1178,14 @@ function OpportunityCard({
             {opp.stage}
           </span>
           {fromDiscord && (
-            <span style={{ fontSize: 9, color: '#5865F2', fontWeight: 700, letterSpacing: 0.3 }}>DC</span>
+            <span style={{ fontSize: 9, color: colors.discord, fontWeight: 700, letterSpacing: 0.3 }}>DC</span>
           )}
           {stale && (
             <span
               style={{
                 marginLeft: 'auto',
                 fontSize: 9,
-                color: '#d96a66',
+                color: colors.danger,
                 letterSpacing: 0.5,
                 textTransform: 'uppercase',
                 fontWeight: 700,
@@ -1248,7 +1248,7 @@ function OpportunityCard({
       style={{
         padding: 12,
         background: colors.bgCard,
-        border: `1px solid ${stale ? '#5a1a18' : colors.lineHi}`,
+        border: `1px solid ${stale ? colors.dangerDk : colors.lineHi}`,
         borderRadius: '14px 0 14px 0',
         cursor: 'grab',
         transition: 'border-color 150ms',
@@ -1258,7 +1258,7 @@ function OpportunityCard({
         if (!stale) e.currentTarget.style.borderColor = meta.color.chip;
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = stale ? '#5a1a18' : colors.lineHi;
+        e.currentTarget.style.borderColor = stale ? colors.dangerDk : colors.lineHi;
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
@@ -1278,7 +1278,7 @@ function OpportunityCard({
           <span
             style={{
               fontSize: 9,
-              color: '#5865F2',
+              color: colors.discord,
               fontWeight: 700,
               letterSpacing: 0.3,
               background: '#5865F215',
@@ -1295,7 +1295,7 @@ function OpportunityCard({
             style={{
               marginLeft: 'auto',
               fontSize: 10,
-              color: '#d96a66',
+              color: colors.danger,
               letterSpacing: 0.5,
               textTransform: 'uppercase',
               fontWeight: 600,

@@ -41,9 +41,9 @@ export function OfflineBanner() {
     ? { bottom: layout.bottomNavHeight + 8, left: 8, right: 8 }
     : { top: 8, left: '50%', transform: 'translateX(-50%)', maxWidth: 360 };
 
-  const bg = online ? '#19250a' : '#241a06';
-  const fg = online ? colors.green : '#E8B923';
-  const border = online ? colors.greenDk : '#5a3f10';
+  const bg = online ? colors.greenBg : colors.warnBg;
+  const fg = online ? colors.green : colors.warn;
+  const border = online ? colors.greenDk : colors.warnDk;
   const message = online ? '✓ กลับมา online แล้ว' : '⚠ Offline · ใช้ข้อมูลที่ cache ไว้';
 
   return (

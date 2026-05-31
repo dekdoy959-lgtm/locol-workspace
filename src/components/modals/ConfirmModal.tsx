@@ -91,7 +91,7 @@ export function ConfirmModal({
               fontSize: 16,
               fontWeight: 700,
               letterSpacing: -0.3,
-              color: danger ? '#d96a66' : colors.text,
+              color: danger ? colors.danger : colors.text,
               marginBottom: 10,
             }}
           >
@@ -112,9 +112,9 @@ export function ConfirmModal({
               style={{
                 padding: '7px 18px',
                 borderRadius: '8px 0 8px 0',
-                border: `1px solid ${danger ? '#5a1a18' : colors.greenDk}`,
-                background: danger ? '#3a1010' : '#19250a',
-                color: danger ? '#d96a66' : colors.green,
+                border: `1px solid ${danger ? colors.dangerDk : colors.greenDk}`,
+                background: danger ? '#3a1010' : colors.greenBg,
+                color: danger ? colors.danger : colors.green,
                 fontSize: 12.5,
                 fontWeight: 700,
                 cursor: isLoading ? 'not-allowed' : 'pointer',

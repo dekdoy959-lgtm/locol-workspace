@@ -89,8 +89,8 @@ export function NoteComposer({ scope, targetId, currentUserId }: NoteComposerPro
             <span
               style={{
                 fontSize: 10,
-                color: '#E8B923',
-                background: '#241a06',
+                color: colors.warn,
+                background: colors.warnBg,
                 border: '1px solid #5a3f10',
                 padding: '2px 8px',
                 borderRadius: '6px 0 6px 0',
@@ -137,10 +137,10 @@ export function NoteComposer({ scope, targetId, currentUserId }: NoteComposerPro
           style={{
             marginTop: 8,
             padding: 8,
-            background: '#241010',
+            background: colors.dangerBg,
             border: '1px solid #5a1a18',
             borderRadius: '6px 0 6px 0',
-            color: '#d96a66',
+            color: colors.danger,
             fontSize: 12,
           }}
         >

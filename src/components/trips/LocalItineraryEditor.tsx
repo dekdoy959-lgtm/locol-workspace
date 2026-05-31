@@ -124,7 +124,7 @@ export function LocalItineraryEditor({ stops, onChange }: LocalItineraryEditorPr
         }}
       >
         <div>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: '#9aa56a', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: colors.olive, textTransform: 'uppercase' }}>
             ✈ ITINERARY · แผนเดินทาง
           </div>
           <div style={{ fontSize: 11.5, color: colors.dimSoft, marginTop: 4 }}>
@@ -203,7 +203,7 @@ function DayBlock({
       <div
         style={{
           padding: '10px 18px',
-          background: '#1d1f12',
+          background: colors.oliveBg,
           borderBottom: `1px solid ${colors.line}`,
           display: 'flex',
           alignItems: 'center',
@@ -212,7 +212,7 @@ function DayBlock({
       >
         <span
           style={{
-            background: '#9aa56a',
+            background: colors.olive,
             color: colors.bg,
             padding: '2px 8px',
             fontSize: 11,
@@ -432,7 +432,7 @@ function LocalStopRow({
               padding: '5px 12px',
               background: 'transparent',
               border: '1px solid #5a1a18',
-              color: '#d96a66',
+              color: colors.danger,
               borderRadius: '6px 0 6px 0',
               fontSize: 11,
               fontWeight: 600,

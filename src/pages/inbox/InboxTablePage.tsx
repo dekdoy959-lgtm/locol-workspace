@@ -466,7 +466,7 @@ function PeopleList({ names, highlight = false }: { names: string[]; highlight?:
         <span
           key={i}
           style={{
-            color: highlight ? '#d96a66' : colors.surface,
+            color: highlight ? colors.danger : colors.surface,
             fontWeight: highlight ? 600 : 400,
             fontSize: 11.5,
             lineHeight: 1.3,
@@ -498,8 +498,8 @@ function DateCell({ date, accent }: { date: string | null; accent?: string }) {
 function PriorityChip({ pri }: { pri: string | null }) {
   if (!pri) return <span style={{ color: colors.dim, opacity: 0.5 }}>—</span>;
   const colorMap: Record<string, string> = {
-    High: '#d96a66',
-    Medium: '#E8B923',
+    High: colors.danger,
+    Medium: colors.warn,
     Low: colors.dim,
   };
   return (

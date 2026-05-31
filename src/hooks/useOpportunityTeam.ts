@@ -1,3 +1,4 @@
+import { colors } from '../styles/tokens';
 import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
@@ -11,10 +12,10 @@ export type TeamRole = TeamAssignmentRow['role'];
 
 export const TEAM_ROLE_META: Record<TeamRole, { label: string; icon: string; color: string }> = {
   owner:          { label: 'Owner · เจ้าของหลัก',       icon: '👑', color: '#99CE24' },
-  reviewer:       { label: 'Reviewer · ผู้ตรวจสอบ',     icon: '✓',  color: '#E8B923' },
-  document_lead:  { label: 'Document Lead · คนทำเอกสาร', icon: '📝', color: '#9aa56a' },
+  reviewer:       { label: 'Reviewer · ผู้ตรวจสอบ',     icon: '✓',  color: colors.warn },
+  document_lead:  { label: 'Document Lead · คนทำเอกสาร', icon: '📝', color: colors.olive },
   coordinator:    { label: 'Coordinator · คนประสานงาน', icon: '🤝', color: '#d99a66' },
-  traveler:       { label: 'Traveler · คนไป',           icon: '✈',  color: '#d96a66' },
+  traveler:       { label: 'Traveler · คนไป',           icon: '✈',  color: colors.danger },
   support:        { label: 'Support · ทั่วไป',           icon: '🛟', color: '#747474' },
 };
 

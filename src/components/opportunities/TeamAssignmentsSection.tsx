@@ -150,7 +150,7 @@ export function TeamAssignmentsSection({ opportunityId }: TeamAssignmentsSection
                             fontSize: 14,
                             lineHeight: 1,
                           }}
-                          onMouseEnter={(e) => (e.currentTarget.style.color = '#d96a66')}
+                          onMouseEnter={(e) => (e.currentTarget.style.color = colors.danger)}
                           onMouseLeave={(e) => (e.currentTarget.style.color = colors.dim)}
                         >
                           ×

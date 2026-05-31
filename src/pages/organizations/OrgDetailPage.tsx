@@ -65,7 +65,7 @@ export function OrgDetailPage() {
     return (
       <div style={{ padding: 40 }}>
         <LCard padding={24} bg="#241010" border="#5a1a18">
-          <div style={{ color: '#d96a66', marginBottom: 16 }}>ไม่พบ organization</div>
+          <div style={{ color: colors.danger, marginBottom: 16 }}>ไม่พบ organization</div>
           <LBtn ghost onClick={() => navigate('/organizations')}>← กลับ</LBtn>
         </LCard>
       </div>
@@ -119,13 +119,13 @@ export function OrgDetailPage() {
                 style={{
                   width: 64,
                   height: 64,
-                  background: '#1d1f12',
+                  background: colors.oliveBg,
                   border: '1px solid #3a3f1f',
                   borderRadius: '12px 0 12px 0',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#9aa56a',
+                  color: colors.olive,
                   fontWeight: 700,
                   fontSize: 20,
                   letterSpacing: 1,

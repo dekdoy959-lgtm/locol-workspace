@@ -14,6 +14,18 @@ export const colors = {
   dim: '#747474',
   green: '#99CE24',
   greenDk: '#6e9618',
+  greenBg: '#19250a',
+  // Semantic accents (previously hardcoded across the app)
+  danger: '#d96a66',
+  dangerDk: '#5a1a18',
+  dangerBg: '#241010',
+  warn: '#E8B923',
+  warnDk: '#5a3f10',
+  warnBg: '#241a06',
+  olive: '#9aa56a',
+  oliveDk: '#3a3f1f',
+  oliveBg: '#1d1f12',
+  discord: '#5865F2',
 } as const;
 
 
