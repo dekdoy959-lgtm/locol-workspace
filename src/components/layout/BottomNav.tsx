@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { colors, layout } from '../../styles/tokens';
 import { LIcon } from '../primitives/LIcon';
 import type { IconKind } from '../primitives/LIcon';
@@ -36,14 +36,15 @@ interface BottomNavProps {
 export function BottomNav({ onSearchOpen }: BottomNavProps) {
   const [moreOpen, setMoreOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, signOut } = useAuth();
 
-  // Close drawer when navigating
+  // Close the drawer on navigation. React Router uses history.pushState (which
+  // does NOT fire 'popstate'), so watch the location instead of a popstate
+  // listener that would never fire for in-app navigation.
   useEffect(() => {
-    const handler = () => setMoreOpen(false);
-    window.addEventListener('popstate', handler);
-    return () => window.removeEventListener('popstate', handler);
-  }, []);
+    setMoreOpen(false);
+  }, [location.pathname]);
 
   const handleSignOut = async () => {
     setMoreOpen(false);

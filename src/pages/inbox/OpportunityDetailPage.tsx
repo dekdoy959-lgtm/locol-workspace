@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useOpportunity, useUpdateOpportunity, useDuplicateOpportunity } from '../../hooks/useOpportunities';
 import { useTeamMembers, teamMemberDisplayName, teamMemberInitials } from '../../hooks/useTeamMembers';
@@ -71,7 +71,7 @@ export function OpportunityDetailPage() {
   }
 
   const meta = findTrack(opp.track as TrackKey);
-  const teamById = Object.fromEntries(team.map((m) => [m.id, m]));
+  const teamById = useMemo(() => Object.fromEntries(team.map((m) => [m.id, m])), [team]);
   const owner = opp.owner_id ? teamById[opp.owner_id] : null;
   const reviewer = opp.reviewer_id ? teamById[opp.reviewer_id] : null;
   const staleThreshold = getStaleThreshold(trackSettings, opp.track as TrackKey);
