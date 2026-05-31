@@ -294,7 +294,7 @@ function LocalStopRow({
     return (
       <div style={{ padding: '14px 18px', background: '#161812' }}>
         <div style={{ marginBottom: 10 }}>
-          <LLabel>📅 วันที่ (เปลี่ยนได้เพื่อย้ายไปอีกวัน)</LLabel>
+          <LLabel><LIcon kind="cal" size={10} color={colors.dim} /> วันที่ (เปลี่ยนได้เพื่อย้ายไปอีกวัน)</LLabel>
           <div style={{ maxWidth: 200 }}>
             <LInput
               type="date"

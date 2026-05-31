@@ -549,7 +549,7 @@ export function ContactDetailPage() {
                     {contact.birthday}
                     {contact.birthday_notification_enabled && (
                       <span style={{ marginLeft: 8, fontSize: 10, color: colors.green, letterSpacing: 0.6 }}>
-                        🔔 ALERT ON
+                        <LIcon kind="bell" size={9} color={colors.green} /> ALERT ON
                       </span>
                     )}
                   </span>

@@ -121,7 +121,7 @@ export function NoteComposer({ scope, targetId, currentUserId }: NoteComposerPro
               onChange={(e) => setReminder(e.target.checked)}
               style={{ accentColor: colors.green }}
             />
-            🔔 แจ้งเตือนตอนถึงวัน
+            <LIcon kind="bell" size={10} color={colors.dimSoft} /> แจ้งเตือนตอนถึงวัน
           </label>
         )}
 

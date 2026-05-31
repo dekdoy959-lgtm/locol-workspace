@@ -238,7 +238,7 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
             <>⚠ Google {calendarAuthError && gmailAuthError ? 'Calendar + Gmail' : calendarAuthError ? 'Calendar' : 'Gmail'} access หมดอายุ — logout + login ใหม่</>
           ) : (
             <>
-              {calendarLoading && <span>📅 กำลังดึง Calendar…</span>}
+              {calendarLoading && <span><LIcon kind="cal" size={10} color={colors.dim} /> กำลังดึง Calendar…</span>}
               {gmailLoading && <span>📧 กำลังดึง Gmail…</span>}
             </>
           )}
@@ -267,7 +267,7 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
             <div style={{ fontSize: 11, color: colors.dimSoft, lineHeight: 1.4 }}>
               {unsharedCounts.gmail > 0 && <>✉ {unsharedCounts.gmail} emails </>}
               {unsharedCounts.gmail > 0 && unsharedCounts.calendar > 0 && '· '}
-              {unsharedCounts.calendar > 0 && <>📅 {unsharedCounts.calendar} meetings </>}
+              {unsharedCounts.calendar > 0 && <><LIcon kind="cal" size={10} color={colors.dim} /> {unsharedCounts.calendar} meetings </>}
               · Share เพื่อให้ทีมเห็นใน Interactions
             </div>
           </div>
