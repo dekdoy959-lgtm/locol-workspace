@@ -304,8 +304,16 @@ async function processBirthdays() {
     const [, mm, dd] = c.birthday.split('-');
     if (!mm || !dd) continue;
 
-    const thisYear = new Date(today.getFullYear(), Number(mm) - 1, Number(dd));
-    const nextYear = new Date(today.getFullYear() + 1, Number(mm) - 1, Number(dd));
+    // Feb 29 birthdays: observe on Feb 28 in non-leap years instead of letting
+    // JS roll the date to Mar 1 (which would fire the reminder a day late).
+    const m = Number(mm) - 1;
+    const isFeb29 = m === 1 && Number(dd) === 29;
+    const dayFor = (year) => {
+      const leap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+      return isFeb29 && !leap ? new Date(year, 1, 28) : new Date(year, m, Number(dd));
+    };
+    const thisYear = dayFor(today.getFullYear());
+    const nextYear = dayFor(today.getFullYear() + 1);
     const next = thisYear >= today ? thisYear : nextYear;
     const daysUntil = Math.round((next.getTime() - today.getTime()) / MS_PER_DAY);
 

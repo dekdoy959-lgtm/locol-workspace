@@ -147,8 +147,9 @@ export function CalendarPage() {
   const conflicts = useMemo(() => detectConflicts(items), [items]);
   const monthCost = useMemo(() => formatCostMap(totalCost(monthItems.filter((i) => i.kind === 'event'))), [monthItems]);
 
+  const exportableItems = items.filter((i) => !i.href.startsWith('#'));
   const handleExport = () => {
-    downloadICal(items.filter((i) => !i.href.startsWith('#')), `locol-calendar-${todayLocalISO()}.ics`);
+    downloadICal(exportableItems, `locol-calendar-${todayLocalISO()}.ics`);
   };
 
   return (
@@ -165,7 +166,7 @@ export function CalendarPage() {
             CALENDAR
           </LH>
           <div style={{ display: 'flex', gap: 8 }}>
-            <LBtn ghost onClick={handleExport}>
+            <LBtn ghost onClick={handleExport} disabled={exportableItems.length === 0}>
               <LIcon kind="arrow-down" size={11} color={colors.dimSoft} /> EXPORT .ICS
             </LBtn>
           </div>
