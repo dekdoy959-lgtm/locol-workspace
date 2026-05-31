@@ -283,7 +283,7 @@ export function OpportunityDetailPage() {
                   {discordSource.original_text}
                 </div>
               )}
-              {discordSource.attachment_paths.length > 0 && (
+              {Array.isArray(discordSource.attachment_paths) && discordSource.attachment_paths.length > 0 && (
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
                   {discordSource.attachment_paths.map((a, i) => (
                     <DiscordAttachment key={i} storagePath={a.storage_path} filename={a.filename} />

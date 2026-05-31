@@ -15,7 +15,7 @@
 
 import { useNavigate, useParams } from 'react-router-dom';
 import { useOpportunity } from '../../hooks/useOpportunities';
-import { useTripStops, groupStopsByDay } from '../../hooks/useTripStops';
+import { useTripStops, groupStopsByDay, STOP_TYPE_META, type StopType } from '../../hooks/useTripStops';
 import { useOpportunityTeam, TEAM_ROLE_META, type TeamRole } from '../../hooks/useOpportunityTeam';
 import { useTeamMembers, teamMemberDisplayName } from '../../hooks/useTeamMembers';
 import { findTrack, type TrackKey } from '../../types/opportunity';
@@ -113,14 +113,27 @@ export function OpportunityBriefPage() {
         <Section title="📅 KEY DATES">
           <KeyValueList
             items={[
-              ['วันจัดงาน · Event date', v('event_date_start') + (v('event_date_end') ? ` → ${v('event_date_end')}` : '')],
-              ['เวลา · Time', v('event_time')],
-              ['Registration deadline', v('registration_deadline')],
-              ['Application deadline', v('application_deadline')],
-              ['Decision date', v('decision_date')],
-              ['Effective date (สัญญา)', v('effective_date')],
-              ['Renewal date (สัญญา)', v('renewal_date')],
-              ['Trip start', v('trip_date_start') + (v('trip_date_end') ? ` → ${v('trip_date_end')}` : '')],
+              // Show only the date rows that belong to this track — avoids a
+              // trip brief listing "Event date" (and the trip_date duplicating
+              // the itinerary table, which is the canonical trip schedule).
+              ...(opp.track === 'event'
+                ? ([
+                    ['วันจัดงาน · Event date', v('event_date_start') + (v('event_date_end') ? ` → ${v('event_date_end')}` : '')],
+                    ['เวลา · Time', v('event_time')],
+                    ['Registration deadline', v('registration_deadline')],
+                  ] as [string, string][])
+                : []),
+              ...(opp.track === 'apply'
+                ? ([
+                    ['Application deadline', v('application_deadline')],
+                    ['Decision date', v('decision_date')],
+                    ['Effective date (สัญญา)', v('effective_date')],
+                    ['Renewal date (สัญญา)', v('renewal_date')],
+                  ] as [string, string][])
+                : []),
+              ...(opp.track === 'trip'
+                ? ([['Trip start', v('trip_date_start') + (v('trip_date_end') ? ` → ${v('trip_date_end')}` : '')]] as [string, string][])
+                : []),
             ].filter(([, val]) => val)}
           />
         </Section>
@@ -245,7 +258,7 @@ export function OpportunityBriefPage() {
                       return (
                         <tr key={s.id} style={{ borderTop: `1px solid ${colors.line}` }}>
                           <Td>{time || '—'}</Td>
-                          <Td>{s.stop_type}</Td>
+                          <Td>{STOP_TYPE_META[s.stop_type as StopType]?.icon} {STOP_TYPE_META[s.stop_type as StopType]?.label ?? s.stop_type}</Td>
                           <Td>
                             <div className="brief-text" style={{ fontWeight: 600 }}>{place || '—'}</div>
                             {stopTravelers.length > 0 && (

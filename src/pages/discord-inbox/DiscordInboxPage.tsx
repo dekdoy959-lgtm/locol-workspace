@@ -260,7 +260,7 @@ function InboxCard({
             )}
 
             {/* Image thumbnails */}
-            {item.attachment_paths.length > 0 && (
+            {Array.isArray(item.attachment_paths) && item.attachment_paths.length > 0 && (
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
                 {item.attachment_paths.map((a, i) => (
                   <DiscordAttachment key={i} storagePath={a.storage_path} filename={a.filename} width={80} height={60} />

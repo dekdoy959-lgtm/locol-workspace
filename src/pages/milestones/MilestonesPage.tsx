@@ -50,12 +50,16 @@ export function MilestonesPage() {
 
   const filtered = useMemo(() => {
     return milestones.filter((m) => {
+      // Drop orphaned milestones whose contact no longer exists (or isn't in
+      // useContacts) — they render as nothing but were still counted in the
+      // section badges, producing "NO TIER · 4" with zero visible rows.
+      if (!contactById[m.contact_id]) return false;
       if (side !== 'all' && m.side !== side) return false;
       if (status === 'open' && m.achieved) return false;
       if (status === 'done' && !m.achieved) return false;
       return true;
     });
-  }, [milestones, side, status]);
+  }, [milestones, contactById, side, status]);
 
   const today = todayLocalISO();
 
