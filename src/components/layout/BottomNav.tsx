@@ -63,6 +63,10 @@ export function BottomNav({ onSearchOpen }: BottomNavProps) {
           left: 0,
           right: 0,
           height: layout.bottomNavHeight,
+          // Keep the full nav height for tap targets and add the iPhone home-bar
+          // inset BELOW it (content-box) instead of letting it shrink the bar.
+          boxSizing: 'content-box',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
           background: colors.bg,
           borderTop: `1px solid ${colors.line}`,
           display: 'flex',
