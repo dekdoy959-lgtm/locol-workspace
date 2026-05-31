@@ -19,7 +19,7 @@ import { useTripStops, groupStopsByDay, STOP_TYPE_META, type StopType } from '..
 import { useOpportunityTeam, TEAM_ROLE_META, type TeamRole } from '../../hooks/useOpportunityTeam';
 import { useTeamMembers, teamMemberDisplayName } from '../../hooks/useTeamMembers';
 import { findTrack, type TrackKey } from '../../types/opportunity';
-import { LBtn } from '../../components/primitives';
+import { LBtn, LIcon, type IconKind } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
 
 export function OpportunityBriefPage() {
@@ -113,7 +113,7 @@ export function OpportunityBriefPage() {
         </div>
 
         {/* Key dates */}
-        <Section title="📅 KEY DATES">
+        <Section icon="cal" title="KEY DATES">
           <KeyValueList
             items={[
               // Show only the date rows that belong to this track — avoids a
@@ -142,7 +142,7 @@ export function OpportunityBriefPage() {
         </Section>
 
         {/* Place / venue */}
-        <Section title="📍 PLACE / VENUE">
+        <Section icon="pin" title="PLACE / VENUE">
           <KeyValueList
             items={[
               ['Location / Venue', v('location')],
@@ -162,7 +162,7 @@ export function OpportunityBriefPage() {
         </Section>
 
         {/* Team */}
-        <Section title="👥 TEAM · ใครรับผิดชอบอะไร">
+        <Section icon="users" title="TEAM · ใครรับผิดชอบอะไร">
           <KeyValueList
             items={(['owner', 'reviewer', 'document_lead', 'coordinator', 'traveler', 'support'] as TeamRole[])
               .map((r) => [TEAM_ROLE_META[r].label, roleNames(r).join(', ')] as [string, string])
@@ -172,7 +172,7 @@ export function OpportunityBriefPage() {
 
         {/* Marketing brief (event) */}
         {(opp.track === 'event' || opp.track === 'trip') && (
-          <Section title="🎨 MARKETING BRIEF">
+          <Section icon="palette" title="MARKETING BRIEF">
             <KeyValueList
               items={[
                 ['📋 Agenda', v('agenda')],
@@ -213,7 +213,7 @@ export function OpportunityBriefPage() {
 
         {/* Itinerary (trips) */}
         {opp.track === 'trip' && grouped.length > 0 && (
-          <Section title="✈ ITINERARY · แผนเดินทาง">
+          <Section icon="plane" title="ITINERARY · แผนเดินทาง">
             {grouped.map(({ date, stops: dayStops }, idx) => (
               <div key={date} className="brief-section" style={{ marginBottom: 18 }}>
                 <div
@@ -308,12 +308,15 @@ export function OpportunityBriefPage() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ icon, title, children }: { icon?: IconKind; title: string; children: React.ReactNode }) {
   return (
     <div className="brief-section" style={{ marginBottom: 24 }}>
       <h2
         className="brief-accent"
         style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
           fontSize: 14,
           fontWeight: 700,
           letterSpacing: 1.5,
@@ -324,6 +327,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
           borderBottom: `1px solid ${colors.line}`,
         }}
       >
+        {icon && <LIcon kind={icon} size={14} color={colors.green} />}
         {title}
       </h2>
       {children}
