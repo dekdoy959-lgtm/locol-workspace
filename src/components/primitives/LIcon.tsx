@@ -26,7 +26,8 @@ export type IconKind =
   | 'menu'
   | 'settings'
   | 'close'
-  | 'check';
+  | 'check'
+  | 'plane';
 
 interface LIconProps {
   kind: IconKind;
@@ -143,6 +144,13 @@ export function LIcon({ kind, size = 14, color = colors.text }: LIconProps) {
         <svg width={s} height={s} viewBox="0 0 24 24">
           <path d="M15,7 H10 Q7,7 7,10 Q7,12 10,12 H14 Q17,12 17,15 Q17,17 14,17 H8" {...st} />
           <line x1="12" y1="4" x2="12" y2="20" {...st} />
+        </svg>
+      );
+    case 'plane':
+      return (
+        <svg width={s} height={s} viewBox="0 0 24 24">
+          <path d="M21,3 L3,10.5 L10,13 L13,20 Z" {...st} />
+          <line x1="10" y1="13" x2="21" y2="3" {...st} />
         </svg>
       );
     case 'home':

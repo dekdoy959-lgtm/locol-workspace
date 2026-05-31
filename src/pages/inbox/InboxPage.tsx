@@ -1025,8 +1025,8 @@ function OpportunityCard({
   const reviewer = opp.reviewer_id ? teamById[opp.reviewer_id] : null;
   const stale = isStale(opp, staleThreshold);
   const pri = opp.priority === 'High' ? 'hi' : opp.priority === 'Medium' ? 'med' : 'low';
-  const trackIcon: 'cal' | 'money' | 'doc' | 'clock' =
-    opp.track === 'event' ? 'cal' : opp.track === 'trip' ? 'cal' : opp.track === 'apply' ? 'doc' : 'clock';
+  const trackIcon: 'cal' | 'money' | 'doc' | 'clock' | 'plane' =
+    opp.track === 'event' ? 'cal' : opp.track === 'trip' ? 'plane' : opp.track === 'apply' ? 'doc' : 'clock';
   const fromDiscord = !!(opp.details as Record<string, unknown>)?.discord_message_id;
 
   // ─── a11y (#3): make the card keyboard-operable. Enter/Space opens it;
