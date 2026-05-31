@@ -432,7 +432,7 @@ function StopRow({
           <LTextarea
             value={draft.agenda ?? ''}
             onChange={(v) => setDraft({ ...draft, agenda: v || null })}
-            placeholder="09:00 ตรวจวัว\n10:00 พูดคุยเจ้าของฟาร์ม\n10:30 ถ่ายรูป"
+            placeholder={'09:00 ตรวจวัว\n10:00 พูดคุยเจ้าของฟาร์ม\n10:30 ถ่ายรูป'}
             rows={3}
           />
         </div>

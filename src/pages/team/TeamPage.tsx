@@ -203,7 +203,7 @@ function MemberRow({
             <LBtn small ghost onClick={onCancelEdit}>
               ยกเลิก
             </LBtn>
-            <LBtn small primary onClick={() => onSave(draft)} disabled={saving}>
+            <LBtn small primary onClick={() => onSave(draft)} disabled={saving || !draft.full_name?.trim()}>
               {saving ? 'กำลังบันทึก…' : 'บันทึก'}
             </LBtn>
           </div>
