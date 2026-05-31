@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGroups, useGroupMemberCounts } from '../../hooks/useGroups';
 import { buildGroupTree, formatCadence, type GroupTreeNode } from '../../types/group';
-import { LCard, LH, LBtn, LIcon, LNote } from '../../components/primitives';
+import { LCard, LH, LBtn, LIcon, LNote, LEmptyState } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
 
 export function GroupsListPage() {
@@ -30,13 +30,17 @@ export function GroupsListPage() {
       {isLoading ? (
         <div style={{ padding: 40, textAlign: 'center', color: colors.dim }}>กำลังโหลด…</div>
       ) : tree.length === 0 ? (
-        <LCard padding={40}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 14, color: colors.dimSoft, marginBottom: 12 }}>ยังไม่มี group ในระบบ</div>
-            <LBtn primary onClick={() => navigate('/groups/new')}>
-              <LIcon kind="plus" size={12} color={colors.bg} /> สร้าง group แรก
-            </LBtn>
-          </div>
+        <LCard padding={16}>
+          <LEmptyState
+            art="people"
+            title="ยังไม่มี group ในระบบ"
+            sub="จัดกลุ่ม contacts — ตาม segment, campaign, หรือ smart rule"
+            action={
+              <LBtn primary onClick={() => navigate('/groups/new')}>
+                <LIcon kind="plus" size={12} color={colors.bg} /> สร้าง group แรก
+              </LBtn>
+            }
+          />
         </LCard>
       ) : (
         <LCard padding={0} bg={colors.bgCard}>

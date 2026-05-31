@@ -4,7 +4,7 @@ import { useOrganizations } from '../../hooks/useOrganizations';
 import { useContacts } from '../../hooks/useContacts';
 import { orgInitials } from '../../types/organization';
 import { RELATIONSHIP_STATUS_META, type RelationshipStatus, type OrgEntry } from '../../types/contact';
-import { LCard, LH, LBtn, LIcon, LInput, LNote, LChip } from '../../components/primitives';
+import { LCard, LH, LBtn, LIcon, LInput, LNote, LChip, LEmptyState } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
 
 export function OrgListPage() {
@@ -105,17 +105,19 @@ export function OrgListPage() {
       {isLoading ? (
         <div style={{ padding: 40, textAlign: 'center', color: colors.dim }}>กำลังโหลด…</div>
       ) : filtered.length === 0 ? (
-        <LCard padding={40}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 14, color: colors.dimSoft, marginBottom: 12 }}>
-              {orgs.length === 0 ? 'ยังไม่มี organization ในระบบ' : 'ไม่พบตามที่ค้น'}
-            </div>
-            {orgs.length === 0 && (
-              <LBtn primary onClick={() => navigate('/organizations/new')}>
-                <LIcon kind="plus" size={12} color={colors.bg} /> สร้าง org แรก
-              </LBtn>
-            )}
-          </div>
+        <LCard padding={16}>
+          <LEmptyState
+            art="box"
+            title={orgs.length === 0 ? 'ยังไม่มี organization ในระบบ' : 'ไม่พบตามที่ค้น'}
+            sub={orgs.length === 0 ? 'เพิ่มองค์กรที่ทีมเราติดต่อ — partner, sponsor, ฟาร์ม' : 'ลองปรับคำค้นหรือ status filter'}
+            action={
+              orgs.length === 0 ? (
+                <LBtn primary onClick={() => navigate('/organizations/new')}>
+                  <LIcon kind="plus" size={12} color={colors.bg} /> สร้าง org แรก
+                </LBtn>
+              ) : undefined
+            }
+          />
         </LCard>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 14 }}>
