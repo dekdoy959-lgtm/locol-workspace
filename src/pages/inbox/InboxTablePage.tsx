@@ -254,7 +254,9 @@ export function InboxTablePage() {
 
   const handleExport = () => {
     const csv = rowsToCSV(filtered);
-    const filename = `locol-summary-${todayLocalISO()}.csv`;
+    // Include time so multiple exports on the same day don't collide.
+    const hhmmss = new Date().toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `locol-summary-${todayLocalISO()}-${hhmmss}.csv`;
     downloadCSV(csv, filename);
   };
 

@@ -14,6 +14,7 @@ const CATEGORY_LABELS: Record<string, { label: string; color: string }> = {
   apply:   { label: 'ขอทุน/งานแข่ง', color: colors.warn },
   watch:   { label: 'ติดตามข่าว',     color: colors.dim },
   event:   { label: 'อีเวนต์',        color: colors.danger },
+  trip:    { label: 'ลงพื้นที่',       color: colors.olive },
   contact: { label: 'Contact',         color: '#57a0d3' },
 };
 
@@ -56,6 +57,7 @@ export function DiscordInboxPage() {
     { key: 'apply',   label: 'ขอทุน/งานแข่ง' },
     { key: 'watch',   label: 'ติดตามข่าว' },
     { key: 'event',   label: 'อีเวนต์' },
+    { key: 'trip',    label: 'ลงพื้นที่' },
     { key: 'contact', label: 'Contact' },
   ];
 
