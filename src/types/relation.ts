@@ -27,8 +27,8 @@ export const RELATION_TYPES: RelationType[] = [
   { value: 'married-to', label: 'คู่สมรส · Married to', color: colors.danger, style: 'solid' },
   { value: 'mentor', label: 'Mentor · ที่ปรึกษา', color: colors.warn, style: 'solid' },
   { value: 'investor', label: 'นักลงทุน · Investor', color: colors.warn, style: 'solid' },
-  { value: 'client', label: 'ลูกค้า · Client', color: colors.olive, style: 'solid' },
-  { value: 'vendor', label: 'Vendor · Supplier', color: colors.olive, style: 'solid' },
+  { value: 'client', label: 'ลูกค้า · Client', color: colors.olive, style: 'solid', inverse: 'vendor' },
+  { value: 'vendor', label: 'Vendor · Supplier', color: colors.olive, style: 'solid', inverse: 'client' },
   { value: 'other', label: 'อื่นๆ · Other', color: colors.dim, style: 'solid' },
 ];
 

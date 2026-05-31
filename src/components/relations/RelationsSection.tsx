@@ -291,7 +291,12 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {decoratedRelations.map((r) => {
-            const rt = findRelationType(r.type);
+            const rtBase = findRelationType(r.type);
+            // For incoming relations, show the inverse type when defined
+            // (e.g. 'introduced-by' from the other side reads as 'introduced-to')
+            // so the label reflects this contact's perspective, not the author's.
+            const rt =
+              !r.isOutgoing && rtBase?.inverse ? findRelationType(rtBase.inverse) ?? rtBase : rtBase;
             const targetLabel =
               r.targetKind === 'contact'
                 ? contactDisplayName(r.target as ContactRow)
@@ -355,7 +360,14 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
                 <button
                   type="button"
                   onClick={async () => {
-                    if (await confirm({ title: 'ลบความสัมพันธ์นี้?', danger: true })) del.mutate(r.id);
+                    if (
+                      await confirm({
+                        title: 'ลบความสัมพันธ์นี้?',
+                        body: 'ความสัมพันธ์เป็นแบบสองทาง — ลบแล้วจะหายจากทั้งสองฝ่าย',
+                        danger: true,
+                      })
+                    )
+                      del.mutate(r.id);
                   }}
                   title="ลบ"
                   style={{
