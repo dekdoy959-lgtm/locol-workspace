@@ -13,7 +13,7 @@ import { LCard, LH, LBtn, LIcon, LInput, LAvatar, LChip, LStatus, LNote } from '
 import { colors } from '../../styles/tokens';
 
 const HEALTH_COLORS: Record<string, { fg: string; bg: string; border: string }> = {
-  'On Track':   { fg: '#99CE24', bg: colors.greenBg, border: '#6e9618' },
+  'On Track':   { fg: colors.green, bg: colors.greenBg, border: colors.greenDk },
   Watch:        { fg: colors.warn, bg: colors.warnBg, border: colors.warnDk },
   'Going Cold': { fg: '#d99a66', bg: '#2a1d10', border: '#6a3f1c' },
   Overdue:      { fg: colors.danger, bg: colors.dangerBg, border: colors.dangerDk },

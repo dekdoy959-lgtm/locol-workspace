@@ -84,10 +84,10 @@ export const RELATIONSHIP_STATUS_OPTIONS = [
 ];
 
 export const RELATIONSHIP_STATUS_META: Record<RelationshipStatus, { color: string; bg: string; border: string; label: string }> = {
-  known:    { color: '#99CE24', bg: colors.greenBg, border: '#6e9618', label: 'รู้จัก' },
+  known:    { color: colors.green, bg: colors.greenBg, border: colors.greenDk, label: 'รู้จัก' },
   prospect: { color: colors.warn, bg: colors.warnBg, border: colors.warnDk, label: 'Prospect' },
-  cold:     { color: '#9a9a9a', bg: '#1c1c1c', border: '#3a3a3a', label: 'Cold' },
-  archived: { color: '#747474', bg: '#181818', border: '#2a2a2a', label: 'Archived' },
+  cold:     { color: colors.dimSoft, bg: '#1c1c1c', border: '#3a3a3a', label: 'Cold' },
+  archived: { color: colors.dim, bg: '#181818', border: '#2a2a2a', label: 'Archived' },
 };
 
 export const PHONE_LABEL_OPTIONS = [

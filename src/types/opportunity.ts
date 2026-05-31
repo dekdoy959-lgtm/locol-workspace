@@ -54,7 +54,7 @@ export const TRACKS: TrackMeta[] = [
     cadence: 'อ่านสัปดาห์ละครั้ง',
     stages: ['New', 'Read', 'Filed', 'Promote'],
     defaultStage: 'New',
-    color: { ink: '#D9D9D9', soft: '#1f1f1f', chip: '#747474' },
+    color: { ink: colors.surface, soft: '#1f1f1f', chip: colors.dim },
     examples: ['ข่าวคู่แข่งเปิดตัวสินค้า', 'งานวิจัย methane reduction ใหม่', 'industry report'],
     noReviewerRequired: true,
   },

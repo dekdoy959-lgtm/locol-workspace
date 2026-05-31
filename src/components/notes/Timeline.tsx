@@ -1128,7 +1128,7 @@ function InteractionRowView({
       return { accent: colors.warn, bg: colors.warnBg, border: colors.warnDk, icon: '📞', label: 'PHONE' };
     }
     if (interaction.channel === 'Line') {
-      return { accent: '#99CE24', bg: colors.greenBg, border: '#6e9618', icon: '💬', label: 'LINE' };
+      return { accent: colors.green, bg: colors.greenBg, border: colors.greenDk, icon: '💬', label: 'LINE' };
     }
     if (interaction.channel === 'In Person') {
       return { accent: '#d99a66', bg: '#2a1d10', border: '#6a3f1c', icon: '🤝', label: 'IN PERSON' };

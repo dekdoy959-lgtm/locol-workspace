@@ -410,14 +410,14 @@ export const KIND_META: Record<
   event:                 { label: 'EVENT',          color: colors.danger, bg: '#2a1212', border: colors.dangerDk, icon: '📅' },
   registration_deadline: { label: 'REGISTER BY',    color: colors.warn, bg: colors.warnBg, border: colors.warnDk, icon: '⏰' },
   apply_deadline:        { label: 'APPLY BY',       color: colors.warn, bg: colors.warnBg, border: colors.warnDk, icon: '📝' },
-  decision_date:         { label: 'DECISION',       color: '#99CE24', bg: colors.greenBg, border: '#6e9618', icon: '🎯' },
+  decision_date:         { label: 'DECISION',       color: colors.green, bg: colors.greenBg, border: colors.greenDk, icon: '🎯' },
   contract_renewal:      { label: 'RENEW',          color: colors.olive, bg: colors.oliveBg, border: colors.oliveDk, icon: '🔄' },
   contract_effective:    { label: 'START',          color: colors.olive, bg: colors.oliveBg, border: colors.oliveDk, icon: '📜' },
   due:                   { label: 'DUE',            color: '#d99a66', bg: '#2a1d10', border: '#6a3f1c', icon: '⏳' },
-  milestone:             { label: 'MILESTONE',      color: '#99CE24', bg: colors.greenBg, border: '#6e9618', icon: '🎯' },
+  milestone:             { label: 'MILESTONE',      color: colors.green, bg: colors.greenBg, border: colors.greenDk, icon: '🎯' },
   commitment:            { label: 'COMMITMENT',     color: '#d99a66', bg: '#2a1d10', border: '#6a3f1c', icon: '🤝' },
-  reminder:              { label: 'REMINDER',       color: '#99CE24', bg: colors.greenBg, border: '#6e9618', icon: '🔔' },
-  birthday:              { label: 'BIRTHDAY',       color: '#99CE24', bg: colors.greenBg, border: '#6e9618', icon: '🎂' },
+  reminder:              { label: 'REMINDER',       color: colors.green, bg: colors.greenBg, border: colors.greenDk, icon: '🔔' },
+  birthday:              { label: 'BIRTHDAY',       color: colors.green, bg: colors.greenBg, border: colors.greenDk, icon: '🎂' },
   meeting:               { label: 'MEETING',        color: colors.danger, bg: colors.dangerBg, border: colors.dangerDk, icon: '📅' },
 };
 

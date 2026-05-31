@@ -12,7 +12,7 @@ type InboxRow = Database['public']['Tables']['discord_inbox']['Row'];
 
 const CATEGORY_LABELS: Record<string, { label: string; color: string }> = {
   apply:   { label: 'ขอทุน/งานแข่ง', color: colors.warn },
-  watch:   { label: 'ติดตามข่าว',     color: '#747474' },
+  watch:   { label: 'ติดตามข่าว',     color: colors.dim },
   event:   { label: 'อีเวนต์',        color: colors.danger },
   contact: { label: 'Contact',         color: '#57a0d3' },
 };

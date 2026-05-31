@@ -9,11 +9,11 @@ export type ParticipantRole = 'organizer' | 'attendee';
 
 export const STATUS_OPTIONS: { value: ParticipantStatus; label: string; color: string }[] = [
   { value: 'VVIP',     label: '⭐ VVIP',     color: colors.warn },
-  { value: 'Speaker',  label: '🎤 Speaker',  color: '#99CE24' },
+  { value: 'Speaker',  label: '🎤 Speaker',  color: colors.green },
   { value: 'Invitee',  label: '✉ Invitee',  color: colors.olive },
   { value: 'Sponsor',  label: '💰 Sponsor',  color: colors.danger },
-  { value: 'Audience', label: '👥 Audience', color: '#D9D9D9' },
-  { value: 'Other',    label: 'Other',       color: '#747474' },
+  { value: 'Audience', label: '👥 Audience', color: colors.surface },
+  { value: 'Other',    label: 'Other',       color: colors.dim },
 ];
 
 export function findStatusMeta(status: string | null): { color: string; label: string } | null {

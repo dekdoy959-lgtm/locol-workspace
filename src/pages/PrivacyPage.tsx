@@ -1,4 +1,5 @@
-const linkStyle = { color: '#99CE24' };
+import { colors } from '../styles/tokens';
+const linkStyle = { color: colors.green };
 
 export function PrivacyPage() {
   return (

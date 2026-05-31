@@ -11,12 +11,12 @@ export type TeamAssignmentInsert = Database['public']['Tables']['opportunity_tea
 export type TeamRole = TeamAssignmentRow['role'];
 
 export const TEAM_ROLE_META: Record<TeamRole, { label: string; icon: string; color: string }> = {
-  owner:          { label: 'Owner · เจ้าของหลัก',       icon: '👑', color: '#99CE24' },
+  owner:          { label: 'Owner · เจ้าของหลัก',       icon: '👑', color: colors.green },
   reviewer:       { label: 'Reviewer · ผู้ตรวจสอบ',     icon: '✓',  color: colors.warn },
   document_lead:  { label: 'Document Lead · คนทำเอกสาร', icon: '📝', color: colors.olive },
   coordinator:    { label: 'Coordinator · คนประสานงาน', icon: '🤝', color: '#d99a66' },
   traveler:       { label: 'Traveler · คนไป',           icon: '✈',  color: colors.danger },
-  support:        { label: 'Support · ทั่วไป',           icon: '🛟', color: '#747474' },
+  support:        { label: 'Support · ทั่วไป',           icon: '🛟', color: colors.dim },
 };
 
 export const TEAM_ROLE_ORDER: TeamRole[] = [

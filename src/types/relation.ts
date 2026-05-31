@@ -17,19 +17,19 @@ export interface RelationType {
 }
 
 export const RELATION_TYPES: RelationType[] = [
-  { value: 'introduced-by', label: 'แนะนำโดย · Introduced by', color: '#99CE24', style: 'solid', inverse: 'introduced-to' },
-  { value: 'introduced-to', label: 'แนะนำให้ · Introduced to', color: '#99CE24', style: 'solid', inverse: 'introduced-by' },
+  { value: 'introduced-by', label: 'แนะนำโดย · Introduced by', color: colors.green, style: 'solid', inverse: 'introduced-to' },
+  { value: 'introduced-to', label: 'แนะนำให้ · Introduced to', color: colors.green, style: 'solid', inverse: 'introduced-by' },
   { value: 'coworker', label: 'เพื่อนร่วมงาน · Coworker', color: colors.olive, style: 'solid' },
   { value: 'co-founder', label: 'Co-founder', color: colors.olive, style: 'solid' },
   { value: 'co-panel', label: 'Co-panel', color: colors.warn, style: 'dashed' },
-  { value: 'knows-well', label: 'รู้จักดี · Knows well', color: '#D9D9D9', style: 'dotted' },
+  { value: 'knows-well', label: 'รู้จักดี · Knows well', color: colors.surface, style: 'dotted' },
   { value: 'family', label: 'ครอบครัว · Family', color: colors.danger, style: 'solid' },
   { value: 'married-to', label: 'คู่สมรส · Married to', color: colors.danger, style: 'solid' },
   { value: 'mentor', label: 'Mentor · ที่ปรึกษา', color: colors.warn, style: 'solid' },
   { value: 'investor', label: 'นักลงทุน · Investor', color: colors.warn, style: 'solid' },
   { value: 'client', label: 'ลูกค้า · Client', color: colors.olive, style: 'solid' },
   { value: 'vendor', label: 'Vendor · Supplier', color: colors.olive, style: 'solid' },
-  { value: 'other', label: 'อื่นๆ · Other', color: '#747474', style: 'solid' },
+  { value: 'other', label: 'อื่นๆ · Other', color: colors.dim, style: 'solid' },
 ];
 
 export function findRelationType(value: string): RelationType {
