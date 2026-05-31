@@ -63,6 +63,9 @@ create trigger trip_stops_updated_at
 -- ─── Row-Level Security ─────────────────────────────────────────────
 alter table public.trip_stops enable row level security;
 
+-- NOTE: 0014/0015 use the 'to authenticated using (true)' role-targeting style.
+-- It is equivalent to the older 'using (auth.role() = ''authenticated'')' style
+-- on other tables — both grant access only to signed-in users.
 drop policy if exists "Authenticated read" on public.trip_stops;
 create policy "Authenticated read"
   on public.trip_stops for select

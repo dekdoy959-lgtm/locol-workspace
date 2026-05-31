@@ -14,10 +14,14 @@
 --     to remove values — so we create a NEW enum, swap, and drop the old
 --   • All references (opportunities.track, track_settings.track) updated together
 --
--- Rollback (manual, if needed):
---   alter type track_kind rename to track_kind_v2;
---   create type track_kind as enum ('apply','act','watch','contract','event');
---   ...etc (mirror the swap operation)
+-- Rollback (manual, if needed) — NOTE: this is LOSSY. Rows remapped to 'trip'
+-- (formerly 'act' / 'contract') cannot be restored to their original value, that
+-- distinction is gone after this migration. A rollback can only recreate the old
+-- enum and collapse 'trip' back to a single chosen value:
+--   1. create type track_kind_old as enum ('apply','act','watch','contract','event');
+--   2. alter opportunities.track + track_settings.track to track_kind_old,
+--      mapping 'trip' -> 'act' (your choice) and the other values 1:1;
+--   3. drop type track_kind; alter type track_kind_old rename to track_kind.
 
 begin;
 
