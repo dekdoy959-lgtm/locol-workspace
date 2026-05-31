@@ -28,8 +28,13 @@
   - ⏭️ ข้าม (ไม่ใช่ bug ชัด): #25 commitment_overdue = feature ใหม่ (ต้องมี runner) · #27 '5 tracks' subtitle หาไม่เจอ · #34 relations incoming label ต้องมี reverse-label semantics · #46 /team nav = product decision
 - **Bench 4 · Cleanup (nice-to-have)** — ⏳ ~26/49 (`88954a1` `4359fd0` `af85a0b` `8f82ab0` `f21ff25` `52a1be9` `9617631` `3ed41a6` `bea54d5` `3c0b36b`)
   - ✅ #4 (ลบ trackColors/statusColors dead) · #8 (Bench1 DiscordAttachment) · #9 teamById memo · #12 stale reviewer msg · #13 tier 'all' chip · #15 · #16 · #17/#41 today hover · #18 Feb29 · #19 online regex · #20 ICS disable · #21 l-fade-in keyframe · #22 MonthGrid key · #23 · #29 PriorityChip tooltip · #30 BottomNav safe-area · #32 initials · #34 void hacks · #35 ternary · #36 ellipsis · #37 name casing · #38 · #40 LAvatar · #42 Placeholder · #43 span · #44 comment · #45 · #46 OfflineBanner timer · #49 BottomNav useLocation
-  - ✅ (เพิ่ม) #1 trip plane icon · #7 agenda placeholder newline · #33 TeamPage full_name required (~29/49)
-  - 🔲 เหลือ ~20 — **subjective / feature / design-decision** (ต้องการ direction จาก user):
+  - ✅ (รอบ user-decided) #1 plane icon · #6 z-index scale · #7 agenda newline · #10/#11 mig comments · #12 reviewer msg · #14 RuleEditor between · #24 form step · #26 login deco · #28 PDF page-break · #31 token by user.id · #33 full_name required · #47 (มีอยู่แล้ว) · #48 trip conflict badge — **~43/49**
+  - ⏭️ #27 คงไว้ (print contrast — user เลือกไม่แก้)
+  - 🔲 เหลือ 3 **sweep ใหญ่** (user อนุมัติแล้ว · ทำใน session สด context เต็ม):
+    - **#5 hex → token (ทั้งหมด):** มี hardcoded hex 50+ จุด (#d96a66 danger, #E8B923 warn ฯลฯ) → เพิ่มเข้า colors token แล้ว replace ทุกจุด
+    - **#2/#39 emoji → LIcon:** แทน functional emoji (📅📍💰🎯) ด้วย LIcon · heading icons ด้วย (บาง emoji เช่น 🐄☕🎉 ต้องวาด SVG ใหม่)
+    - **#3 chip labels → อังกฤษเป็นหลัก:** ทำ chip/label ให้เป็นอังกฤษสม่ำเสมอ
+  - เก่า (subjective ที่ยังไม่ถาม): —
     - **subjective/design:** #2 emoji vs LIcon · #3 Thai/Eng chip · #5 hardcoded hex → tokens · #6 z-index scale · #24 form step '4→4.5→5' · #26 Login deco · #27 print brand color (อาจตั้งใจเพื่อ contrast) · #39 emoji headings mono
     - **ต้อง asset/feature:** #1 trip plane icon (ต้องวาด SVG ใน LIcon) · #47 Brief PDF trip team section · #28 Brief PDF page-break trip table · #48 trip same-day CONFLICT badge
     - **อ่านลึก/by-design:** #7 agenda \n · #14 RuleEditor between pre-fill · #25 LocalItineraryEditor (by-design: edit ใช้ TripItinerary) · #31 provider token leak · #33 TeamPage delete full_name warn
