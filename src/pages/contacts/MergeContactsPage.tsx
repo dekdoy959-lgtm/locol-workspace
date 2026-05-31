@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useContact, useContacts } from '../../hooks/useContacts';
 import { useMergeContacts } from '../../hooks/useMergeContacts';
@@ -255,8 +255,10 @@ export function MergeContactsPage() {
 
   const [state, setState] = useState<MergeState | null>(null);
 
-  // When both contacts are loaded, init state
-  useMemo(() => {
+  // When both contacts are loaded, init state. Use an effect for this side
+  // effect — calling setState from inside useMemo (render phase) is an
+  // anti-pattern that can warn/misbehave in React 19 strict mode.
+  useEffect(() => {
     if (keptContact && sourceContact && state === null) {
       setState(defaultPick(keptContact, sourceContact));
     }

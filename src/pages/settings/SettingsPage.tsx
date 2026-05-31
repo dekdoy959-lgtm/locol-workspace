@@ -344,7 +344,9 @@ function AlertRow({
         <span style={{ fontSize: 12, color: colors.dimSoft }}>{desc}</span>
       </Td>
       <Td label="Enabled">
-        <Toggle checked={checked} onChange={onChange} />
+        {/* Respect the master switch: when alerts are disabled, the per-type
+            toggles are dimmed AND inert (don't fire onChange). */}
+        <Toggle checked={checked} onChange={(v) => { if (!disabled) onChange(v); }} />
       </Td>
     </tr>
   );
