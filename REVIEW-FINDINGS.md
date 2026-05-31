@@ -44,8 +44,10 @@
     - **ต้อง asset/feature:** #1 trip plane icon (ต้องวาด SVG ใน LIcon) · #47 Brief PDF trip team section · #28 Brief PDF page-break trip table · #48 trip same-day CONFLICT badge
     - **อ่านลึก/by-design:** #7 agenda \n · #14 RuleEditor between pre-fill · #25 LocalItineraryEditor (by-design: edit ใช้ TripItinerary) · #31 provider token leak · #33 TeamPage delete full_name warn
     - **doc-only:** #10/#11 migration RLS/rollback comments · #5/#6 token migration sweep
-- **Bench 5 · Polish (animation)** — 🔲 ยังไม่เริ่ม (15 ข้อ)
-- **Bench 5 · Polish (animation)** — 🔲 ยังไม่เริ่ม (15 ข้อ)
+- **Bench 5 · Polish (animation)** — ⏳ **10/15** (`c2e48a5`→`1ee87ba`) · ปรัชญา "calm choreography" · ทุก animation gated หลัง prefers-reduced-motion + verified ใน browser
+  - ✅ #1 briefing count-up (LCountUp) · #2 View Transitions card→detail · #3 stagger-in kanban · #4 today heartbeat pulse · #5 confetti ตอน Won · #6 save checkmark (TripBudgetCard) · #8 card hover lift · #9 shimmer skeletons (LSkeleton) · #10 bell bounce · #12 stage segmented pipeline
+  - 🔲 เหลือ 5 (L/asset — ควร browser session): #7 illustrated empty states (วาด SVG cattle/coffee) · #11 trip stop drag-reorder (large interaction) · #13 mobile long-press context sheet (gesture) · #14 onboarding coachmarks (feature) · #15 track-stripe sweep (ไม่มี track-tab UI ปัจจุบัน)
+  - 🛠 utils ใหม่: global.css l-skeleton/l-lift/l-rise/l-stagger/l-pulse-ring/l-bell-bounce · LSkeleton · LCountUp · lib/confetti.ts · lib/viewTransition.ts
 
 ---
 
