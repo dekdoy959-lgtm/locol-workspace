@@ -349,7 +349,7 @@ export function InboxPage() {
               onClick={() => setFilterMine((v) => !v)}
               color={colors.green}
             >
-              👤 Mine
+              <LIcon kind="user" size={10} color={colors.green} /> Mine
             </FilterChip>
             {activeFilterCount > 0 && (
               <button

@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useUpdateOpportunity } from '../../hooks/useOpportunities';
 import type { OpportunityRow } from '../../types/opportunity';
-import { LCard, LBtn, LInput, LLabel } from '../primitives';
+import { LCard, LBtn, LInput, LLabel, LIcon } from '../primitives';
 import { colors } from '../../styles/tokens';
 
 interface TripBudgetCardProps {
@@ -102,7 +102,7 @@ export function TripBudgetCard({ opp }: TripBudgetCardProps) {
                 textTransform: 'uppercase',
               }}
             >
-              💰 BUDGET
+              <LIcon kind="money" size={10} color={colors.dim} /> BUDGET
             </div>
             <div style={{ fontSize: 12, color: colors.dimSoft, marginTop: 4 }}>
               ยังไม่มี budget · กด <b style={{ color: colors.text }}>แก้ไข</b> เพื่อกรอก estimated/actual cost
@@ -137,7 +137,7 @@ export function TripBudgetCard({ opp }: TripBudgetCardProps) {
             textTransform: 'uppercase',
           }}
         >
-          💰 BUDGET TRACKING
+          <LIcon kind="money" size={11} color={colors.green} /> BUDGET TRACKING
         </div>
         {!editing && (
           <LBtn small ghost onClick={() => setEditing(true)}>

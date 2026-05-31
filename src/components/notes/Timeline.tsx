@@ -656,7 +656,7 @@ function NoteRowItem({
           )}
           {isFutureWithReminder && (
             <KindChip color={colors.green} bg="transparent" border={colors.greenDk} dashed>
-              🔔 REMINDER
+              <LIcon kind="bell" size={10} color={colors.green} /> REMINDER
             </KindChip>
           )}
           <span style={{ flex: 1 }} />
@@ -744,7 +744,7 @@ function MeetingRow({
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
           <KindChip color={accent} bg={colors.dangerBg} border={colors.dangerDk}>
-            📅 MEETING
+            <LIcon kind="cal" size={10} color={accent} /> MEETING
           </KindChip>
           {time && (
             <span style={{ fontSize: 11, color: colors.dim, fontFamily: "'IBM Plex Mono', monospace" }}>

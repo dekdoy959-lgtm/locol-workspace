@@ -323,7 +323,7 @@ export function InboxTablePage() {
                 <Th sortKey="priority" current={sortField} dir={sortDir} onSort={toggleSort}>Pri</Th>
                 <Th>Owner</Th>
                 <Th>👑 Reviewer</Th>
-                <Th>📋 ผู้จัด</Th>
+                <Th><LIcon kind="doc" size={10} color={colors.dim} /> ผู้จัด</Th>
                 <Th>📝 ผู้ทำเอกสาร</Th>
                 <Th>🤝 ผู้ประสาน</Th>
                 <Th><LIcon kind="plane" size={10} color={colors.dim} /> ผู้ไป</Th>

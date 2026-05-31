@@ -509,7 +509,7 @@ function LocalStopRow({
         </div>
         {stop.owner_name && (
           <div style={{ fontSize: 11.5, color: colors.dimSoft, marginTop: 2 }}>
-            👤 {stop.owner_name}
+            <LIcon kind="user" size={10} color={colors.dimSoft} /> {stop.owner_name}
             {stop.owner_phone && <span style={{ marginLeft: 6 }}>· {stop.owner_phone}</span>}
           </div>
         )}
