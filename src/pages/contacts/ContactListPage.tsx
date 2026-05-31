@@ -9,7 +9,7 @@ import {
   type EmailEntry,
   type RelationshipStatus,
 } from '../../types/contact';
-import { LCard, LH, LBtn, LIcon, LInput, LAvatar, LChip, LStatus, LNote } from '../../components/primitives';
+import { LCard, LH, LBtn, LIcon, LInput, LAvatar, LChip, LStatus, LNote, LSkeletonCard } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
 
 const HEALTH_COLORS: Record<string, { fg: string; bg: string; border: string }> = {
@@ -140,7 +140,11 @@ export function ContactListPage() {
       </div>
 
       {isLoading ? (
-        <div style={{ padding: 40, textAlign: 'center', color: colors.dim, fontSize: 13 }}>กำลังโหลด…</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <LSkeletonCard key={i} />
+          ))}
+        </div>
       ) : filtered.length === 0 ? (
         <LCard padding={40}>
           <div style={{ textAlign: 'center' }}>

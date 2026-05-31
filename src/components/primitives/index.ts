@@ -20,3 +20,4 @@ export { LTextarea } from './LTextarea';
 export { LSelect } from './LSelect';
 export { LLabel } from './LLabel';
 export { ZigzagStrip, MiniL, CowhideGrain } from './Decorations';
+export { LSkeleton, LSkeletonCard } from './LSkeleton';

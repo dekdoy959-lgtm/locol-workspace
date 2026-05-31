@@ -8,7 +8,7 @@ import { useIsMobile } from '../../hooks/useMediaQuery';
 import { usePullToRefresh } from '../../hooks/usePullToRefresh';
 import { useAuth } from '../../contexts/AuthContext';
 import { TRACKS, findTrack, formatDueRelative, isStale, type TrackKey, type OpportunityRow } from '../../types/opportunity';
-import { LCard, LBtn, LIcon, LPri, LAvatar, LH, LNote, LSelect } from '../../components/primitives';
+import { LCard, LBtn, LIcon, LPri, LAvatar, LH, LNote, LSelect, LSkeletonCard } from '../../components/primitives';
 import { PullToRefreshIndicator } from '../../components/layout/PullToRefreshIndicator';
 import { colors } from '../../styles/tokens';
 
@@ -412,7 +412,15 @@ export function InboxPage() {
       </div>
 
       {isLoading ? (
-        <div style={{ padding: 40, textAlign: 'center', color: colors.dim }}>กำลังโหลด…</div>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)', gap: 14 }}>
+          {Array.from({ length: isMobile ? 1 : 4 }).map((_, col) => (
+            <div key={col} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {Array.from({ length: 3 }).map((__, i) => (
+                <LSkeletonCard key={i} />
+              ))}
+            </div>
+          ))}
+        </div>
       ) : tab === 'focus' ? (
         /* Focus mode (F): items needing my attention */
         <FocusView
