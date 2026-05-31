@@ -214,7 +214,11 @@ function LeafEditor({ leaf, onChange }: { leaf: LeafRule; onChange: (next: Rule 
   };
 
   const onOpChange = (op: string) => {
-    onChange({ ...leaf, op: op as LeafRule['op'] });
+    const next = { ...leaf, op: op as LeafRule['op'] };
+    // 'between' needs two bounds — seed them so the rule is valid right away
+    // instead of carrying an undefined values array until the user types.
+    if (op === 'between') next.values = leaf.values ?? [0, 0];
+    onChange(next);
   };
 
   const renderValueInput = () => {

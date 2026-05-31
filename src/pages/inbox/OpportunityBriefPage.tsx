@@ -68,6 +68,9 @@ export function OpportunityBriefPage() {
           a { color: #0066cc !important; text-decoration: underline !important; }
           h1, h2, h3 { color: black !important; page-break-after: avoid; }
           .brief-section { page-break-inside: avoid; }
+          /* Keep individual itinerary rows from splitting across a page break. */
+          tr { page-break-inside: avoid; }
+          thead { display: table-header-group; }
         }
         @page { margin: 1.5cm; size: A4; }
       `}</style>
