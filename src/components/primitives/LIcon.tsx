@@ -27,7 +27,10 @@ export type IconKind =
   | 'settings'
   | 'close'
   | 'check'
-  | 'plane';
+  | 'plane'
+  | 'pin'
+  | 'camera'
+  | 'palette';
 
 interface LIconProps {
   kind: IconKind;
@@ -246,6 +249,30 @@ export function LIcon({ kind, size = 14, color = colors.text }: LIconProps) {
       return (
         <svg width={s} height={s} viewBox="0 0 24 24">
           <path d="M5,12 L10,17 L19,7" {...st} />
+        </svg>
+      );
+    case 'pin':
+      return (
+        <svg width={s} height={s} viewBox="0 0 24 24">
+          <path d="M12,2 C8,2 5,5 5,9 C5,14 12,22 12,22 C12,22 19,14 19,9 C19,5 16,2 12,2 Z" {...st} />
+          <circle cx="12" cy="9" r="2.5" {...st} />
+        </svg>
+      );
+    case 'camera':
+      return (
+        <svg width={s} height={s} viewBox="0 0 24 24">
+          <rect x="3" y="7" width="18" height="13" {...st} />
+          <path d="M8,7 L9.5,4 H14.5 L16,7" {...st} />
+          <circle cx="12" cy="13.5" r="3.5" {...st} />
+        </svg>
+      );
+    case 'palette':
+      return (
+        <svg width={s} height={s} viewBox="0 0 24 24">
+          <path d="M12,3 C6.5,3 3,7 3,12 C3,16 6,19 9,19 Q11,19 11,17 Q11,15 13,15 H17 Q21,15 21,11 C21,6.5 17,3 12,3 Z" {...st} />
+          <circle cx="8" cy="10" r="1" {...st} />
+          <circle cx="12" cy="7.5" r="1" {...st} />
+          <circle cx="16" cy="10" r="1" {...st} />
         </svg>
       );
   }
