@@ -157,6 +157,21 @@ export function TripItinerary({ opportunityId }: TripItineraryProps) {
             }}
             onAddStop={() => handleAddStop(date)}
             saving={update.isPending}
+            onReorder={(fromId, toId) => {
+              const ids = dayStops.map((s) => s.id);
+              const from = ids.indexOf(fromId);
+              const to = ids.indexOf(toId);
+              if (from < 0 || to < 0 || from === to) return;
+              const reordered = [...dayStops];
+              const [moved] = reordered.splice(from, 1);
+              reordered.splice(to, 0, moved);
+              // Persist the new sequence — update only the stops whose index changed.
+              reordered.forEach((s, i) => {
+                if (s.sort_order !== i) {
+                  update.mutate({ id: s.id, opportunityId, patch: { sort_order: i } });
+                }
+              });
+            }}
           />
         ))}
       </div>
@@ -176,6 +191,7 @@ function DaySection({
   onDelete,
   onAddStop,
   saving,
+  onReorder,
 }: {
   date: string;
   dayNumber: number;
@@ -188,7 +204,10 @@ function DaySection({
   onDelete: (id: string) => void;
   onAddStop: () => void;
   saving: boolean;
+  onReorder: (fromId: string, toId: string) => void;
 }) {
+  const [draggedId, setDraggedId] = useState<string | null>(null);
+  const [overId, setOverId] = useState<string | null>(null);
   const dateObj = new Date(date);
   const weekday = dateObj.toLocaleDateString('th-TH', { weekday: 'long' });
   const niceDate = dateObj.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -257,19 +276,54 @@ function DaySection({
 
       {/* Stops */}
       <div>
-        {stops.map((stop) => (
-          <StopRow
-            key={stop.id}
-            stop={stop}
-            opportunityId={opportunityId}
-            editing={editingStopId === stop.id}
-            onStartEdit={() => onStartEdit(stop.id)}
-            onCancelEdit={onCancelEdit}
-            onSave={(patch) => onSave(stop, patch)}
-            onDelete={() => onDelete(stop.id)}
-            saving={saving}
-          />
-        ))}
+        {stops.map((stop) => {
+          const isEditingThis = editingStopId === stop.id;
+          return (
+            <div
+              key={stop.id}
+              // Drag to reorder stops within the day (disabled while editing a row).
+              draggable={!isEditingThis}
+              onDragStart={(e) => {
+                setDraggedId(stop.id);
+                e.dataTransfer.effectAllowed = 'move';
+              }}
+              onDragOver={(e) => {
+                if (draggedId && draggedId !== stop.id) {
+                  e.preventDefault();
+                  setOverId(stop.id);
+                }
+              }}
+              onDragLeave={() => setOverId((cur) => (cur === stop.id ? null : cur))}
+              onDrop={(e) => {
+                e.preventDefault();
+                if (draggedId && draggedId !== stop.id) onReorder(draggedId, stop.id);
+                setDraggedId(null);
+                setOverId(null);
+              }}
+              onDragEnd={() => {
+                setDraggedId(null);
+                setOverId(null);
+              }}
+              style={{
+                opacity: draggedId === stop.id ? 0.4 : 1,
+                borderTop: overId === stop.id ? `2px solid ${colors.green}` : '2px solid transparent',
+                cursor: isEditingThis ? 'default' : 'grab',
+                transition: 'opacity 120ms ease',
+              }}
+            >
+              <StopRow
+                stop={stop}
+                opportunityId={opportunityId}
+                editing={isEditingThis}
+                onStartEdit={() => onStartEdit(stop.id)}
+                onCancelEdit={onCancelEdit}
+                onSave={(patch) => onSave(stop, patch)}
+                onDelete={() => onDelete(stop.id)}
+                saving={saving}
+              />
+            </div>
+          );
+        })}
         {/* Add stop in this day */}
         <button
           type="button"
