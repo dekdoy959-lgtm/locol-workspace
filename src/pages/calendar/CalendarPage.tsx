@@ -609,7 +609,9 @@ function MonthGrid({
                 transition: 'background 100ms',
               }}
               onMouseEnter={(e) => {
-                if (!isToday) e.currentTarget.style.background = colors.bgSoft;
+                // Today gets a hover state too (a lighter green), instead of
+                // being the one cell that doesn't react to the pointer.
+                e.currentTarget.style.background = isToday ? '#22310d' : colors.bgSoft;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = isToday ? '#19250a' : isWeekend ? colors.bg : 'transparent';
@@ -1078,6 +1080,12 @@ function DayPanel({
         @keyframes l-slide-right {
           from { transform: translateX(100%); }
           to   { transform: translateX(0); }
+        }
+        /* Defined here too (not only in BottomNav, which is absent on desktop)
+           so the DayPanel backdrop fade works on every breakpoint. */
+        @keyframes l-fade-in {
+          from { opacity: 0; }
+          to   { opacity: 1; }
         }
       `}</style>
     </>

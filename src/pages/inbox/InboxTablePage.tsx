@@ -504,6 +504,7 @@ function PriorityChip({ pri }: { pri: string | null }) {
   };
   return (
     <span
+      title={pri}
       style={{
         fontSize: 10.5,
         color: colorMap[pri] ?? colors.dim,
