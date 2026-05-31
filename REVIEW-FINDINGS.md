@@ -21,7 +21,8 @@
   - ✅ #47 Thai IME (MultiValueField stable keys) · #28 trip time inputs type=time · #29 budget variance · #21 nested button-in-Link · #48 delete onError · #30 AlertRow inert เมื่อ master off · #33 MergeContactsPage useMemo→useEffect
   - ✅ **#24 modal focus trap** — ConfirmModal: focus trap + Escape + role=dialog/aria-modal/aria-label + autofocus + focus-return
   - ✅ **#4 ConfirmModal** — วาง `ConfirmProvider` + `useConfirm()` (promise-based, mount ที่ root) แล้วแปลง **ครบทั้ง 14 จุด** window.confirm → modal (components + 5 ฟอร์ม + sub-components)
-  - 🔲 เหลือ — **งานใหญ่:** #3 kanban keyboard a11y (drag-drop keyboard-accessible) · #22 LLabel htmlFor + input id (หลายฟอร์ม)
+  - ✅ **#22 accessible names** — LLabel รับ htmlFor + LInput/LTextarea/LSelect fallback aria-label จาก placeholder (ทุกช่องมี accessible name โดยไม่ override label จริง); การ wire htmlFor ราย field เป็น follow-up
+  - 🔲 เหลือ — **งานใหญ่ที่สุด:** #3 kanban keyboard a11y (drag-drop ให้ keyboard-accessible + ARIA) — ควรเป็น session เฉพาะ
   - 🔲 follow-up เล็ก: window.prompt 1 จุด (duplicate-trip day-shift — ต้องมี input modal) + alert() 3 จุดใน mutation onError (ควรเป็น toast)
   - ⏭️ ข้าม (ไม่ใช่ bug ชัด): #25 commitment_overdue = feature ใหม่ (ต้องมี runner) · #27 '5 tracks' subtitle หาไม่เจอ · #34 relations incoming label ต้องมี reverse-label semantics · #46 /team nav = product decision
 - **Bench 4 · Cleanup (nice-to-have)** — 🔲 ยังไม่เริ่ม (49 ข้อ)
