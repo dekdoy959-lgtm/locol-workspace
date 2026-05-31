@@ -158,7 +158,7 @@ export function BriefingPage() {
               marginTop: 12,
               padding: '10px 14px',
               background: colors.warnBg,
-              border: '1px solid #5a3f10',
+              border: `1px solid ${colors.warnDk}`,
               borderRadius: '10px 0 10px 0',
               fontSize: 12,
               color: colors.warn,
@@ -210,7 +210,7 @@ export function BriefingPage() {
 
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', gap: 14, marginBottom: 14 }}>
         {/* Stale items (highlighted) */}
-        <LCard padding={20} style={{ borderLeft: `3px solid #d96a66` }}>
+        <LCard padding={20} style={{ borderLeft: `3px solid ${colors.danger}` }}>
           <SectionHeader
             accent={colors.danger}
             title={isMine ? 'MY STALE ITEMS' : 'TEAM STALE ITEMS'}

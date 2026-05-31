@@ -216,7 +216,7 @@ export function OpportunityDetailPage() {
                 style={{
                   padding: '7px 16px',
                   borderRadius: '8px 0 8px 0',
-                  border: '1px solid #5a1a18',
+                  border: `1px solid ${colors.dangerDk}`,
                   background: '#1e0a0a',
                   color: colors.danger,
                   fontSize: 12.5,

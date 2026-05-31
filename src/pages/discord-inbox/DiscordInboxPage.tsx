@@ -321,7 +321,7 @@ function InboxCard({
               onClick={() => setShowDeleteConfirm(true)}
               style={{
                 background: 'transparent',
-                border: `1px solid #5a1a18`,
+                border: `1px solid ${colors.dangerDk}`,
                 color: colors.danger,
                 borderRadius: '8px 0 8px 0',
                 padding: '5px 12px',

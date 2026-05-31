@@ -431,7 +431,7 @@ function LocalStopRow({
             style={{
               padding: '5px 12px',
               background: 'transparent',
-              border: '1px solid #5a1a18',
+              border: `1px solid ${colors.dangerDk}`,
               color: colors.danger,
               borderRadius: '6px 0 6px 0',
               fontSize: 11,

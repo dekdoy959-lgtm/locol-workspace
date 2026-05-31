@@ -196,7 +196,7 @@ export function OrgPicker({ value, onChange }: OrgPickerProps) {
                   width: 24,
                   height: 24,
                   background: colors.oliveBg,
-                  border: `1px solid #3a3f1f`,
+                  border: `1px solid ${colors.oliveDk}`,
                   borderRadius: '6px 0 6px 0',
                   display: 'inline-flex',
                   alignItems: 'center',

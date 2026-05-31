@@ -121,7 +121,7 @@ export function GroupDetailPage() {
             marginBottom: 18,
             padding: 14,
             background: colors.warnBg,
-            border: '1px solid #5a3f10',
+            border: `1px solid ${colors.warnDk}`,
             borderRadius: '12px 0 12px 0',
           }}
         >

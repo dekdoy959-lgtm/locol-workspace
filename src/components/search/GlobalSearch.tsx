@@ -522,7 +522,7 @@ function ResultIcon({ result }: { result: SearchResult }) {
           width: 28,
           height: 28,
           background: colors.oliveBg,
-          border: `1px solid #3a3f1f`,
+          border: `1px solid ${colors.oliveDk}`,
           color: colors.olive,
           fontSize: 11,
           fontWeight: 700,

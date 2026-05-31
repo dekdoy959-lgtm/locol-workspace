@@ -18,7 +18,7 @@ export function LDangerBtn({ children, onClick, disabled, small }: LDangerBtnPro
       style={{
         background: 'transparent',
         color: colors.danger,
-        border: '1px solid #5a1a18',
+        border: `1px solid ${colors.dangerDk}`,
         padding: small ? '5px 12px' : '8px 16px',
         borderRadius: '10px 0 10px 0',
         fontFamily: 'inherit',

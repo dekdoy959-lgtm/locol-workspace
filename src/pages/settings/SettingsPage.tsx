@@ -297,7 +297,7 @@ export function SettingsPage() {
         </LCard>
       </div>
 
-      <div style={{ marginTop: 24, padding: 14, background: colors.warnBg, border: '1px solid #5a3f10', borderRadius: '10px 0 10px 0' }}>
+      <div style={{ marginTop: 24, padding: 14, background: colors.warnBg, border: `1px solid ${colors.warnDk}`, borderRadius: '10px 0 10px 0' }}>
         <div style={{ fontSize: 11, color: colors.warn, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>
           <LIcon kind="warn" size={11} color={colors.warn} /> Email setup
         </div>

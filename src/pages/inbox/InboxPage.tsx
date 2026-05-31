@@ -808,7 +808,7 @@ function FocusView({
         style={{
           padding: '10px 14px',
           background: colors.dangerBg,
-          border: '1px solid #5a1a18',
+          border: `1px solid ${colors.dangerDk}`,
           borderRadius: '12px 0 12px 0',
           marginBottom: 12,
           fontSize: 12,

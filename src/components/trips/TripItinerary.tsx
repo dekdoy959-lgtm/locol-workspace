@@ -244,7 +244,7 @@ function DaySection({
               color: colors.danger,
               letterSpacing: 0.4,
               background: '#2a1212',
-              border: '1px solid #5a1a18',
+              border: `1px solid ${colors.dangerDk}`,
               borderRadius: '5px 0 5px 0',
               padding: '2px 7px',
             }}
@@ -495,7 +495,7 @@ function StopRow({
             style={{
               padding: '5px 12px',
               background: 'transparent',
-              border: '1px solid #5a1a18',
+              border: `1px solid ${colors.dangerDk}`,
               color: colors.danger,
               borderRadius: '6px 0 6px 0',
               fontSize: 11,
@@ -581,7 +581,7 @@ function StopRow({
                 textDecoration: 'none',
                 padding: '1px 6px',
                 background: colors.oliveBg,
-                border: '1px solid #3a3f1f',
+                border: `1px solid ${colors.oliveDk}`,
                 borderRadius: '4px 0 4px 0',
                 letterSpacing: 0.4,
                 fontWeight: 600,
@@ -613,7 +613,7 @@ function StopRow({
               marginTop: 4,
               padding: '2px 8px',
               background: colors.oliveBg,
-              border: '1px solid #3a3f1f',
+              border: `1px solid ${colors.oliveDk}`,
               borderRadius: '4px 0 4px 0',
               display: 'inline-block',
             }}

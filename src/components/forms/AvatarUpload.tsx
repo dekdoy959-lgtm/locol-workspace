@@ -163,7 +163,7 @@ export function AvatarUpload({ value, onChange, initials, contactId }: AvatarUpl
             marginTop: 8,
             padding: '6px 10px',
             background: colors.dangerBg,
-            border: '1px solid #5a1a18',
+            border: `1px solid ${colors.dangerDk}`,
             borderRadius: '6px 0 6px 0',
             color: colors.danger,
             fontSize: 12,

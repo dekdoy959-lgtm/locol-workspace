@@ -221,7 +221,7 @@ export function ContactDetailPage() {
                     onClick={() => setShowDeleteDiscord(true)}
                     style={{
                       background: 'transparent',
-                      border: `1px solid #5a1a18`,
+                      border: `1px solid ${colors.dangerDk}`,
                       color: colors.danger,
                       borderRadius: '6px 0 6px 0',
                       padding: '3px 10px',

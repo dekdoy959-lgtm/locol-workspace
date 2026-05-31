@@ -137,7 +137,7 @@ export function OrgListPage() {
                       width: 44,
                       height: 44,
                       background: colors.oliveBg,
-                      border: `1px solid #3a3f1f`,
+                      border: `1px solid ${colors.oliveDk}`,
                       borderRadius: '10px 0 10px 0',
                       display: 'flex',
                       alignItems: 'center',

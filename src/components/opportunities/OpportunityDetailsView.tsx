@@ -69,7 +69,7 @@ export function OpportunityDetailsView({ track, details }: OpportunityDetailsVie
                     width: 22,
                     height: 22,
                     background: colors.oliveBg,
-                    border: `1px solid #3a3f1f`,
+                    border: `1px solid ${colors.oliveDk}`,
                     color: colors.olive,
                     fontSize: 10,
                     fontWeight: 700,

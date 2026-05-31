@@ -128,7 +128,7 @@ export function InteractionsSection({ contactId }: Props) {
               style={{
                 padding: 8,
                 background: colors.dangerBg,
-                border: '1px solid #5a1a18',
+                border: `1px solid ${colors.dangerDk}`,
                 borderRadius: '6px 0 6px 0',
                 color: colors.danger,
                 fontSize: 12,

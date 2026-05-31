@@ -815,7 +815,7 @@ export function RelationshipGraphPage() {
                         style={{
                           padding: '8px 10px',
                           background: colors.warnBg,
-                          border: '1px solid #5a3f10',
+                          border: `1px solid ${colors.warnDk}`,
                           borderRadius: '8px 0 8px 0',
                           display: 'flex',
                           alignItems: 'center',

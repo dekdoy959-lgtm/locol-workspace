@@ -329,7 +329,7 @@ export function CalendarPage() {
             marginBottom: 12,
             padding: '8px 12px',
             background: colors.warnBg,
-            border: '1px solid #5a3f10',
+            border: `1px solid ${colors.warnDk}`,
             borderRadius: '6px 0 6px 0',
             fontSize: 11,
             color: colors.warn,

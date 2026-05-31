@@ -120,7 +120,7 @@ export function OrgDetailPage() {
                   width: 64,
                   height: 64,
                   background: colors.oliveBg,
-                  border: '1px solid #3a3f1f',
+                  border: `1px solid ${colors.oliveDk}`,
                   borderRadius: '12px 0 12px 0',
                   display: 'flex',
                   alignItems: 'center',

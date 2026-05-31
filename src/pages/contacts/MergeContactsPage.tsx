@@ -424,7 +424,7 @@ export function MergeContactsPage() {
           style={{
             padding: 12,
             background: colors.dangerBg,
-            border: '1px solid #5a1a18',
+            border: `1px solid ${colors.dangerDk}`,
             borderRadius: '10px 0 10px 0',
             color: colors.danger,
             fontSize: 13,

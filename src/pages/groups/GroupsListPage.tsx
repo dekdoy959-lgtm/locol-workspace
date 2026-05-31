@@ -150,7 +150,7 @@ function GroupNode({
                 fontSize: 9,
                 color: colors.warn,
                 background: colors.warnBg,
-                border: '1px solid #5a3f10',
+                border: `1px solid ${colors.warnDk}`,
                 padding: '1px 5px',
                 borderRadius: '4px 0 4px 0',
                 letterSpacing: 0.5,
