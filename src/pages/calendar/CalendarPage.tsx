@@ -81,6 +81,14 @@ function matchSplit(item: CalendarItem, split: SplitMode): boolean {
 
 export function CalendarPage() {
   const navigate = useNavigate();
+  // Calendar items carry either an internal route or an external URL (Google
+  // Calendar htmlLink). navigate() only handles internal paths — open external
+  // links in a new tab instead of feeding an https:// URL to the router.
+  const openItem = (href: string) => {
+    if (!href || href === '#') return;
+    if (/^https?:\/\//i.test(href)) window.open(href, '_blank', 'noopener,noreferrer');
+    else navigate(href);
+  };
   const { user } = useAuth();
   const isMobile = useIsMobile();
 
@@ -340,8 +348,8 @@ export function CalendarPage() {
           onDateClick={(d) => setSelectedDate(d)}
         />
       )}
-      {view === 'agenda' && <AgendaView items={items} conflicts={conflicts} onClickItem={(i) => navigate(i.href)} />}
-      {view === 'travel' && <TravelView items={items} onClickItem={(i) => navigate(i.href)} />}
+      {view === 'agenda' && <AgendaView items={items} conflicts={conflicts} onClickItem={(i) => openItem(i.href)} />}
+      {view === 'travel' && <TravelView items={items} onClickItem={(i) => openItem(i.href)} />}
 
       {/* Day panel (slide-in from right when date selected) */}
       {selectedDate && (
@@ -351,7 +359,7 @@ export function CalendarPage() {
           onClose={() => setSelectedDate(null)}
           onClickItem={(i) => {
             setSelectedDate(null);
-            navigate(i.href);
+            openItem(i.href);
           }}
         />
       )}

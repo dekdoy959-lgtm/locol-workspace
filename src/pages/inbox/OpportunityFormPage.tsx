@@ -21,7 +21,12 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const initialTrack = (searchParams.get('track') as TrackKey | null) ?? 'apply';
+  // Validate the ?track= URL param against known tracks — an unknown value
+  // would otherwise flow into the form and be rejected by the DB enum on save.
+  const trackParam = searchParams.get('track');
+  const initialTrack: TrackKey = TRACKS.some((t) => t.key === trackParam)
+    ? (trackParam as TrackKey)
+    : 'apply';
 
   const { data: existing, isLoading } = useOpportunity(mode === 'edit' ? id : undefined);
   const { data: team = [] } = useTeamMembers();
@@ -63,12 +68,14 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
     }
   }, [mode, existing]);
 
-  // When track changes in create mode, reset stage to default
-  useEffect(() => {
-    if (mode === 'create') {
-      setStage(findTrack(track).defaultStage);
-    }
-  }, [track, mode]);
+  // Changing the track must reset the stage to that track's default — an old
+  // stage from a different track is invalid for the new one and the DB enum
+  // would reject it on save. Applies to BOTH create and edit (the edit init
+  // effect above sets track+stage together, so it isn't affected).
+  const handleTrackChange = (newTrack: TrackKey) => {
+    setTrack(newTrack);
+    setStage(findTrack(newTrack).defaultStage);
+  };
 
   const trackMeta = findTrack(track);
   const stageOptions = trackMeta.stages.map((s) => ({ value: s, label: s }));
@@ -145,7 +152,13 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
         navigate(`/inbox/${id}`);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      const raw = err instanceof Error ? err.message : String(err);
+      // Postgres enum/check violations leak internal type names — show a hint.
+      setError(
+        /invalid input value for enum|violates check constraint/i.test(raw)
+          ? 'บันทึกไม่สำเร็จ: ค่าบางช่อง (เช่น stage/status) ไม่ถูกต้องสำหรับ track นี้ — ลองเลือกใหม่อีกครั้ง'
+          : raw,
+      );
     }
   };
 
@@ -207,7 +220,7 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
               <button
                 key={t.key}
                 type="button"
-                onClick={() => setTrack(t.key)}
+                onClick={() => handleTrackChange(t.key)}
                 style={{
                   padding: '12px 8px',
                   background: track === t.key ? t.color.soft : 'transparent',

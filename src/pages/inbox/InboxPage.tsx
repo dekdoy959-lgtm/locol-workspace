@@ -145,7 +145,9 @@ export function InboxPage() {
     if (!user?.id) return [];
     const todayMs = Date.now();
     const sevenDaysMs = todayMs + 7 * MS_PER_DAY;
-    const mine = opps.filter((o) => o.owner_id === user.id || o.reviewer_id === user.id);
+    // Derive from filteredOpps (not raw opps) so the Focus tab + its count
+    // respect the active filter chips (priority / stale / mine).
+    const mine = filteredOpps.filter((o) => o.owner_id === user.id || o.reviewer_id === user.id);
     const needsAttention = mine.filter((o) => {
       const stale = isStale(o, getStaleThreshold(trackSettings, o.track as TrackKey));
       const dueSoon =
@@ -163,7 +165,7 @@ export function InboxPage() {
       if (aPri !== bPri) return bPri - aPri;
       return (a.due_date ?? 'zzz').localeCompare(b.due_date ?? 'zzz');
     });
-  }, [opps, user, trackSettings]);
+  }, [filteredOpps, user, trackSettings]);
 
   const filtered =
     tab === 'all'
