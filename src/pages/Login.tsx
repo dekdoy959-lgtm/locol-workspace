@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { LCard, LH, LBtn, LFrame, LNote, MiniL } from '../components/primitives';
+import { LCard, LH, LBtn, LFrame, MiniL } from '../components/primitives';
 import { colors } from '../styles/tokens';
 
 export function LoginPage() {
@@ -80,7 +80,6 @@ export function LoginPage() {
           )}
 
           <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${colors.line}` }}>
-            <LNote>BRAND · 5 : 15 : 80</LNote>
             <p
               style={{
                 fontSize: 11.5,

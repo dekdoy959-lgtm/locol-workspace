@@ -309,7 +309,7 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
         {/* Trip-only · in-form itinerary editor (create mode) */}
         {mode === 'create' && track === 'trip' && (
           <FormSection
-            title="4.5 · Itinerary · ที่ที่จะไป (ใส่ได้เลย ก่อนกดสร้าง)"
+            title="Itinerary · ที่ที่จะไป (ใส่ได้เลย ก่อนกดสร้าง)"
             description="แต่ละจุดมีวัน/เวลา/ฟาร์ม/วัตถุประสงค์ของตัวเอง · กรอกตอนนี้เลย ทุกอย่างถูกบันทึกพร้อมกันตอนคุณกด 'สร้าง'"
           >
             <LocalItineraryEditor stops={localStops} onChange={setLocalStops} />
