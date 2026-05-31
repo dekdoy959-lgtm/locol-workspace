@@ -17,10 +17,10 @@
   - #6 calendar queryKey by user.id · #13 org roll-up by org_id · #14 duplicate copies people+team assignments · #20 discord restore ไม่ clobber status · #11 discord bucket private + signed URLs (migration 0018)
 - **Bench 2 · Correctness** (`26afb2a`, `6d28cd6`, `1c2c842`) — ✅ should #5,15,16,17,19,32,36,37,39,40,42,43,44 (13/14)
   - #18 (avatar) = N/A: เป็น URL text input (`type="url"`) ไม่ใช่ file upload — premise ของ finding ไม่ตรงโค้ดจริง
-- **Bench 3 · a11y + UX** — ⏳ บางส่วน (`a26a661`, `04ca935`)
-  - ✅ #47 Thai IME (MultiValueField stable keys) · #28 trip time inputs type=time · #29 budget variance · #21 nested button-in-Link · #48 delete onError
-  - 🔲 เหลือ — **งานใหญ่ ควรทำ batch เฉพาะ:** #4 ConfirmModal (17 จุด window.confirm/alert/prompt — เป็น stateful refactor + ต้องวาง infra promise-based confirm) · #24 modal focus trap/Escape/aria-modal · #3 kanban keyboard a11y · #22 LLabel htmlFor (หลายฟอร์ม)
-  - 🔲 เหลือ — เล็ก: #25 settings #alerts hash + commitment_overdue UI · #27 calendar today/subtitle polish · #30 AlertRow toggle เมื่อ master off · #33 MergeContactsPage init in useMemo · #34 RelationsSection incoming label · #46 /team ไม่อยู่ใน sidebar nav (Goals→/milestones ถูกแล้ว)
+- **Bench 3 · a11y + UX** — ⏳ บางส่วน (`a26a661`, `04ca935`, `6a632de`)
+  - ✅ #47 Thai IME (MultiValueField stable keys) · #28 trip time inputs type=time · #29 budget variance · #21 nested button-in-Link · #48 delete onError · #30 AlertRow inert เมื่อ master off · #33 MergeContactsPage useMemo→useEffect
+  - 🔲 เหลือ — **งานใหญ่ ควรทำ batch เฉพาะ (context เต็ม):** #4 ConfirmModal (17 จุด window.confirm/alert/prompt — stateful refactor + วาง infra promise-based confirm) · #24 modal focus trap/Escape/aria-modal · #3 kanban keyboard a11y · #22 LLabel htmlFor (หลายฟอร์ม)
+  - ⏭️ ข้าม (ไม่ใช่ bug ชัด): #25 commitment_overdue = feature ใหม่ (ต้องมี runner) · #27 '5 tracks' subtitle หาไม่เจอ (น่าจะแก้แล้ว) · #34 relations incoming label ต้องมี reverse-label semantics · #46 /team nav = product decision (Goals→/milestones ถูกแล้ว)
 - **Bench 4 · Cleanup (nice-to-have)** — 🔲 ยังไม่เริ่ม (49 ข้อ)
 - **Bench 5 · Polish (animation)** — 🔲 ยังไม่เริ่ม (15 ข้อ)
 
