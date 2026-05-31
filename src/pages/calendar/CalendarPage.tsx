@@ -618,11 +618,25 @@ function MonthGrid({
               }}
             >
               <div
+                className={isToday ? 'l-pulse-ring' : undefined}
                 style={{
                   fontSize: 11,
                   fontWeight: 600,
                   color: isToday ? colors.green : isWeekend ? colors.dimSoft : colors.text,
                   fontFamily: "'IBM Plex Mono', monospace",
+                  ...(isToday
+                    ? {
+                        alignSelf: 'flex-start',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: 18,
+                        height: 18,
+                        padding: '0 4px',
+                        borderRadius: '50%',
+                        border: `1px solid ${colors.greenDk}`,
+                      }
+                    : {}),
                 }}
               >
                 {cell.date.getDate()}

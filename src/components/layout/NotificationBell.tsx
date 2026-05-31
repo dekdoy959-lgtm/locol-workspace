@@ -161,7 +161,10 @@ export function NotificationBell() {
           justifyContent: 'center',
         }}
       >
-        <LIcon kind="bell" size={16} color={count ? colors.green : colors.dimSoft} />
+        {/* key={count} remounts the span so the bounce re-fires on each new unread */}
+        <span key={count} className={count > 0 ? 'l-bell-bounce' : undefined} style={{ display: 'inline-flex' }}>
+          <LIcon kind="bell" size={16} color={count ? colors.green : colors.dimSoft} />
+        </span>
         {count > 0 && (
           <span
             style={{
