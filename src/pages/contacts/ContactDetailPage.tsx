@@ -9,6 +9,7 @@ import { MilestoneBoard } from '../../components/milestones/MilestoneBoard';
 import { ShareContactModal } from '../../components/contacts/ShareContactModal';
 import { RelationsSection } from '../../components/relations/RelationsSection';
 import { LinkedOpportunities } from '../../components/opportunities/LinkedOpportunities';
+import { DiscordAttachment } from '../../components/discord/DiscordAttachment';
 import { useLinkedOpportunitiesForContact } from '../../hooks/useLinkedOpportunities';
 import { useDiscordInboxForContact } from '../../hooks/useDiscordInbox';
 import { InteractionsSection } from '../../components/interactions/InteractionsSection';
@@ -257,25 +258,9 @@ export function ContactDetailPage() {
               )}
               {discordSource.attachment_paths.length > 0 && (
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
-                  {discordSource.attachment_paths.map((a, i) => {
-                    const src = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/discord-attachments/${a.storage_path}`;
-                    return (
-                      <a key={i} href={src} target="_blank" rel="noreferrer">
-                        <img
-                          src={src}
-                          alt={a.filename}
-                          style={{
-                            width: 100,
-                            height: 72,
-                            objectFit: 'cover',
-                            borderRadius: '6px 0 6px 0',
-                            border: `1px solid ${colors.lineHi}`,
-                          }}
-                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                        />
-                      </a>
-                    );
-                  })}
+                  {discordSource.attachment_paths.map((a, i) => (
+                    <DiscordAttachment key={i} storagePath={a.storage_path} filename={a.filename} />
+                  ))}
                 </div>
               )}
             </LCard>

@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { LPage, LCard, LChip, LH, LNote, LBtn } from '../../components/primitives';
 import { ConfirmModal } from '../../components/modals/ConfirmModal';
+import { DiscordAttachment } from '../../components/discord/DiscordAttachment';
 import { colors } from '../../styles/tokens';
 import type { Database } from '../../types/database';
 
@@ -210,8 +211,6 @@ function InboxCard({
     ? `/contacts/${item.created_contact_id}`
     : null;
 
-  const storageBase = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/discord-attachments/`;
-
   return (
     <>
       <LCard style={{ opacity: isCancelled ? 0.55 : 1 }}>
@@ -264,20 +263,7 @@ function InboxCard({
             {item.attachment_paths.length > 0 && (
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
                 {item.attachment_paths.map((a, i) => (
-                  <a key={i} href={storageBase + a.storage_path} target="_blank" rel="noreferrer">
-                    <img
-                      src={storageBase + a.storage_path}
-                      alt={a.filename}
-                      style={{
-                        width: 80,
-                        height: 60,
-                        objectFit: 'cover',
-                        borderRadius: '6px 0 6px 0',
-                        border: `1px solid ${colors.lineHi}`,
-                      }}
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                    />
-                  </a>
+                  <DiscordAttachment key={i} storagePath={a.storage_path} filename={a.filename} width={80} height={60} />
                 ))}
               </div>
             )}

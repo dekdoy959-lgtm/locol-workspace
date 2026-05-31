@@ -15,6 +15,7 @@ import { LCard, LH, LBtn, LChip, LField, LIcon, LNote, LAvatar, LSelect } from '
 import { NoteComposer } from '../../components/notes/NoteComposer';
 import { Timeline } from '../../components/notes/Timeline';
 import { OpportunityPeopleSection } from '../../components/opportunities/OpportunityPeopleSection';
+import { DiscordAttachment } from '../../components/discord/DiscordAttachment';
 import { TeamAssignmentsSection } from '../../components/opportunities/TeamAssignmentsSection';
 import { TripItinerary } from '../../components/trips/TripItinerary';
 import { TripBudgetCard } from '../../components/trips/TripBudgetCard';
@@ -284,25 +285,9 @@ export function OpportunityDetailPage() {
               )}
               {discordSource.attachment_paths.length > 0 && (
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
-                  {discordSource.attachment_paths.map((a, i) => {
-                    const src = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/discord-attachments/${a.storage_path}`;
-                    return (
-                      <a key={i} href={src} target="_blank" rel="noreferrer">
-                        <img
-                          src={src}
-                          alt={a.filename}
-                          style={{
-                            width: 100,
-                            height: 72,
-                            objectFit: 'cover',
-                            borderRadius: '6px 0 6px 0',
-                            border: `1px solid ${colors.lineHi}`,
-                          }}
-                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                        />
-                      </a>
-                    );
-                  })}
+                  {discordSource.attachment_paths.map((a, i) => (
+                    <DiscordAttachment key={i} storagePath={a.storage_path} filename={a.filename} />
+                  ))}
                 </div>
               )}
             </LCard>
