@@ -7,7 +7,7 @@ interface LAvatarProps {
   ring?: boolean;
 }
 
-export function LAvatar({ initials = 'JD', size = 26, color = colors.surface, ring = false }: LAvatarProps) {
+export function LAvatar({ initials = '?', size = 26, color = colors.surface, ring = false }: LAvatarProps) {
   return (
     <span
       style={{

@@ -189,7 +189,10 @@ export function OpportunityDetailPage() {
                   rel="noopener noreferrer"
                   style={{ color: colors.dimSoft, textDecoration: 'underline' }}
                 >
-                  {opp.source_url.replace(/^https?:\/\//, '').slice(0, 60)}
+                  {(() => {
+                    const u = opp.source_url.replace(/^https?:\/\//, '');
+                    return u.length > 60 ? u.slice(0, 60) + '…' : u;
+                  })()}
                 </a>
               </div>
             )}
