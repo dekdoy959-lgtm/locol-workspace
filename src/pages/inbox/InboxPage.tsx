@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useOpportunities, useUpdateOpportunity } from '../../hooks/useOpportunities';
+import { withViewTransition } from '../../lib/viewTransition';
 import { useTeamMembers, teamMemberInitials } from '../../hooks/useTeamMembers';
 import { useTrackSettings, getStaleThreshold } from '../../hooks/useTrackSettings';
 import { useIsMobile } from '../../hooks/useMediaQuery';
@@ -428,7 +429,7 @@ export function InboxPage() {
           teamById={teamById}
           trackSettings={trackSettings}
           density={density}
-          onCardClick={(id) => navigate(`/inbox/${id}`)}
+          onCardClick={(id) => withViewTransition(() => navigate(`/inbox/${id}`))}
         />
       ) : tab === 'all' ? (
         /* All-tracks kanban: 4-col grid on desktop, horizontal snap-scroll on mobile */
@@ -468,7 +469,7 @@ export function InboxPage() {
                 staleThreshold={getStaleThreshold(trackSettings, t.key)}
                 density={density}
                 isMobile={isMobile}
-                onCardClick={(id) => navigate(`/inbox/${id}`)}
+                onCardClick={(id) => withViewTransition(() => navigate(`/inbox/${id}`))}
                 onAddClick={() => navigate(`/inbox/new?track=${t.key}`)}
                 onMoveCard={handleMoveCard}
                 movedId={lastMovedId}
@@ -518,7 +519,7 @@ export function InboxPage() {
                   staleThreshold={getStaleThreshold(trackSettings, tab as TrackKey)}
                   density={density}
                   defaultCollapsed={DONE_STAGES.has(g.stage)}
-                  onCardClick={(id) => navigate(`/inbox/${id}`)}
+                  onCardClick={(id) => withViewTransition(() => navigate(`/inbox/${id}`))}
                 />
               ))
           ) : (
