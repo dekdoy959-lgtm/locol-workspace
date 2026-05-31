@@ -31,8 +31,10 @@
   - ✅ (รอบ user-decided) #1 plane icon · #6 z-index scale · #7 agenda newline · #10/#11 mig comments · #12 reviewer msg · #14 RuleEditor between · #24 form step · #26 login deco · #28 PDF page-break · #31 token by user.id · #33 full_name required · #47 (มีอยู่แล้ว) · #48 trip conflict badge — **~43/49**
   - ⏭️ #27 คงไว้ (print contrast — user เลือกไม่แก้)
   - ✅ **#5 hex → token เสร็จ** (`c31edc5` `674be80` `6aa7ef0`) — เพิ่ม semantic tokens (danger/warn/olive/greenBg/discord) + replace hex ทุกจุดนอก tokens.ts (quoted · JSX props · compound border strings · 251 modules build เขียว)
-  - ⏳ **#2/#39 emoji → LIcon** (เริ่มแล้ว `eabeed7`): icon foundation พร้อม — เพิ่ม pin/camera/palette เข้า LIcon (📍📸🎨) + ของเดิม cal/money/target/users/doc ครอบ functional emoji ส่วนใหญ่
-    - 🔲 **เหลือ:** (1) JSX text swap จริง (แทน emoji ใน title/label ทั่ว app — **ต้องเห็น browser verify ว่า render สวย**) · (2) icon รูปภาพยาก 🐄☕🎉 (ต้องวาด+verify ใน browser)
+  - ⏳ **#2/#39 emoji → LIcon** (`eabeed7` `13f0eb7`): icon foundation + verified workflow พร้อม
+    - ✅ เพิ่ม pin/camera/palette เข้า LIcon · **verify render ใน browser แล้ว** (temp /icon-test route → DOM ยืนยัน geometry ถูก → ลบ route) · swap 📍→pin 5 จุด (CalendarPage×3, OrgList, Timeline) build เขียว
+    - 🔲 **เหลือ (mechanical ตาม pattern เดิม):** swap emoji ที่เหลือ — ✈→plane, 📅→cal, 💰→money, 🎯→target, 👥→users, 📸→camera, 🎨→palette (หลายอันอยู่ใน title/label string props → ต้องปรับ prop รับ ReactNode) · icon รูปยาก 🐄☕🎉 (วาด+verify)
+    - 💡 วิธี verify: `preview_start` dev → temp public route render icon → `preview_eval` เช็ค getBoundingClientRect/children (screenshot tool เพี้ยนเป็นเส้นบาง ใช้ eval แทน)
   - 🔲 **#3 chip labels → อังกฤษ:** judgment sweep ต่อ label (เลือกคำแปลรายตัว)
   - เก่า (subjective ที่ยังไม่ถาม): —
     - **subjective/design:** #2 emoji vs LIcon · #3 Thai/Eng chip · #5 hardcoded hex → tokens · #6 z-index scale · #24 form step '4→4.5→5' · #26 Login deco · #27 print brand color (อาจตั้งใจเพื่อ contrast) · #39 emoji headings mono
