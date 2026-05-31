@@ -922,6 +922,8 @@ function TrackColumn({
           </span>
         </div>
         <div style={{ fontSize: 10, color: colors.dimSoft, marginTop: 3, letterSpacing: 0.3 }}>{meta.cadence}</div>
+        {/* Track-colored ink stripe that sweeps in (#15). */}
+        <div className="l-ink-sweep" style={{ height: 2, background: meta.color.ink, marginTop: 8, borderRadius: 2 }} />
       </div>
 
       {/* Lifecycle micro-bar */}

@@ -209,6 +209,9 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   .l-pulse-ring { animation: l-pulse-ring 2s ease-out infinite; }
   .l-bell-bounce { animation: l-bell-bounce 600ms ease; }
 
+  @keyframes l-ink-sweep { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .l-ink-sweep { transform-origin: left center; animation: l-ink-sweep 600ms ease-out backwards; }
+
   /* Stagger-in list children (#3) — apply .l-stagger to the container. */
   .l-stagger > * { animation: l-rise 280ms ease-out backwards; }
   .l-stagger > *:nth-child(1)  { animation-delay: 0ms; }
