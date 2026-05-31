@@ -26,13 +26,13 @@
   - **→ Bench 3 ครบทุกข้อที่ทำได้แล้ว** (เหลือเฉพาะ follow-up เล็ก: prompt 1 + alert 3 จุด, และ ⏭️ ข้าม #25/#27/#34/#46)
   - 🔲 follow-up เล็ก: window.prompt 1 จุด (duplicate-trip day-shift — ต้องมี input modal) + alert() 3 จุดใน mutation onError (ควรเป็น toast)
   - ⏭️ ข้าม (ไม่ใช่ bug ชัด): #25 commitment_overdue = feature ใหม่ (ต้องมี runner) · #27 '5 tracks' subtitle หาไม่เจอ · #34 relations incoming label ต้องมี reverse-label semantics · #46 /team nav = product decision
-- **Bench 4 · Cleanup (nice-to-have)** — ⏳ ~18/49 (`88954a1`, `4359fd0`, `af85a0b`, `8f82ab0`, `f21ff25`, `52a1be9`)
-  - ✅ #9 teamById memoized · #13 tier 'all' chip label · #15 (regex มี Thai) · #16 (memoized แล้ว) · #18 Feb29 birthday→Feb28 · #19 online regex ไทย · #20 ICS export disable เมื่อ 0 · #23 (done) · #32 initials slice code-point · #34 ลบ void hacks · #35 Audience ternary · #36 source_url ellipsis · #37 contact name casing · #38 (Bench1) · #40 LAvatar '?' · #42 ลบ Placeholder.tsx · #43 ลบ dead span · #44 stale comment · #45 (Bench1) · #49 BottomNav useLocation (popstate dead)
-  - 🔲 เหลือ ~31 — group ไว้ให้ทำต่อ:
-    - **dead code/token:** #4 dead tokens (trackColors/statusColors/fontSize/radius) · #5 hardcoded hex → tokens · #6 z-index ไม่สม่ำเสมอ · #22 MonthGrid cell key remount (เล็กมาก)
-    - **i18n/UX เล็ก:** #1 trip ใช้ icon 'cal' (ต้องเพิ่ม plane SVG ใน LIcon) · #2 emoji vs LIcon · #3 Thai/Eng chip · #7 agenda \n collapse · #13 tier chip null label 'TIER' · #24 form step '4→4.5→5' · #26 Login deco · #29 InboxTable PriorityChip tooltip/colorblind · #39 emoji headings mono
-    - **calendar/มือถือ:** #17/#41 today hover · #21 DayPanel keyframe l-fade-in · #28 Brief PDF page-break trip table · #30 BottomNav 44px safe-area · #46 OfflineBanner setTimeout pile-up · #48 trip same-day CONFLICT badge
-    - **misc:** #8 storage URL helper · #10/#11 migration RLS/rollback comments · #12 stale error text · #14 RuleEditor 'between' pre-fill · #25 LocalItineraryEditor edit mode · #27 print brand color · #31 provider token leak · #33 TeamPage delete full_name no warn · #47 Brief PDF trip team section
+- **Bench 4 · Cleanup (nice-to-have)** — ⏳ ~26/49 (`88954a1` `4359fd0` `af85a0b` `8f82ab0` `f21ff25` `52a1be9` `9617631` `3ed41a6` `bea54d5` `3c0b36b`)
+  - ✅ #4 (ลบ trackColors/statusColors dead) · #8 (Bench1 DiscordAttachment) · #9 teamById memo · #12 stale reviewer msg · #13 tier 'all' chip · #15 · #16 · #17/#41 today hover · #18 Feb29 · #19 online regex · #20 ICS disable · #21 l-fade-in keyframe · #22 MonthGrid key · #23 · #29 PriorityChip tooltip · #30 BottomNav safe-area · #32 initials · #34 void hacks · #35 ternary · #36 ellipsis · #37 name casing · #38 · #40 LAvatar · #42 Placeholder · #43 span · #44 comment · #45 · #46 OfflineBanner timer · #49 BottomNav useLocation
+  - 🔲 เหลือ ~23 — **ส่วนใหญ่ subjective / ต้อง asset / อ่านลึก** (low priority):
+    - **subjective/design:** #2 emoji vs LIcon · #3 Thai/Eng chip · #5 hardcoded hex → tokens · #6 z-index scale · #24 form step '4→4.5→5' · #26 Login deco · #27 print brand color (อาจตั้งใจเพื่อ contrast) · #39 emoji headings mono
+    - **ต้อง asset/feature:** #1 trip plane icon (ต้องวาด SVG ใน LIcon) · #47 Brief PDF trip team section · #28 Brief PDF page-break trip table · #48 trip same-day CONFLICT badge
+    - **อ่านลึก/by-design:** #7 agenda \n · #14 RuleEditor between pre-fill · #25 LocalItineraryEditor (by-design: edit ใช้ TripItinerary) · #31 provider token leak · #33 TeamPage delete full_name warn
+    - **doc-only:** #10/#11 migration RLS/rollback comments · #5/#6 token migration sweep
 - **Bench 5 · Polish (animation)** — 🔲 ยังไม่เริ่ม (15 ข้อ)
 - **Bench 5 · Polish (animation)** — 🔲 ยังไม่เริ่ม (15 ข้อ)
 
