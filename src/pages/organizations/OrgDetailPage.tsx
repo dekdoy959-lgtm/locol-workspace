@@ -64,7 +64,7 @@ export function OrgDetailPage() {
   if (!org) {
     return (
       <div style={{ padding: 40 }}>
-        <LCard padding={24} bg="#241010" border="#5a1a18">
+        <LCard padding={24} bg={colors.dangerBg} border={colors.dangerDk}>
           <div style={{ color: colors.danger, marginBottom: 16 }}>ไม่พบ organization</div>
           <LBtn ghost onClick={() => navigate('/organizations')}>← กลับ</LBtn>
         </LCard>
@@ -102,11 +102,11 @@ export function OrgDetailPage() {
           <LCard padding={24}>
             <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
               <LChip ink={colors.dim}>{org.id.slice(0, 8).toUpperCase()}</LChip>
-              <LChip ink="#9aa56a" bg="#1d1f12" border="#3a3f1f" big>
+              <LChip ink={colors.olive} bg={colors.oliveBg} border={colors.oliveDk} big>
                 ORGANIZATION
               </LChip>
               {org.our_tier && (
-                <LChip ink={colors.green} bg="#19250a" border={colors.greenDk} big>
+                <LChip ink={colors.green} bg={colors.greenBg} border={colors.greenDk} big>
                   T{org.our_tier}
                 </LChip>
               )}
@@ -252,12 +252,12 @@ export function OrgDetailPage() {
                             {contactDisplayName(c)}
                           </span>
                           {myOrg?.is_primary && (
-                            <LChip ink={colors.green} bg="#19250a" border={colors.greenDk}>
+                            <LChip ink={colors.green} bg={colors.greenBg} border={colors.greenDk}>
                               PRIMARY
                             </LChip>
                           )}
                           {myOrg?.is_current && (
-                            <LChip ink={colors.green} bg="#19250a" border={colors.greenDk}>
+                            <LChip ink={colors.green} bg={colors.greenBg} border={colors.greenDk}>
                               CURRENT
                             </LChip>
                           )}
@@ -279,7 +279,7 @@ export function OrgDetailPage() {
                         </div>
                       </div>
                       {c.tier && (
-                        <LChip ink={colors.green} border={colors.greenDk} bg="#19250a">
+                        <LChip ink={colors.green} border={colors.greenDk} bg={colors.greenBg}>
                           T{c.tier}
                         </LChip>
                       )}

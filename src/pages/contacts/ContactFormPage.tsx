@@ -540,7 +540,7 @@ export function ContactFormPage({ mode }: { mode: 'create' | 'edit' }) {
                 cursor: 'pointer',
               }}
             >
-              <LIcon kind="warn" size={11} color="#d96a66" /> ลบ Contact
+              <LIcon kind="warn" size={11} color={colors.danger} /> ลบ Contact
             </button>
           </div>
         )}

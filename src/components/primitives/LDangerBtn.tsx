@@ -33,7 +33,7 @@ export function LDangerBtn({ children, onClick, disabled, small }: LDangerBtnPro
         gap: 6,
       }}
     >
-      <LIcon kind="warn" size={11} color="#d96a66" /> {children}
+      <LIcon kind="warn" size={11} color={colors.danger} /> {children}
     </button>
   );
 }

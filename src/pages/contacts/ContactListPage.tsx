@@ -48,7 +48,7 @@ export function ContactListPage() {
   if (error) {
     return (
       <div style={{ padding: 40 }}>
-        <LCard padding={24} bg="#241010" border="#5a1a18">
+        <LCard padding={24} bg={colors.dangerBg} border={colors.dangerDk}>
           <div style={{ color: colors.danger }}>Error loading contacts: {String(error)}</div>
         </LCard>
       </div>
@@ -245,7 +245,7 @@ export function ContactListPage() {
                           );
                         })()}
                         {c.tier && (
-                          <LChip ink={colors.green} border={colors.greenDk} bg="#19250a">
+                          <LChip ink={colors.green} border={colors.greenDk} bg={colors.greenBg}>
                             T{c.tier}
                           </LChip>
                         )}

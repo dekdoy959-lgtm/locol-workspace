@@ -165,7 +165,7 @@ export function BriefingPage() {
               lineHeight: 1.5,
             }}
           >
-            <LIcon kind="warn" size={11} color="#E8B923" /> ยังไม่มี opportunity ไหนที่ถูก assign ให้คุณ
+            <LIcon kind="warn" size={11} color={colors.warn} /> ยังไม่มี opportunity ไหนที่ถูก assign ให้คุณ
             ({buckets._diag.totalOpps} total ในทีม) · เปิด opportunity แล้วเลือก{' '}
             <b style={{ color: colors.text }}>Owner = you</b> · หรือสลับไปดู{' '}
             <button
@@ -212,7 +212,7 @@ export function BriefingPage() {
         {/* Stale items (highlighted) */}
         <LCard padding={20} style={{ borderLeft: `3px solid #d96a66` }}>
           <SectionHeader
-            accent="#d96a66"
+            accent={colors.danger}
             title={isMine ? 'MY STALE ITEMS' : 'TEAM STALE ITEMS'}
             count={buckets.myStale.length}
             sub="ของผม/ของฉัน ไม่ได้ update เกิน threshold ของ track นั้น — กดเพื่อเปิด + update ทันที"
@@ -231,7 +231,7 @@ export function BriefingPage() {
         {/* Upcoming this week */}
         <LCard padding={20}>
           <SectionHeader
-            accent="#E8B923"
+            accent={colors.warn}
             title={isMine ? 'DUE THIS WEEK' : 'TEAM DUE THIS WEEK'}
             count={buckets.myUpcoming.length}
             sub="งานที่ฉัน own + due ใน 7 วัน"
@@ -300,7 +300,7 @@ export function BriefingPage() {
         {/* New captures */}
         <LCard padding={20}>
           <SectionHeader
-            accent="#9aa56a"
+            accent={colors.olive}
             title="NEW CAPTURES · 48H"
             count={buckets.newCaptures.length}
             sub="สิ่งใหม่ที่จับเข้ามา"

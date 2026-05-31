@@ -200,7 +200,7 @@ export function CalendarPage() {
           sub="งานต้องเสร็จให้ทัน"
           active={splitMode === 'deadlines'}
           onClick={() => setSplitMode('deadlines')}
-          accent="#E8B923"
+          accent={colors.warn}
         />
         <SplitBtn
           icon="📅"
@@ -208,7 +208,7 @@ export function CalendarPage() {
           sub="งานที่ team มีออกไป (workspace only)"
           active={splitMode === 'trips'}
           onClick={() => setSplitMode('trips')}
-          accent="#d96a66"
+          accent={colors.danger}
         />
       </div>
 
@@ -222,8 +222,8 @@ export function CalendarPage() {
         }}
       >
         <StatTile label="EVENTS THIS WEEK" value={weekItems.filter((i) => i.kind === 'event').length} accent={KIND_META.event.color} />
-        <StatTile label="DEADLINES 14d" value={[...applyDeadlines, ...registrationsClosing].length} accent="#E8B923" />
-        <StatTile label="NEEDS DECISION" value={decisionsNeeded.length} accent="#d96a66" />
+        <StatTile label="DEADLINES 14d" value={[...applyDeadlines, ...registrationsClosing].length} accent={colors.warn} />
+        <StatTile label="NEEDS DECISION" value={decisionsNeeded.length} accent={colors.danger} />
         <StatTile label="MONTH BUDGET" value={monthCost} accent={colors.green} isText />
       </div>
 
@@ -234,7 +234,7 @@ export function CalendarPage() {
             <SmartSection
               title="🔥 NEEDS DECISION"
               sub="Events ใน 14 วัน ยังไม่ได้ตัดสินใจว่าไปหรือไม่ไป"
-              accent="#d96a66"
+              accent={colors.danger}
               items={decisionsNeeded}
               onItemClick={(i) => navigate(i.href)}
             />
@@ -243,7 +243,7 @@ export function CalendarPage() {
             <SmartSection
               title="⏰ REGISTRATION CLOSING"
               sub="ลงทะเบียนภายใน 7 วัน · ยังไม่ register"
-              accent="#E8B923"
+              accent={colors.warn}
               items={registrationsClosing}
               onItemClick={(i) => navigate(i.href)}
             />
@@ -252,7 +252,7 @@ export function CalendarPage() {
             <SmartSection
               title="📝 APPLY DEADLINES"
               sub="Grant/program ใกล้ปิดรับสมัคร"
-              accent="#E8B923"
+              accent={colors.warn}
               items={applyDeadlines}
               onItemClick={(i) => navigate(i.href)}
             />
@@ -261,7 +261,7 @@ export function CalendarPage() {
             <SmartSection
               title="🔄 CONTRACTS RENEWING"
               sub="สัญญาใกล้หมดอายุ — 90/30/7 d windows"
-              accent="#9aa56a"
+              accent={colors.olive}
               items={contractsToRenew}
               onItemClick={(i) => navigate(i.href)}
             />

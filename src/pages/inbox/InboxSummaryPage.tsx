@@ -126,10 +126,10 @@ export function InboxSummaryPage() {
           value={buckets.stale.length}
           color={buckets.stale.length > 0 ? colors.danger : colors.text}
         />
-        <BigStat label="Events Soon" value={buckets.upcomingEventsThis.length + buckets.upcomingEventsNext.length} color="#d96a66" />
-        <BigStat label="Applying" value={buckets.applying.length} color="#E8B923" />
-        <BigStat label="Awaiting Decision" value={buckets.awaitingDecision.length} color="#E8B923" />
-        <BigStat label="Upcoming Trips" value={buckets.upcomingTrips.length} color="#9aa56a" />
+        <BigStat label="Events Soon" value={buckets.upcomingEventsThis.length + buckets.upcomingEventsNext.length} color={colors.danger} />
+        <BigStat label="Applying" value={buckets.applying.length} color={colors.warn} />
+        <BigStat label="Awaiting Decision" value={buckets.awaitingDecision.length} color={colors.warn} />
+        <BigStat label="Upcoming Trips" value={buckets.upcomingTrips.length} color={colors.olive} />
       </div>
 
       {/* Stale banner */}
@@ -137,7 +137,7 @@ export function InboxSummaryPage() {
         <SectionCard
           title="STALE · ต้อง update ด่วน"
           subtitle={`${buckets.stale.length} item ไม่ได้ update เกิน threshold (per-track)`}
-          accent="#d96a66"
+          accent={colors.danger}
           opps={buckets.stale}
           teamById={teamById}
           onClick={(id) => navigate(`/inbox/${id}`)}
@@ -147,7 +147,7 @@ export function InboxSummaryPage() {
       {/* Upcoming events */}
       <div style={{ marginBottom: 18 }}>
         <SectionHeader
-          accent="#d96a66"
+          accent={colors.danger}
           title="UPCOMING EVENTS · งานที่จะไป"
           subtitle="แบ่งตามสัปดาห์"
         />
@@ -181,7 +181,7 @@ export function InboxSummaryPage() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 18 }}>
         <SectionCard
           title="APPLYING · กำลังสมัคร"
-          accent="#E8B923"
+          accent={colors.warn}
           opps={buckets.applying}
           teamById={teamById}
           onClick={(id) => navigate(`/inbox/${id}`)}
@@ -189,7 +189,7 @@ export function InboxSummaryPage() {
         />
         <SectionCard
           title="AWAITING DECISION · รอผล"
-          accent="#E8B923"
+          accent={colors.warn}
           opps={buckets.awaitingDecision}
           teamById={teamById}
           onClick={(id) => navigate(`/inbox/${id}`)}
@@ -212,7 +212,7 @@ export function InboxSummaryPage() {
           <SectionCard
             title="UPCOMING TRIPS · ลงพื้นที่"
             subtitle="งานที่ team จะออกไปฟาร์ม / ภาคสนาม"
-            accent="#9aa56a"
+            accent={colors.olive}
             opps={buckets.upcomingTrips}
             teamById={teamById}
             onClick={(id) => navigate(`/inbox/${id}`)}

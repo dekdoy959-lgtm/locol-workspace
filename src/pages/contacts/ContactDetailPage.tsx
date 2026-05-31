@@ -70,7 +70,7 @@ export function ContactDetailPage() {
   if (error || !contact) {
     return (
       <div style={{ padding: 40 }}>
-        <LCard padding={24} bg="#241010" border="#5a1a18">
+        <LCard padding={24} bg={colors.dangerBg} border={colors.dangerDk}>
           <div style={{ color: colors.danger, marginBottom: 16 }}>ไม่พบ contact หรือเกิด error</div>
           <LBtn ghost onClick={() => navigate('/contacts')}>← กลับไปหน้า Contacts</LBtn>
         </LCard>
@@ -117,7 +117,7 @@ export function ContactDetailPage() {
             <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
               <LChip ink={colors.dim}>{contact.id.slice(0, 8).toUpperCase()}</LChip>
               {contact.tier && (
-                <LChip ink={colors.green} bg="#19250a" border={colors.greenDk} big>
+                <LChip ink={colors.green} bg={colors.greenBg} border={colors.greenDk} big>
                   T{contact.tier} · {contact.tier === 1 ? 'INNER' : contact.tier === 2 ? 'ACTIVE' : 'WIDE'}
                 </LChip>
               )}
@@ -135,14 +135,14 @@ export function ContactDetailPage() {
               {contact.health && (
                 <LChip
                   ink={colors.green}
-                  bg="#19250a"
+                  bg={colors.greenBg}
                   border={colors.greenDk}
                 >
                   {contact.health}
                 </LChip>
               )}
               {discordSource && (
-                <LChip ink="#5865F2" bg="#5865F215" border="#5865F240">
+                <LChip ink={colors.discord} bg="#5865F215" border="#5865F240">
                   DISCORD
                 </LChip>
               )}
@@ -312,7 +312,7 @@ export function ContactDetailPage() {
                           rel="noopener noreferrer"
                           style={{ textDecoration: 'none' }}
                         >
-                          <LChip ink={colors.green} border={colors.greenDk} bg="#19250a">
+                          <LChip ink={colors.green} border={colors.greenDk} bg={colors.greenBg}>
                             {s.platform} · {s.handle}
                           </LChip>
                         </a>
@@ -367,12 +367,12 @@ export function ContactDetailPage() {
                     </div>
                     <div style={{ display: 'flex', gap: 6 }}>
                       {o.is_current && (
-                        <LChip ink={colors.green} bg="#19250a" border={colors.greenDk}>
+                        <LChip ink={colors.green} bg={colors.greenBg} border={colors.greenDk}>
                           CURRENT
                         </LChip>
                       )}
                       {o.is_primary && (
-                        <LChip ink={colors.green} bg="#19250a" border={colors.greenDk}>
+                        <LChip ink={colors.green} bg={colors.greenBg} border={colors.greenDk}>
                           PRIMARY
                         </LChip>
                       )}

@@ -181,7 +181,7 @@ export function OrgListPage() {
                     );
                   })()}
                   {o.our_tier && (
-                    <LChip ink="#9aa56a" border="#3a3f1f" bg="#1d1f12">
+                    <LChip ink={colors.olive} border={colors.oliveDk} bg={colors.oliveBg}>
                       T{o.our_tier}
                     </LChip>
                   )}

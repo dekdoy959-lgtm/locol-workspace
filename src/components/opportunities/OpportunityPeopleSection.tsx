@@ -66,7 +66,7 @@ export function OpportunityPeopleSection({ opportunityId }: Props) {
         title="ATTENDEES / PARTICIPANTS"
         subtitle="ใครเข้าร่วม + status (VVIP / Speaker / Invitee / Audience / Sponsor)"
         role="attendee"
-        accent="#E8B923"
+        accent={colors.warn}
         people={attendees}
         contactById={contactById}
         orgById={orgById}

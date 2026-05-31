@@ -133,8 +133,8 @@ export function MilestonesPage() {
         <Stat label="Total" value={counts.total} />
         <Stat label="Open" value={counts.open} color={colors.green} />
         <Stat label="Done ✓" value={counts.done} color={colors.dimSoft} />
-        <Stat label="Their / Our" value={`${counts.them} / ${counts.us}`} color="#E8B923" />
-        <Stat label="Shared" value={counts.shared} color="#9aa56a" />
+        <Stat label="Their / Our" value={`${counts.them} / ${counts.us}`} color={colors.warn} />
+        <Stat label="Shared" value={counts.shared} color={colors.olive} />
       </div>
 
       {/* Filters */}
@@ -462,12 +462,12 @@ function MilestoneItem({
             {contactDisplayName(contact)}
           </span>
           {milestone.achieved && (
-            <LChip ink={colors.green} bg="#19250a" border={colors.greenDk}>
+            <LChip ink={colors.green} bg={colors.greenBg} border={colors.greenDk}>
               ✓ DONE
             </LChip>
           )}
           {isOverdue && (
-            <LChip ink="#d96a66" bg="#241010" border="#5a1a18">
+            <LChip ink={colors.danger} bg={colors.dangerBg} border={colors.dangerDk}>
               OVERDUE
             </LChip>
           )}

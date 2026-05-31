@@ -56,7 +56,7 @@ export function GroupDetailPage() {
   if (!group) {
     return (
       <div style={{ padding: 40 }}>
-        <LCard padding={24} bg="#241010" border="#5a1a18">
+        <LCard padding={24} bg={colors.dangerBg} border={colors.dangerDk}>
           <div style={{ color: colors.danger, marginBottom: 16 }}>ไม่พบ group</div>
           <LBtn ghost onClick={() => navigate('/groups')}>← กลับ</LBtn>
         </LCard>
@@ -92,7 +92,7 @@ export function GroupDetailPage() {
           <div style={{ display: 'flex', gap: 8, marginBottom: 12, alignItems: 'center' }}>
             <LNote>GROUP</LNote>
             {isSmart && (
-              <LChip ink="#E8B923" bg="#241a06" border="#5a3f10">
+              <LChip ink={colors.warn} bg={colors.warnBg} border={colors.warnDk}>
                 ⚡ SMART
               </LChip>
             )}
@@ -353,7 +353,7 @@ export function GroupDetailPage() {
                     />
                     <span style={{ flex: 1, fontSize: 13 }}>{sg.name}</span>
                     {sg.cadence_days && (
-                      <LChip ink={colors.green} border={colors.greenDk} bg="#19250a">
+                      <LChip ink={colors.green} border={colors.greenDk} bg={colors.greenBg}>
                         {formatCadence(sg.cadence_days)}
                       </LChip>
                     )}

@@ -252,7 +252,7 @@ export function InboxPage() {
           count={focusItems.length}
           active={tab === 'focus'}
           onClick={() => setTab('focus')}
-          color="#d96a66"
+          color={colors.danger}
           dotColor={focusItems.length > 0 ? colors.danger : colors.dim}
         />
         <TabBtn
@@ -333,7 +333,7 @@ export function InboxPage() {
             <FilterChip
               active={filterPriority}
               onClick={() => setFilterPriority((v) => !v)}
-              color="#d96a66"
+              color={colors.danger}
             >
               🔥 High
             </FilterChip>

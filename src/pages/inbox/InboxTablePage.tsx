@@ -391,10 +391,10 @@ export function InboxTablePage() {
                     <td style={tdStyle()}><PeopleList names={r.coordinators} /></td>
                     <td style={tdStyle()}><PeopleList names={r.travelers} highlight /></td>
                     <td style={tdStyle()}><DateCell date={r.openDate} /></td>
-                    <td style={tdStyle()}><DateCell date={r.closeDate} accent="#E8B923" /></td>
-                    <td style={tdStyle()}><DateCell date={r.docDueDate} accent="#E8B923" /></td>
-                    <td style={tdStyle()}><DateCell date={r.announcementDate} accent="#9aa56a" /></td>
-                    <td style={tdStyle()}><DateCell date={r.eventDate} accent="#d96a66" /></td>
+                    <td style={tdStyle()}><DateCell date={r.closeDate} accent={colors.warn} /></td>
+                    <td style={tdStyle()}><DateCell date={r.docDueDate} accent={colors.warn} /></td>
+                    <td style={tdStyle()}><DateCell date={r.announcementDate} accent={colors.olive} /></td>
+                    <td style={tdStyle()}><DateCell date={r.eventDate} accent={colors.danger} /></td>
                   </tr>
                 );
               })}

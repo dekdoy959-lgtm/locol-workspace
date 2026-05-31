@@ -84,7 +84,7 @@ export function CommitmentsSection({ contactId }: Props) {
         <CommitmentColumn
           title="เขา → ฉัน"
           subtitle="They owe me"
-          accent="#d96a66"
+          accent={colors.danger}
           commitments={theyOwe}
           onAdd={() => setAddingDirection('they_owe')}
           onToggle={handleToggleStatus}

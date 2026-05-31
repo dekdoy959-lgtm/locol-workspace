@@ -631,7 +631,7 @@ function NoteRowItem({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
-          <KindChip color={colors.green} bg="#19250a" border={colors.greenDk}>
+          <KindChip color={colors.green} bg={colors.greenBg} border={colors.greenDk}>
             NOTE
           </KindChip>
           {author && (
@@ -650,7 +650,7 @@ function NoteRowItem({
             </span>
           )}
           {isFuture && (
-            <KindChip color="#E8B923" bg="#241a06" border="#5a3f10">
+            <KindChip color={colors.warn} bg={colors.warnBg} border={colors.warnDk}>
               SCHEDULED
             </KindChip>
           )}
@@ -743,7 +743,7 @@ function MeetingRow({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
-          <KindChip color={accent} bg="#241010" border="#5a1a18">
+          <KindChip color={accent} bg={colors.dangerBg} border={colors.dangerDk}>
             📅 MEETING
           </KindChip>
           {time && (
@@ -752,7 +752,7 @@ function MeetingRow({
             </span>
           )}
           {isFuture && (
-            <KindChip color="#E8B923" bg="#241a06" border="#5a3f10">
+            <KindChip color={colors.warn} bg={colors.warnBg} border={colors.warnDk}>
               UPCOMING
             </KindChip>
           )}
@@ -907,16 +907,16 @@ function EmailRow({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
-          <KindChip color={accent} bg="#1d1f12" border="#3a3f1f">
+          <KindChip color={accent} bg={colors.oliveBg} border={colors.oliveDk}>
             ✉ EMAIL · {outgoing ? 'SENT' : 'RECEIVED'}
           </KindChip>
           {isUnread && (
-            <KindChip color={colors.green} bg="#19250a" border={colors.greenDk}>
+            <KindChip color={colors.green} bg={colors.greenBg} border={colors.greenDk}>
               UNREAD
             </KindChip>
           )}
           {isImportant && (
-            <KindChip color="#E8B923" bg="#241a06" border="#5a3f10">
+            <KindChip color={colors.warn} bg={colors.warnBg} border={colors.warnDk}>
               ★ IMPORTANT
             </KindChip>
           )}

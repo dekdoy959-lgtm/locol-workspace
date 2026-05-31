@@ -62,7 +62,7 @@ export function OpportunityDetailPage() {
   if (!opp) {
     return (
       <div style={{ padding: 40 }}>
-        <LCard padding={24} bg="#241010" border="#5a1a18">
+        <LCard padding={24} bg={colors.dangerBg} border={colors.dangerDk}>
           <div style={{ color: colors.danger, marginBottom: 16 }}>ไม่พบ opportunity</div>
           <LBtn ghost onClick={() => navigate('/inbox')}>← กลับ</LBtn>
         </LCard>
@@ -155,12 +155,12 @@ export function OpportunityDetailPage() {
                 </LChip>
               )}
               {discordSource && (
-                <LChip ink="#5865F2" bg="#5865F215" border="#5865F240">
+                <LChip ink={colors.discord} bg="#5865F215" border="#5865F240">
                   DISCORD
                 </LChip>
               )}
               {stale && (
-                <LChip ink="#d96a66" bg="#241010" border="#5a1a18">
+                <LChip ink={colors.danger} bg={colors.dangerBg} border={colors.dangerDk}>
                   STALE {ageDays}d
                 </LChip>
               )}

@@ -436,7 +436,7 @@ export function RelationshipGraphPage() {
                     x={CANVAS_W / 2}
                     y={CANVAS_H / 2 - R2 - 10}
                     textAnchor="middle"
-                    fill="#5a3f10"
+                    fill={colors.warnDk}
                     fontSize="9"
                     letterSpacing="1"
                     style={{ textTransform: 'uppercase' }}
@@ -798,7 +798,7 @@ export function RelationshipGraphPage() {
               <LH
                 level={5}
                 accent={false}
-                color="#E8B923"
+                color={colors.warn}
                 sub="คนที่ยังไม่รู้จัก แต่ติดต่อผ่านคนรู้จักได้ — โอกาส warm intro"
               >
                 WARM INTRO OPPORTUNITIES · {twoHopCount}

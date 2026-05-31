@@ -299,7 +299,7 @@ export function SettingsPage() {
 
       <div style={{ marginTop: 24, padding: 14, background: colors.warnBg, border: '1px solid #5a3f10', borderRadius: '10px 0 10px 0' }}>
         <div style={{ fontSize: 11, color: colors.warn, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>
-          <LIcon kind="warn" size={11} color="#E8B923" /> Email setup
+          <LIcon kind="warn" size={11} color={colors.warn} /> Email setup
         </div>
         <div style={{ fontSize: 12, color: colors.surface, lineHeight: 1.55 }}>
           1. Sign up <a href="https://resend.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.green }}>Resend</a> (free 100/day) → copy API key
