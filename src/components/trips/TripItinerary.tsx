@@ -719,7 +719,7 @@ function PerStopTravelers({
       <div style={{ fontSize: 9, color: colors.dim, letterSpacing: 0.8, textTransform: 'uppercase', fontWeight: 600 }}>
         <LIcon kind="plane" size={9} color={colors.dim} /> ใครไปจุดนี้
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
         {myStopAssignments.map((a) => {
           const m = teamById[a.team_member_id];
           if (!m) return null;
@@ -743,13 +743,14 @@ function PerStopTravelers({
                 type="button"
                 onClick={() => remove.mutate({ id: a.id, opportunityId })}
                 title="ลบ"
+                aria-label={`ลบ ${teamMemberDisplayName(m)}`}
                 style={{
                   background: 'transparent',
                   border: 'none',
                   color: colors.dim,
                   cursor: 'pointer',
-                  padding: '0 2px',
-                  fontSize: 11,
+                  padding: '2px 6px',
+                  fontSize: 14,
                   lineHeight: 1,
                 }}
               >
@@ -777,7 +778,7 @@ function PerStopTravelers({
           </button>
         )}
         {picking && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, marginTop: 3 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6 }}>
             {availableMembers.map((m) => (
               <button
                 key={m.id}
