@@ -8,7 +8,7 @@ import {
   type ContactRow,
 } from '../../types/contact';
 import { SIDE_LABEL, type MilestoneRow, type MilestoneSide } from '../../types/milestone';
-import { LCard, LH, LIcon, LNote, LAvatar, LChip } from '../../components/primitives';
+import { LCard, LH, LIcon, LNote, LAvatar, LChip, LEmptyState } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
 import { todayLocalISO } from '../../lib/dateUtil';
 
@@ -174,12 +174,16 @@ export function MilestonesPage() {
       {isLoading ? (
         <div style={{ padding: 40, textAlign: 'center', color: colors.dim }}>กำลังโหลด…</div>
       ) : filtered.length === 0 ? (
-        <LCard padding={40}>
-          <div style={{ textAlign: 'center', color: colors.dimSoft, fontSize: 13 }}>
-            {milestones.length === 0
-              ? 'ยังไม่มี milestones — ไปที่ Contact คนไหนคนนึงเพื่อเพิ่ม'
-              : 'ไม่พบตาม filter ที่เลือก'}
-          </div>
+        <LCard padding={16}>
+          <LEmptyState
+            art="sprout"
+            title={milestones.length === 0 ? 'ยังไม่มี milestones' : 'ไม่พบตาม filter ที่เลือก'}
+            sub={
+              milestones.length === 0
+                ? 'ตั้งเป้าหมายความสัมพันธ์ — ไปที่ Contact คนไหนคนนึงเพื่อเพิ่ม milestone แรก'
+                : 'ลองปรับ tier / side / status filter'
+            }
+          />
         </LCard>
       ) : group === 'tier' ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>

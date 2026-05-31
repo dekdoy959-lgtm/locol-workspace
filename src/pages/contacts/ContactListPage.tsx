@@ -9,7 +9,7 @@ import {
   type EmailEntry,
   type RelationshipStatus,
 } from '../../types/contact';
-import { LCard, LH, LBtn, LIcon, LInput, LAvatar, LChip, LStatus, LNote, LSkeletonCard } from '../../components/primitives';
+import { LCard, LH, LBtn, LIcon, LInput, LAvatar, LChip, LStatus, LNote, LSkeletonCard, LEmptyState } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
 
 const HEALTH_COLORS: Record<string, { fg: string; bg: string; border: string }> = {
@@ -146,17 +146,19 @@ export function ContactListPage() {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <LCard padding={40}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 14, color: colors.dimSoft, marginBottom: 12 }}>
-              {contacts?.length === 0 ? 'ยังไม่มี contact ในระบบ' : 'ไม่พบ contact ตามที่กรอง'}
-            </div>
-            {contacts?.length === 0 && (
-              <LBtn primary onClick={() => navigate('/contacts/new')}>
-                <LIcon kind="plus" size={12} color={colors.bg} /> เพิ่มคนแรก
-              </LBtn>
-            )}
-          </div>
+        <LCard padding={16}>
+          <LEmptyState
+            art={contacts?.length === 0 ? 'people' : 'box'}
+            title={contacts?.length === 0 ? 'ยังไม่มี contact ในระบบ' : 'ไม่พบ contact ตามที่กรอง'}
+            sub={contacts?.length === 0 ? 'เริ่มสร้างเครือข่ายของคุณ — เพิ่มคนแรกเข้ามา' : 'ลองปรับ filter หรือคำค้นหา'}
+            action={
+              contacts?.length === 0 ? (
+                <LBtn primary onClick={() => navigate('/contacts/new')}>
+                  <LIcon kind="plus" size={12} color={colors.bg} /> เพิ่มคนแรก
+                </LBtn>
+              ) : undefined
+            }
+          />
         </LCard>
       ) : (
         <LCard padding={0} bg={colors.bgCard}>

@@ -22,3 +22,4 @@ export { LLabel } from './LLabel';
 export { ZigzagStrip, MiniL, CowhideGrain } from './Decorations';
 export { LSkeleton, LSkeletonCard } from './LSkeleton';
 export { LCountUp } from './LCountUp';
+export { LEmptyState } from './LEmptyState';
