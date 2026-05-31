@@ -12,6 +12,10 @@
 
 > ทำงานต่อเป็น "Bench" เรียงตามผลกระทบ × ความเสี่ยง · build เขียว + push ทุก batch
 
+**✅ SHOULD-FIX ครบแล้ว** (รอบ should-fix sweep — `3a685b8`→`c6aee66`): นอกจากที่ทำใน Bench 1-3 แล้ว เก็บที่เหลือ:
+#23 Discord trip category · #31 unique CSV filename · #9 NotificationBell respect alert prefs · #41 traveler picker touch · #35 notification N+1 cache + rate limit · #34 incoming relation inverse label + two-way delete warning · #25 settings #alerts anchor + functional commitment_overdue toggle (bell แสดง overdue commitments) · #27 (subtitle เป็น '4 tracks' แล้ว · today-hover ทำใน #4 · ไม่มี dead span) · #18 N/A (URL input).
+⏭️ เหลือเฉพาะ #26 unbounded fetches = ต้อง **pagination feature** (silent .limit() เสี่ยง drop rows — ไม่ทำแบบมักง่าย)
+
 - **Bench 0 · Migrations** (`ad138e9`) — run 0009→0016→0017→0018 บน cloud (0009 ไม่เคยรัน + แก้ bug INSERT policy `using(true)`)
 - **Bench 1 · Security + Data** (`a105bc3`, `b1a549d`) — ✅ should #11,13,14,20 · sec #10(mitigated) · nice #38,45
   - #6 calendar queryKey by user.id · #13 org roll-up by org_id · #14 duplicate copies people+team assignments · #20 discord restore ไม่ clobber status · #11 discord bucket private + signed URLs (migration 0018)
