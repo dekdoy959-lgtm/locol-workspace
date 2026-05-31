@@ -70,25 +70,37 @@ const sentCounts = {
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+// Per-run caches — the same owner appears across many opps/contacts, so cache
+// the recipient + prefs lookups to avoid an N+1 query storm.
+const _recipientCache = new Map();
+const _prefsCache = new Map();
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 async function getRecipient(userId) {
   if (!userId) return null;
+  if (_recipientCache.has(userId)) return _recipientCache.get(userId);
   const { data } = await supabase
     .from('team_members')
     .select('id, email, full_name')
     .eq('id', userId)
     .maybeSingle();
-  return data;
+  _recipientCache.set(userId, data ?? null);
+  return data ?? null;
 }
 
 async function getPrefs(userId) {
   if (!userId) return null;
+  if (_prefsCache.has(userId)) return _prefsCache.get(userId);
   const { data } = await supabase
     .from('user_alert_prefs')
     .select('*')
     .eq('user_id', userId)
     .maybeSingle();
   // If no prefs row, default all enabled
-  return data ?? { enabled: true, stale_opportunities: true, cold_contacts: true, reminder_notes: true, birthdays: true };
+  const prefs =
+    data ?? { enabled: true, stale_opportunities: true, cold_contacts: true, reminder_notes: true, birthdays: true };
+  _prefsCache.set(userId, prefs);
+  return prefs;
 }
 
 async function alreadySentToday(alertType, entityId, email, variant = null) {
@@ -148,6 +160,8 @@ async function sendAndLog({ alertType, entityTable, entityId, recipientUser, sub
 
     sentCounts[alertType] = (sentCounts[alertType] ?? 0) + 1;
     console.log(`  ✓ ${recipientUser.email.padEnd(35)} ${subject}`);
+    // Rate limit: stay well under Resend's ~2 req/s so a large run doesn't 429.
+    await sleep(600);
   } catch (err) {
     sentCounts.errors++;
     console.error(`  ❌ ${recipientUser.email}: ${err.message ?? err}`);
