@@ -9,8 +9,10 @@ const GOOGLE_SCOPES = [
   'https://www.googleapis.com/auth/gmail.readonly',
 ].join(' ');
 
-const PROVIDER_TOKEN_KEY = 'locol_google_provider_token';
-const PROVIDER_TOKEN_EXPIRY_KEY = 'locol_google_provider_token_expiry';
+// Per-user keys so a shared device can't serve user A's Google token to user B.
+// (signOut() also sweeps every 'locol_google_' key as a backstop.)
+const tokenKey = (userId: string) => `locol_google_provider_token_${userId}`;
+const expiryKey = (userId: string) => `locol_google_provider_token_expiry_${userId}`;
 
 interface AuthContextValue {
   session: Session | null;
@@ -23,25 +25,25 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-function persistProviderToken(token: string | null, expiresInSec?: number) {
+function persistProviderToken(userId: string, token: string | null, expiresInSec?: number) {
   if (!token) {
-    localStorage.removeItem(PROVIDER_TOKEN_KEY);
-    localStorage.removeItem(PROVIDER_TOKEN_EXPIRY_KEY);
+    localStorage.removeItem(tokenKey(userId));
+    localStorage.removeItem(expiryKey(userId));
     return;
   }
-  localStorage.setItem(PROVIDER_TOKEN_KEY, token);
+  localStorage.setItem(tokenKey(userId), token);
   // Google access tokens last ~3600s. Use provided expiry or default.
   const expiry = Date.now() + (expiresInSec ?? 3600) * 1000;
-  localStorage.setItem(PROVIDER_TOKEN_EXPIRY_KEY, String(expiry));
+  localStorage.setItem(expiryKey(userId), String(expiry));
 }
 
-function loadProviderToken(): string | null {
-  const token = localStorage.getItem(PROVIDER_TOKEN_KEY);
-  const expiryStr = localStorage.getItem(PROVIDER_TOKEN_EXPIRY_KEY);
+function loadProviderToken(userId: string): string | null {
+  const token = localStorage.getItem(tokenKey(userId));
+  const expiryStr = localStorage.getItem(expiryKey(userId));
   if (!token || !expiryStr) return null;
   if (Date.now() > Number(expiryStr)) {
-    localStorage.removeItem(PROVIDER_TOKEN_KEY);
-    localStorage.removeItem(PROVIDER_TOKEN_EXPIRY_KEY);
+    localStorage.removeItem(tokenKey(userId));
+    localStorage.removeItem(expiryKey(userId));
     return null;
   }
   return token;
@@ -49,30 +51,34 @@ function loadProviderToken(): string | null {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
-  const [providerToken, setProviderToken] = useState<string | null>(() => loadProviderToken());
+  // Loaded once we know the user id (per-user key), not in the initializer.
+  const [providerToken, setProviderToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
-      // Session from getSession() doesn't always carry provider_token (only on fresh sign-in)
-      // — so we fall back to localStorage.
-      if (data.session?.provider_token) {
-        persistProviderToken(data.session.provider_token);
+      const uid = data.session?.user?.id;
+      // getSession() doesn't always carry provider_token (only on fresh
+      // sign-in) — fall back to the per-user stored token.
+      if (uid && data.session?.provider_token) {
+        persistProviderToken(uid, data.session.provider_token);
         setProviderToken(data.session.provider_token);
+      } else if (uid) {
+        setProviderToken(loadProviderToken(uid));
       }
       setLoading(false);
     });
 
     const { data: sub } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession);
-      if (event === 'SIGNED_IN' && newSession?.provider_token) {
-        persistProviderToken(newSession.provider_token);
+      if (event === 'SIGNED_IN' && newSession?.user?.id && newSession.provider_token) {
+        persistProviderToken(newSession.user.id, newSession.provider_token);
         setProviderToken(newSession.provider_token);
       }
       if (event === 'SIGNED_OUT') {
-        persistProviderToken(null);
         setProviderToken(null);
+        // Per-user token keys are wiped by signOut()'s localStorage sweep below.
       }
     });
 
@@ -98,7 +104,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Wipe ALL local state BEFORE Supabase signs out — prevents PII (contacts,
     // notes, calendar attendees, meeting titles) from being readable on the
     // next user's session on a shared device.
-    persistProviderToken(null);
     setProviderToken(null);
     if (typeof window !== 'undefined') {
       try {
