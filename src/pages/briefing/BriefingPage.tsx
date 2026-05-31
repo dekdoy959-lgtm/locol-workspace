@@ -19,7 +19,7 @@ import {
   contactInitials,
   type ContactRow,
 } from '../../types/contact';
-import { LCard, LH, LBtn, LIcon, LNote, LAvatar, LPri } from '../../components/primitives';
+import { LCard, LH, LBtn, LIcon, LNote, LAvatar, LPri, LCountUp } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
 import { todayLocalISO, addDaysISO } from '../../lib/dateUtil';
 
@@ -437,7 +437,7 @@ function SectionHeader({
         </span>
         {count !== undefined && (
           <span style={{ fontSize: 11, color: colors.dim, fontFamily: "'IBM Plex Mono', monospace" }}>
-            · {count}
+            · <LCountUp value={count} />
           </span>
         )}
       </div>
