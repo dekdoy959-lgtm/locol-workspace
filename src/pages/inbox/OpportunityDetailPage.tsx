@@ -22,6 +22,7 @@ import { TripBudgetCard } from '../../components/trips/TripBudgetCard';
 import { OpportunityDetailsView } from '../../components/opportunities/OpportunityDetailsView';
 import { ConfirmModal } from '../../components/modals/ConfirmModal';
 import { colors } from '../../styles/tokens';
+import { fireConfetti } from '../../lib/confetti';
 
 export function OpportunityDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -81,6 +82,8 @@ export function OpportunityDetailPage() {
 
   const handleStageChange = (newStage: string) => {
     update.mutate({ id: opp.id, patch: { stage: newStage } });
+    // Signature celebration: reaching 'Won' (grants/competitions are rare wins).
+    if (newStage === 'Won' && opp.stage !== 'Won') fireConfetti();
   };
 
   const handleCancel = () => {
