@@ -193,6 +193,19 @@ function DaySection({
   const weekday = dateObj.toLocaleDateString('th-TH', { weekday: 'long' });
   const niceDate = dateObj.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
 
+  // Flag time overlaps between stops in this day (both need start + end times).
+  const hasConflict = (() => {
+    const timed = stops.filter((s) => s.start_time && s.end_time);
+    for (let i = 0; i < timed.length; i++) {
+      for (let j = i + 1; j < timed.length; j++) {
+        if (timed[i].start_time! < timed[j].end_time! && timed[j].start_time! < timed[i].end_time!) {
+          return true;
+        }
+      }
+    }
+    return false;
+  })();
+
   return (
     <div style={{ borderBottom: `1px solid ${colors.line}` }}>
       {/* Day header */}
@@ -222,6 +235,23 @@ function DaySection({
         <span style={{ fontSize: 13, color: colors.text, fontWeight: 600 }}>{niceDate}</span>
         <span style={{ fontSize: 11, color: colors.dimSoft }}>· {weekday}</span>
         <span style={{ flex: 1 }} />
+        {hasConflict && (
+          <span
+            title="มี stop ที่ช่วงเวลาชนกันในวันนี้"
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              color: '#d96a66',
+              letterSpacing: 0.4,
+              background: '#2a1212',
+              border: '1px solid #5a1a18',
+              borderRadius: '5px 0 5px 0',
+              padding: '2px 7px',
+            }}
+          >
+            ⚠ เวลาชนกัน
+          </span>
+        )}
         <span style={{ fontSize: 11, color: colors.dim }}>{stops.length} จุด</span>
       </div>
 
