@@ -308,6 +308,7 @@ function LocalStopRow({
           <div>
             <LLabel>เริ่ม</LLabel>
             <LInput
+              type="time"
               value={draft.start_time ?? ''}
               onChange={(v) => setDraft({ ...draft, start_time: v || null })}
               placeholder="09:00"
@@ -316,6 +317,7 @@ function LocalStopRow({
           <div>
             <LLabel>สิ้นสุด</LLabel>
             <LInput
+              type="time"
               value={draft.end_time ?? ''}
               onChange={(v) => setDraft({ ...draft, end_time: v || null })}
               placeholder="11:00"

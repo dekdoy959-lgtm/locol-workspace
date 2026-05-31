@@ -53,7 +53,10 @@ export function TripBudgetCard({ opp }: TripBudgetCardProps) {
   }, [initialActual]);
 
   const actual = asNumber(actualDraft);
-  const variance = actual != null && estimated > 0 ? actual - estimated : null;
+  // Show the variance whenever an actual is entered — even with no estimate
+  // (variance = full actual as overspend). Only the percentage needs a
+  // non-zero estimate to avoid divide-by-zero.
+  const variance = actual != null ? actual - estimated : null;
   const variancePct = variance != null && estimated > 0 ? (variance / estimated) * 100 : null;
 
   const handleSave = async () => {

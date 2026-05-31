@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { LBtn, LIcon } from '../primitives';
 import { colors } from '../../styles/tokens';
 
@@ -11,6 +11,14 @@ interface MultiValueFieldProps<T> {
 }
 
 export function MultiValueField<T>({ items, onChange, emptyItem, renderItem, addLabel }: MultiValueFieldProps<T>) {
+  // Stable per-row keys. Using the array index as the React key remounts the
+  // input on every add/remove, which drops focus mid-composition and breaks
+  // Thai IME typing. Keep a key list aligned with items through add/remove.
+  const keysRef = useRef<string[]>(items.map(() => crypto.randomUUID()));
+  if (keysRef.current.length !== items.length) {
+    keysRef.current = items.map((_, i) => keysRef.current[i] ?? crypto.randomUUID());
+  }
+
   const handleUpdate = (index: number, next: T) => {
     const updated = [...items];
     updated[index] = next;
@@ -18,10 +26,12 @@ export function MultiValueField<T>({ items, onChange, emptyItem, renderItem, add
   };
 
   const handleRemove = (index: number) => {
+    keysRef.current.splice(index, 1);
     onChange(items.filter((_, i) => i !== index));
   };
 
   const handleAdd = () => {
+    keysRef.current.push(crypto.randomUUID());
     onChange([...items, structuredClone(emptyItem)]);
   };
 
@@ -29,7 +39,7 @@ export function MultiValueField<T>({ items, onChange, emptyItem, renderItem, add
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       {items.map((item, i) => (
         <div
-          key={i}
+          key={keysRef.current[i]}
           style={{
             display: 'flex',
             alignItems: 'flex-start',
