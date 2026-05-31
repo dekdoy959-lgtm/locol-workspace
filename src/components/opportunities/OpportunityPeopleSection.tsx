@@ -123,7 +123,7 @@ function PeopleGroup({
   const confirm = useConfirm();
   const [pickerKind, setPickerKind] = useState<PickerKind>(null);
   const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<ParticipantStatus>(withStatus ? 'Audience' : 'Audience');
+  const [status, setStatus] = useState<ParticipantStatus>('Audience');
 
   const searchResults = useMemo(() => {
     const q = search.trim().toLowerCase();

@@ -126,7 +126,6 @@ export function InboxSummaryPage() {
           value={buckets.stale.length}
           color={buckets.stale.length > 0 ? '#d96a66' : colors.text}
         />
-        <span style={{ display: 'none' }}>{TRACKS.length}</span>
         <BigStat label="Events Soon" value={buckets.upcomingEventsThis.length + buckets.upcomingEventsNext.length} color="#d96a66" />
         <BigStat label="Applying" value={buckets.applying.length} color="#E8B923" />
         <BigStat label="Awaiting Decision" value={buckets.awaitingDecision.length} color="#E8B923" />

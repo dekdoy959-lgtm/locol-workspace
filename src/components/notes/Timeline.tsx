@@ -881,7 +881,7 @@ function EmailRow({
   sharePending: boolean;
   onShare: () => void;
 }) {
-  const accent = '#9aa56a'; // olive — matches Contract track
+  const accent = '#9aa56a'; // olive
   const outgoing = myEmail && isOutgoing(message, myEmail);
 
   const from = parseAddress(getHeader(message, 'From'))[0];

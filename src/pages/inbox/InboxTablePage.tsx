@@ -1,14 +1,14 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOpportunities } from '../../hooks/useOpportunities';
-import { useTeamMembers, teamMemberDisplayName, teamMemberInitials } from '../../hooks/useTeamMembers';
-import { useAllOpportunityTeam, TEAM_ROLE_META, type TeamRole, type TeamAssignmentRow } from '../../hooks/useOpportunityTeam';
+import { useTeamMembers } from '../../hooks/useTeamMembers';
+import { useAllOpportunityTeam, type TeamRole, type TeamAssignmentRow } from '../../hooks/useOpportunityTeam';
 import { useAllOpportunityPeople } from '../../hooks/useOpportunityPeople';
 import { useContacts } from '../../hooks/useContacts';
 import { useOrganizations } from '../../hooks/useOrganizations';
 import { contactDisplayName, type ContactRow } from '../../types/contact';
 import { TRACKS, findTrack, type TrackKey, type OpportunityRow } from '../../types/opportunity';
-import { LCard, LH, LBtn, LIcon, LNote, LAvatar, LInput, LSelect } from '../../components/primitives';
+import { LCard, LH, LBtn, LIcon, LNote, LInput, LSelect } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
 import { todayLocalISO } from '../../lib/dateUtil';
 import type { OppPersonRow } from '../../types/opportunityPeople';
@@ -515,9 +515,3 @@ function PriorityChip({ pri }: { pri: string | null }) {
     </span>
   );
 }
-
-// Re-export to satisfy unused imports
-void TEAM_ROLE_META;
-void LAvatar;
-void teamMemberDisplayName;
-void teamMemberInitials;
