@@ -10,6 +10,7 @@ import { findTrack, type OpportunityRow } from '../../types/opportunity';
 import { findRelationType, RELATION_TYPE_OPTIONS } from '../../types/relation';
 import { LBtn, LInput, LSelect, LIcon, LLabel, LAvatar } from '../primitives';
 import { colors } from '../../styles/tokens';
+import { useConfirm } from '../modals/ConfirmProvider';
 
 interface RelationsSectionProps {
   contactId: string;
@@ -25,6 +26,7 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
   const { data: allOpps = [] } = useOpportunities();
   const create = useCreateRelation();
   const del = useDeleteRelation();
+  const confirm = useConfirm();
 
   const [addOpen, setAddOpen] = useState(false);
   const [targetKind, setTargetKind] = useState<TargetKind>('contact');
@@ -352,8 +354,8 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
                 </div>
                 <button
                   type="button"
-                  onClick={() => {
-                    if (confirm('ลบความสัมพันธ์นี้?')) del.mutate(r.id);
+                  onClick={async () => {
+                    if (await confirm({ title: 'ลบความสัมพันธ์นี้?', danger: true })) del.mutate(r.id);
                   }}
                   title="ลบ"
                   style={{

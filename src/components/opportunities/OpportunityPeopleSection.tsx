@@ -22,6 +22,7 @@ import {
 } from '../../types/opportunityPeople';
 import { LBtn, LIcon, LSelect, LInput, LAvatar, LH } from '../primitives';
 import { colors } from '../../styles/tokens';
+import { useConfirm } from '../modals/ConfirmProvider';
 
 interface Props {
   opportunityId: string;
@@ -119,6 +120,7 @@ function PeopleGroup({
   withStatus?: boolean;
 }) {
   const navigate = useNavigate();
+  const confirm = useConfirm();
   const [pickerKind, setPickerKind] = useState<PickerKind>(null);
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<ParticipantStatus>(withStatus ? 'Audience' : 'Audience');
@@ -411,8 +413,8 @@ function PeopleGroup({
                 )}
                 <button
                   type="button"
-                  onClick={() => {
-                    if (confirm('ลบออก?')) onRemove(p.id);
+                  onClick={async () => {
+                    if (await confirm({ title: 'ลบออก?', danger: true })) onRemove(p.id);
                   }}
                   title="ลบ"
                   style={{

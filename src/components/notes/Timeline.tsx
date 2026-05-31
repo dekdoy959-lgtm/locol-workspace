@@ -31,6 +31,7 @@ import {
   parseAddress,
 } from '../../lib/google-gmail';
 import { colors } from '../../styles/tokens';
+import { useConfirm } from '../modals/ConfirmProvider';
 import { LIcon, LAvatar } from '../primitives';
 import { todayLocalISO } from '../../lib/dateUtil';
 import type { LinkedOpportunity } from '../../hooks/useLinkedOpportunities';
@@ -611,6 +612,7 @@ function NoteRowItem({
   author: TeamMemberRow | null;
   onDelete: () => void;
 }) {
+  const confirm = useConfirm();
   const isFutureWithReminder = isFuture && note.is_future;
   const opacity = isFuture ? 0.78 : 1;
 
@@ -660,8 +662,8 @@ function NoteRowItem({
           <span style={{ flex: 1 }} />
           <button
             type="button"
-            onClick={() => {
-              if (confirm('ลบ note นี้?')) onDelete();
+            onClick={async () => {
+              if (await confirm({ title: 'ลบ note นี้?', danger: true })) onDelete();
             }}
             style={{
               background: 'transparent',
