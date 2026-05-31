@@ -96,7 +96,7 @@ export function OpportunityFormPage({ mode }: { mode: 'create' | 'edit' }) {
 
     const needsReviewer = !trackMeta.noReviewerRequired;
     if (mode === 'create' && needsReviewer && (!ownerId || !reviewerId)) {
-      setError('Owner + Reviewer ต้องระบุ (ยกเว้น Watch track)');
+      setError('Owner + Reviewer ต้องระบุ (ยกเว้น track ที่ไม่ต้องมี reviewer)');
       return;
     }
     // Two-person rule — owner and reviewer must be different people

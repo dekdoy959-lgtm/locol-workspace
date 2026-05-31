@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { colors, layout } from '../../styles/tokens';
 
@@ -12,13 +12,17 @@ export function OfflineBanner() {
     typeof navigator !== 'undefined' ? navigator.onLine : true,
   );
   const [showReconnected, setShowReconnected] = useState(false);
+  const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const onOnline = () => {
       setOnline(true);
       setShowReconnected(true);
-      const t = setTimeout(() => setShowReconnected(false), 2000);
-      return () => clearTimeout(t);
+      // Reset the hide timer instead of stacking a new one each time 'online'
+      // fires (flapping connections would otherwise pile up timeouts — the
+      // returned cleanup from an event handler is ignored, so it never ran).
+      if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
+      reconnectTimer.current = setTimeout(() => setShowReconnected(false), 2000);
     };
     const onOffline = () => setOnline(false);
     window.addEventListener('online', onOnline);
@@ -26,6 +30,7 @@ export function OfflineBanner() {
     return () => {
       window.removeEventListener('online', onOnline);
       window.removeEventListener('offline', onOffline);
+      if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
     };
   }, []);
 
