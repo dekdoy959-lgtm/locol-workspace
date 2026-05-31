@@ -16,23 +16,6 @@ export const colors = {
   greenDk: '#6e9618',
 } as const;
 
-export const trackColors = {
-  apply:    { ink: '#E8B923', soft: '#3a2a0a', chip: '#BD8E23' },
-  act:      { ink: '#99CE24', soft: '#1f2a08', chip: '#6e9618' },
-  watch:    { ink: '#D9D9D9', soft: '#1f1f1f', chip: '#747474' },
-  contract: { ink: '#9aa56a', soft: '#1d1f12', chip: '#695935' },
-  event:    { ink: '#d96a66', soft: '#2a1212', chip: '#A12F2D' },
-} as const;
-
-export const statusColors = {
-  'On Track':   { fg: '#99CE24', bg: '#19250a', border: '#6e9618' },
-  'Watch':      { fg: '#E8B923', bg: '#241a06', border: '#5a3f10' },
-  'Going Cold': { fg: '#d99a66', bg: '#2a1d10', border: '#6a3f1c' },
-  'Overdue':    { fg: '#d96a66', bg: '#241010', border: '#5a1a18' },
-  'In Window':  { fg: '#99CE24', bg: '#19250a', border: '#6e9618' },
-  'Too Soon':   { fg: '#747474', bg: '#181818', border: '#2a2a2a' },
-  'Due':        { fg: '#E8B923', bg: '#241a06', border: '#5a3f10' },
-} as const;
 
 export const fonts = {
   sans: "'IBM Plex Sans Thai', sans-serif",
@@ -100,5 +83,3 @@ export const layout = {
   desktopPagePadding: '28px 36px',
 } as const;
 
-export type TrackKey = keyof typeof trackColors;
-export type StatusKey = keyof typeof statusColors;

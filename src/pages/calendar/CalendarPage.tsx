@@ -589,7 +589,7 @@ function MonthGrid({
           const isWeekend = cell.date.getDay() === 0 || cell.date.getDay() === 6;
           return (
             <button
-              key={cell.iso + idx}
+              key={cell.iso}
               type="button"
               onClick={() => onDateClick(cell.iso)}
               style={{
