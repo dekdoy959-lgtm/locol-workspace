@@ -49,7 +49,7 @@ export function ShareContactModal({ contact, onClose }: ShareContactModalProps) 
       }}
     >
       <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: 560, width: '100%' }}>
-        <LCard padding={28}>
+        <LCard padding={28} bg={colors.bgOverlay}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 18 }}>
             <div>
               <LH level={3}>SHARE CONTACT</LH>

@@ -5,6 +5,7 @@ Internal CRM + opportunity tracker for **LOCOL** — Thailand's low-carbon premi
 > 🌐 **Live**: <https://locol-workspace.vercel.app>
 > 📖 **Dev setup**: [`SETUP-DEV.md`](./SETUP-DEV.md)
 > 📦 **Claude MCP for team**: <https://locol-workspace.vercel.app/SETUP-FOR-TEAM.md>
+> 🎨 **Design system**: [`docs/`](./docs/) — tokens, elevation ladder & ADRs · 🤖 **Session rules**: [`CLAUDE.md`](./CLAUDE.md)
 
 ---
 

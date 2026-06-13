@@ -85,7 +85,7 @@ export function ConfirmModal({
         onClick={(e) => e.stopPropagation()}
         style={{ maxWidth: 400, width: '100%' }}
       >
-        <LCard padding={28}>
+        <LCard padding={28} bg={colors.bgOverlay}>
           <div
             style={{
               fontSize: 16,

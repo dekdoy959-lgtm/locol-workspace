@@ -248,7 +248,7 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
         style={{
           width: '100%',
           maxWidth: 680,
-          background: colors.bgCard,
+          background: colors.bgOverlay,
           border: `1px solid ${colors.lineHi}`,
           borderRadius: '16px 0 16px 0',
           boxShadow: '0 20px 60px rgba(0,0,0,0.6)',

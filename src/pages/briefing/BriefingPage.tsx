@@ -133,6 +133,7 @@ export function BriefingPage() {
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
           <LH
             level={2}
+            tick
             sub={`สวัสดี ${myMember?.full_name ?? user?.email?.split('@')[0] ?? ''} · ${today.toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long' })}`}
           >
             {viewMode === 'me' ? 'WHAT NEEDS ME TODAY' : 'WHAT NEEDS THE TEAM TODAY'}

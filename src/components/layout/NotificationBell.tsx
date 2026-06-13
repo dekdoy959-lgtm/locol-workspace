@@ -227,7 +227,7 @@ export function NotificationBell() {
             top: 'calc(100% + 8px)',
             width: 360,
             maxHeight: '70vh',
-            background: colors.bgCard,
+            background: colors.bgOverlay,
             border: `1px solid ${colors.lineHi}`,
             borderRadius: '14px 0 14px 0',
             boxShadow: '0 12px 32px rgba(0,0,0,0.55)',

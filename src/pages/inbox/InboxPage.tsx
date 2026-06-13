@@ -219,7 +219,7 @@ export function InboxPage() {
         <div>
           <LNote>Opportunity Layer · Inbox</LNote>
           <div style={{ height: 10 }} />
-          <LH level={3} sub="หน้าหลัก · 4 tracks · drag การ์ดข้าม column เพื่อเปลี่ยน track">
+          <LH level={3} tick sub="หน้าหลัก · 4 tracks · drag การ์ดข้าม column เพื่อเปลี่ยน track">
             INBOX
           </LH>
         </div>

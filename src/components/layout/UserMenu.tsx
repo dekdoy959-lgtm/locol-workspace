@@ -71,7 +71,7 @@ export function UserMenu({ initials }: UserMenuProps) {
             right: 0,
             top: 'calc(100% + 8px)',
             minWidth: 240,
-            background: colors.bgCard,
+            background: colors.bgOverlay,
             border: `1px solid ${colors.lineHi}`,
             borderRadius: '12px 0 12px 0',
             boxShadow: '0 12px 32px rgba(0,0,0,0.55)',

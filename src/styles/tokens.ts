@@ -2,16 +2,28 @@
 // Ported from prototype locol-components.jsx
 
 export const colors = {
-  bg: '#101010',
-  bgSoft: '#181818',
-  bgCard: '#1c1c1c',
-  bgRaise: '#222222',
-  line: '#2a2a2a',
-  lineHi: '#3a3a3a',
-  text: '#FFFFFF',
-  surface: '#D9D9D9',
-  dimSoft: '#9a9a9a',
-  dim: '#747474',
+  // ── Surface elevation ladder ──────────────────────────────────────
+  // Each rung is a whisper-quiet step lighter (and a hair warmer) so depth
+  // reads as "soil / wood at night", not flat screen-black. Stack order:
+  // canvas → soft → card → raised/hover → overlay. Higher = lighter.
+  bg: '#101010',        // L0 · canvas (brand black) — page background
+  bgSoft: '#171614',    // L1 · inset / section bands · sits just above canvas
+  bgCard: '#1d1c19',    // L2 · cards (the default resting surface)
+  bgRaise: '#252320',   // L3 · raised / hover / active card
+  bgOverlay: '#2c2a26', // L4 · dropdowns · popovers · modals (one rung above cards)
+  bgInput: '#141311',   // input inset — darker than card → reads "type here"
+  // ── Border progression (rgba whispers, not harsh hex) ─────────────
+  // Low-opacity white blends with whatever it sits on → edges define
+  // structure without demanding attention. Intensity ↑ with importance.
+  lineSubtle: 'rgba(255,255,255,0.05)', // inner dividers · faintest
+  line: 'rgba(255,255,255,0.09)',       // standard border (was #2a2a2a)
+  lineHi: 'rgba(255,255,255,0.15)',     // emphasis border (was #3a3a3a)
+  lineStrong: 'rgba(255,255,255,0.22)', // max emphasis · hover firm-up
+  // ── Text hierarchy (warm-neutral · all ≥ AA on canvas) ────────────
+  text: '#FFFFFF',      // primary — headings, key values
+  surface: '#D9D9D9',   // bright — surface elements / strong body
+  dimSoft: '#a6a39e',   // secondary — labels, supporting copy (~6:1)
+  dim: '#8a8782',       // muted — metadata, hints (~4.7:1, now AA-pass)
   green: '#99CE24',
   greenDk: '#6e9618',
   greenBg: '#19250a',
