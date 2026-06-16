@@ -4,6 +4,15 @@
 
 ---
 
+## 2026-06-17 · Card overflow — show-more cap (#6)
+
+When a track/stage has many cards the list overflowed. Added a `COLUMN_CARD_LIMIT = 8` cap with a
+"▾ แสดงเพิ่ม +N / ▲ ย่อ" toggle to all three card lists in the Inbox: kanban `TrackColumn`
+(all view), `StageSection` (staged single-track), and the flat single-track list. Complements the
+existing density toggle, auto-collapse-done, and column-scoped scroll. No data/migration. Build green.
+
+---
+
 ## 2026-06-17 · Grant funding schedule + Calendar link (#7)
 
 - **`FundingScheduleSection`** on the apply (ขอทุน) detail page — rounds of submit/payout/report,

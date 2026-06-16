@@ -75,6 +75,7 @@ export function InboxPage() {
   const update = useUpdateOpportunity();
   const [tab, setTab] = useState<Tab>('all');
   const [tripScopeFilter, setTripScopeFilter] = useState<'all' | 'domestic' | 'international'>('all');
+  const [flatExpanded, setFlatExpanded] = useState(false); // #6 — flat single-track list cap
   const [dragOverTrack, setDragOverTrack] = useState<TrackKey | null>(null);
   // Id of the card most recently moved via keyboard — used to restore focus to
   // it after it re-renders in the destination column.
@@ -576,7 +577,7 @@ export function InboxPage() {
           ) : (
             // Flat list
             <div style={{ display: 'flex', flexDirection: 'column', gap: density === 'dense' ? 4 : density === 'compact' ? 6 : 12 }}>
-              {filtered.map((o) => (
+              {(flatExpanded ? filtered : filtered.slice(0, COLUMN_CARD_LIMIT)).map((o) => (
                 <OpportunityCard
                   key={o.id}
                   opp={o}
@@ -587,6 +588,25 @@ export function InboxPage() {
                   wide
                 />
               ))}
+              {filtered.length > COLUMN_CARD_LIMIT && (
+                <button
+                  type="button"
+                  onClick={() => setFlatExpanded((v) => !v)}
+                  style={{
+                    alignSelf: 'flex-start',
+                    padding: '7px 14px',
+                    background: 'transparent',
+                    border: `1px solid ${colors.line}`,
+                    color: colors.dimSoft,
+                    cursor: 'pointer',
+                    fontFamily: 'inherit',
+                    fontSize: 12,
+                    borderRadius: '8px 0 8px 0',
+                  }}
+                >
+                  {flatExpanded ? '▲ ย่อ' : `▾ แสดงเพิ่มทั้งหมด +${filtered.length - COLUMN_CARD_LIMIT}`}
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -617,6 +637,8 @@ function StageSection({
   onCardClick: (id: string) => void;
 }) {
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
+  const [expanded, setExpanded] = useState(false);
+  const visibleItems = expanded ? items : items.slice(0, COLUMN_CARD_LIMIT);
   return (
     <div>
       <button
@@ -674,7 +696,7 @@ function StageSection({
       </button>
       {!collapsed && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: density === 'dense' ? 4 : density === 'compact' ? 6 : 10 }}>
-          {items.map((o) => (
+          {visibleItems.map((o) => (
             <OpportunityCard
               key={o.id}
               opp={o}
@@ -685,6 +707,25 @@ function StageSection({
               wide
             />
           ))}
+          {items.length > COLUMN_CARD_LIMIT && (
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              style={{
+                alignSelf: 'flex-start',
+                padding: '6px 12px',
+                background: 'transparent',
+                border: `1px solid ${colors.line}`,
+                color: colors.dimSoft,
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                fontSize: 11.5,
+                borderRadius: '8px 0 8px 0',
+              }}
+            >
+              {expanded ? '▲ ย่อ' : `▾ แสดงเพิ่ม +${items.length - COLUMN_CARD_LIMIT}`}
+            </button>
+          )}
         </div>
       )}
     </div>
@@ -896,6 +937,9 @@ function FocusView({
   );
 }
 
+// #6 — how many cards to show before "แสดงเพิ่ม" in a column / section.
+const COLUMN_CARD_LIMIT = 8;
+
 function TrackColumn({
   track,
   opps,
@@ -928,6 +972,9 @@ function TrackColumn({
   onDrop?: (e: React.DragEvent) => void;
 }) {
   const meta = findTrack(track);
+  // #6 — cap a busy column so it doesn't overflow; reveal the rest on demand.
+  const [expanded, setExpanded] = useState(false);
+  const visibleOpps = expanded ? opps : opps.slice(0, COLUMN_CARD_LIMIT);
 
   return (
     <div
@@ -1013,7 +1060,7 @@ function TrackColumn({
           paddingRight: isMobile ? 0 : 2,
         }}
       >
-        {opps.map((o) => (
+        {visibleOpps.map((o) => (
           <OpportunityCard
             key={o.id}
             opp={o}
@@ -1025,6 +1072,24 @@ function TrackColumn({
             autoFocus={o.id === movedId}
           />
         ))}
+        {opps.length > COLUMN_CARD_LIMIT && (
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            style={{
+              padding: '7px 10px',
+              background: 'transparent',
+              border: `1px solid ${colors.line}`,
+              color: colors.dimSoft,
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              fontSize: 11,
+              borderRadius: '10px 0 10px 0',
+            }}
+          >
+            {expanded ? '▲ ย่อ' : `▾ แสดงเพิ่ม +${opps.length - COLUMN_CARD_LIMIT}`}
+          </button>
+        )}
         <button
           type="button"
           onClick={onAddClick}
