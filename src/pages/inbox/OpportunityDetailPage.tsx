@@ -55,6 +55,10 @@ export function OpportunityDetailPage() {
   };
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [showArchiveConfirm, setShowArchiveConfirm] = useState(false);
+  // NOTE: every hook must run before the early returns below — otherwise the
+  // hook count changes between the loading render and the loaded render, which
+  // crashes React ("Rendered more hooks…") and blanks the page on first open.
+  const teamById = useMemo(() => Object.fromEntries(team.map((m) => [m.id, m])), [team]);
 
   if (isLoading) {
     return <div style={{ padding: 40, textAlign: 'center', color: colors.dim }}>กำลังโหลด…</div>;
@@ -72,7 +76,6 @@ export function OpportunityDetailPage() {
   }
 
   const meta = findTrack(opp.track as TrackKey);
-  const teamById = useMemo(() => Object.fromEntries(team.map((m) => [m.id, m])), [team]);
   const owner = opp.owner_id ? teamById[opp.owner_id] : null;
   const reviewer = opp.reviewer_id ? teamById[opp.reviewer_id] : null;
   const staleThreshold = getStaleThreshold(trackSettings, opp.track as TrackKey);

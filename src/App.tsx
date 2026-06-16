@@ -5,6 +5,7 @@ import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persist
 import { AuthProvider } from './contexts/AuthContext';
 import { ConfirmProvider } from './components/modals/ConfirmProvider';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
+import { ErrorBoundary } from './components/layout/ErrorBoundary';
 import { AppLayout } from './components/layout/AppLayout';
 import { OfflineBanner } from './components/layout/OfflineBanner';
 import { LoginPage } from './pages/Login';
@@ -86,6 +87,7 @@ export function App() {
       <AuthProvider>
         <ConfirmProvider>
         <BrowserRouter>
+          <ErrorBoundary>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
@@ -128,6 +130,7 @@ export function App() {
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </ErrorBoundary>
           <OfflineBanner />
         </BrowserRouter>
         </ConfirmProvider>

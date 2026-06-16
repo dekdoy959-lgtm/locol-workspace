@@ -4,6 +4,31 @@
 
 ---
 
+## 2026-06-16 · Fix card-click black-screen (Rules-of-Hooks) + root ErrorBoundary
+
+**Bug (user #3):** clicking any opportunity card showed a black screen on first open;
+exiting and re-entering then worked.
+
+**Root cause:** `OpportunityDetailPage` called `useMemo(teamById)` *after* the early
+`if (isLoading)` / `if (!opp)` returns. On a cold click the first render returns early
+(useMemo skipped); when data arrives the re-render reaches the extra hook → React throws
+"Rendered more hooks than during the previous render". With **no error boundary**, that
+blanks the whole app (black, on the dark canvas). Re-entry worked because the opp was then
+cached → `isLoading` false on the first render → hook count consistent.
+
+**Fix:**
+- Moved `teamById` `useMemo` above the early returns (all hooks now run unconditionally).
+- Added `src/components/layout/ErrorBoundary.tsx` and wrapped `<Routes>` — any future render
+  throw now shows a recoverable card (ลองใหม่ / กลับ Inbox) instead of a black screen; it
+  auto-resets when the route path changes.
+- Audited all detail pages (`Contact/Org/Group/Brief/Team`) — no other hook-after-return
+  violations.
+
+**Validation:** `npm run build` green (258 modules). Fix is the canonical Rules-of-Hooks
+remedy; traced the exact cold-vs-warm-cache crash path.
+
+---
+
 ## 2026-06-14 · Design refinement (craft pass A–F)
 
 **Goal (user):** "สวยขึ้น · อ่านง่ายขึ้น · มีลูกเล่นขึ้น" — a craft-level polish on top of the
