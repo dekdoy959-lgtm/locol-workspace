@@ -57,6 +57,27 @@ canvas feel "inhabited." Solid-hex borders are now disallowed — use the rgba s
 
 ---
 
+## ADR-006 · Team access — soft gate first (5a), hard RLS deferred (5b)
+
+**Date:** 2026-06-17 · **Status:** Accepted (5a) · Proposed (5b)
+
+**Context.** Anyone in Google "Test Users" who logs in is auto-created as a team_member and (because
+RLS lets every authenticated user read/write everything) immediately has full access. The user wants
+an in-app way to approve/disable members and manage access.
+
+**Decision.** Ship **Phase 5a** now: add `team_members.status` (pending/active/disabled), make new
+signups `pending`, gate the app in `ProtectedRoute`, and give admins approve/disable controls in
+`/team`. **Do NOT change RLS yet.** A missing `status` (pre-migration) is treated as `active` so the
+live app is never disrupted before the migration runs. **Phase 5b** (helper functions + RLS rewrite so
+only active members read/write and only admins change roles/status) is deferred and opt-in, because a
+wrong RLS policy on the live, in-use DB could lock the whole team out.
+
+**Consequences.** Real onboarding control + admin backend with near-zero risk. The gate is a UX
+boundary, not yet a security boundary (a determined user with the anon key could still hit the API) —
+5b closes that. Pair with publishing the Google OAuth consent screen to drop the Test-Users cap.
+
+---
+
 ## ADR-005 · Trip Intelligence Briefing is config-driven JSONB, not bespoke columns
 
 **Date:** 2026-06-17 · **Status:** Accepted

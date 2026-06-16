@@ -297,6 +297,7 @@ export type Database = {
           initials: string | null;
           avatar_url: string | null;
           role: 'admin' | 'member';
+          status: 'pending' | 'active' | 'disabled';
           created_at: string;
         };
         Insert: Partial<Database['public']['Tables']['team_members']['Row']> & {

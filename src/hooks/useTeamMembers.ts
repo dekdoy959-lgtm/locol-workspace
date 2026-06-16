@@ -1,9 +1,28 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 import type { Database } from '../types/database';
 
 export type TeamMemberRow = Database['public']['Tables']['team_members']['Row'];
 export type TeamMemberUpdate = Database['public']['Tables']['team_members']['Update'];
+
+/** Access status — `status` is absent until migration 0020 runs, so treat
+ * missing as 'active' (pre-migration safety: never lock existing users out). */
+export type AccessStatus = 'pending' | 'active' | 'disabled';
+export function memberStatus(m: TeamMemberRow | undefined | null): AccessStatus {
+  return (m?.status as AccessStatus) ?? 'active';
+}
+export function isAdmin(m: TeamMemberRow | undefined | null): boolean {
+  return m?.role === 'admin';
+}
+
+/** The current signed-in user's team_member row (id === auth uid). */
+export function useMyTeamMember() {
+  const { user } = useAuth();
+  const { data: team = [], isLoading } = useTeamMembers();
+  const me = user ? team.find((m) => m.id === user.id) ?? null : null;
+  return { me, isLoading };
+}
 
 export function useUpdateTeamMember() {
   const qc = useQueryClient();

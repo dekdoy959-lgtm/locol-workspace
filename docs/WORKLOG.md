@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-06-17 · Team access management — Phase 5a (#5)
+
+Soft access gate + admin backend (no RLS change yet — see ADR-006).
+
+- **Migration 0020** (user runs): `team_members.status` ('pending'|'active'|'disabled'); existing rows
+  default 'active'; `handle_new_user()` trigger updated so **new Google signups land 'pending'**;
+  sets `role='admin', status='active'` for the admin email. ⚠️ change the email in the migration to
+  your real LOCOL admin Google account before running.
+- **`ProtectedRoute`** now gates by status: `pending` → "รออนุมัติ" screen, `disabled` → blocked,
+  else through. Missing `status` (pre-migration) resolves to 'active' → zero disruption before 0020.
+- **`/team`** (admin only): ✓ อนุมัติ (pending→active) · ปิด/เปิดใช้งาน · status badge per member ·
+  pending-approvals banner. Non-admins see read-only controls.
+- New hook `useMyTeamMember()` + `isAdmin()` / `memberStatus()` helpers (`useTeamMembers.ts`).
+- **#10 also fully closed**: the notification script already routes cold/birthday alerts to a contact's
+  `owner_id`, and #9 surfaced owner; so a contact's coordinator now receives those.
+- **Onboarding (user action):** publish the Google OAuth consent screen so anyone with a Google
+  account can sign in → lands 'pending' → admin approves (removes the Test-Users cap).
+
+**Decision:** signups = pending; depth = 5a now, **5b (hard RLS) deferred** (lockout risk on live DB).
+Build green (262 modules). Auth-gated UI — verified via build + review.
+
+---
+
 ## 2026-06-17 · Card overflow — show-more cap (#6)
 
 When a track/stage has many cards the list overflowed. Added a `COLUMN_CARD_LIMIT = 8` cap with a

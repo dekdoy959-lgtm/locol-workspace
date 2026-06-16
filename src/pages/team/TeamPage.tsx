@@ -3,6 +3,9 @@ import {
   useTeamMembers,
   useUpdateTeamMember,
   teamMemberInitials,
+  isAdmin,
+  memberStatus,
+  type AccessStatus,
   type TeamMemberRow,
   type TeamMemberUpdate,
 } from '../../hooks/useTeamMembers';
@@ -32,6 +35,9 @@ export function TeamPage() {
     }
     return map;
   }, [members, opps, contacts]);
+
+  const iAmAdmin = isAdmin(members.find((m) => m.id === user?.id));
+  const pendingCount = members.filter((m) => memberStatus(m) === 'pending').length;
 
   if (isLoading) {
     return <div style={{ padding: 40, color: colors.dim, textAlign: 'center' }}>กำลังโหลด team…</div>;
@@ -63,6 +69,15 @@ export function TeamPage() {
           💡 ไม่สามารถ "เพิ่ม" จากหน้านี้ตรง ๆ เพราะ team_member ผูกกับ Supabase Auth · ต้อง signup ก่อน
         </div>
       </LCard>
+
+      {/* Pending approvals banner (admin only) */}
+      {iAmAdmin && pendingCount > 0 && (
+        <LCard padding={14} style={{ marginBottom: 14, borderLeft: `3px solid ${colors.warn}` }}>
+          <div style={{ fontSize: 12.5, color: colors.warn, fontWeight: 700 }}>
+            ⏳ มี {pendingCount} คนรออนุมัติเข้าใช้งาน — กด ✓ อนุมัติ ในตารางด้านล่าง
+          </div>
+        </LCard>
+      )}
 
       {/* Members table */}
       <LCard padding={0}>
@@ -96,6 +111,7 @@ export function TeamPage() {
                   member={m}
                   isEditing={isEditing}
                   isMe={isMe}
+                  iAmAdmin={iAmAdmin}
                   stats={memberStats}
                   onStartEdit={() => setEditingId(m.id)}
                   onCancelEdit={() => setEditingId(null)}
@@ -105,6 +121,7 @@ export function TeamPage() {
                       { onSuccess: () => setEditingId(null) },
                     )
                   }
+                  onSetStatus={(status) => update.mutate({ id: m.id, patch: { status } })}
                   saving={update.isPending}
                 />
               );
@@ -113,8 +130,11 @@ export function TeamPage() {
         </table>
       </LCard>
 
-      <div style={{ marginTop: 14, fontSize: 11, color: colors.dim, lineHeight: 1.5 }}>
-        💡 ทุกคนในทีมแก้ไข profile ของใครก็ได้ (RLS allow) · ถ้าเปลี่ยน role เป็น <b style={{ color: colors.dimSoft }}>admin</b> จะมีสิทธิ์ขั้น advanced ในอนาคต (ตอนนี้ทุกคนสิทธิ์เท่ากัน)
+      <div style={{ marginTop: 14, fontSize: 11, color: colors.dim, lineHeight: 1.6 }}>
+        💡 คนใหม่ login แล้วจะเป็น <b style={{ color: colors.warn }}>รออนุมัติ</b> จนกว่า admin กด <b style={{ color: colors.green }}>✓ อนุมัติ</b> · admin ปิด/เปิดใช้งานสมาชิกได้
+        {iAmAdmin ? '' : ' · (คุณไม่ใช่ admin — เห็นปุ่มจัดการเฉพาะ admin)'}
+        <br />
+        🔒 ตอนนี้เป็น <b style={{ color: colors.dimSoft }}>soft gate</b> (กันหน้าเข้าใช้งาน) — RLS ระดับ DB ยังเปิดให้ active อ่าน/เขียน · จะล็อกระดับ DB จริงใน Phase 5b
       </div>
     </div>
   );
@@ -124,21 +144,26 @@ function MemberRow({
   member,
   isEditing,
   isMe,
+  iAmAdmin,
   stats,
   onStartEdit,
   onCancelEdit,
   onSave,
+  onSetStatus,
   saving,
 }: {
   member: TeamMemberRow;
   isEditing: boolean;
   isMe: boolean;
+  iAmAdmin: boolean;
   stats: { opps: number; contacts: number };
   onStartEdit: () => void;
   onCancelEdit: () => void;
   onSave: (patch: TeamMemberUpdate) => void;
+  onSetStatus: (status: AccessStatus) => void;
   saving: boolean;
 }) {
+  const status = memberStatus(member);
   const [draft, setDraft] = useState<TeamMemberUpdate>({});
 
   const startEdit = () => {
@@ -263,7 +288,10 @@ function MemberRow({
         <span style={{ fontSize: 12, color: colors.surface }}>{member.email}</span>
       </Td>
       <Td>
-        <RoleBadge role={member.role} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+          <RoleBadge role={member.role} />
+          <StatusBadge status={status} />
+        </div>
       </Td>
       <Td>
         <span style={{ fontSize: 12.5, color: stats.opps > 0 ? colors.text : colors.dim, fontFamily: "'IBM Plex Mono', monospace" }}>
@@ -279,11 +307,48 @@ function MemberRow({
         <span style={{ fontSize: 11.5, color: colors.dimSoft }}>{joined}</span>
       </Td>
       <Td>
-        <LBtn small ghost onClick={startEdit}>
-          แก้ไข
-        </LBtn>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          {iAmAdmin && status === 'pending' && (
+            <LBtn small primary onClick={() => onSetStatus('active')} disabled={saving}>✓ อนุมัติ</LBtn>
+          )}
+          {iAmAdmin && status === 'active' && !isMe && (
+            <LBtn small ghost onClick={() => onSetStatus('disabled')} disabled={saving}>ปิดใช้งาน</LBtn>
+          )}
+          {iAmAdmin && status === 'disabled' && (
+            <LBtn small ghost onClick={() => onSetStatus('active')} disabled={saving}>เปิดใช้งาน</LBtn>
+          )}
+          <LBtn small ghost onClick={startEdit}>แก้ไข</LBtn>
+        </div>
       </Td>
     </tr>
+  );
+}
+
+function StatusBadge({ status }: { status: AccessStatus }) {
+  const meta =
+    status === 'pending'
+      ? { label: '⏳ รออนุมัติ', color: colors.warn, bg: colors.warnBg, border: colors.warnDk }
+      : status === 'disabled'
+        ? { label: '⛔ ปิดใช้งาน', color: colors.danger, bg: colors.dangerBg, border: colors.dangerDk }
+        : { label: '✓ active', color: colors.green, bg: colors.greenBg, border: colors.greenDk };
+  return (
+    <span
+      style={{
+        display: 'inline-block',
+        fontSize: 10,
+        color: meta.color,
+        background: meta.bg,
+        border: `1px solid ${meta.border}`,
+        padding: '2px 7px',
+        borderRadius: '5px 0 5px 0',
+        fontWeight: 600,
+        letterSpacing: 0.4,
+        textTransform: 'uppercase',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {meta.label}
+    </span>
   );
 }
 
