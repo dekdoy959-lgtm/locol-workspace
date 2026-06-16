@@ -20,6 +20,7 @@ import { TeamAssignmentsSection } from '../../components/opportunities/TeamAssig
 import { TripItinerary } from '../../components/trips/TripItinerary';
 import { TripBudgetCard } from '../../components/trips/TripBudgetCard';
 import { TripBriefingPanel } from '../../components/trips/TripBriefingPanel';
+import { FundingScheduleSection } from '../../components/opportunities/FundingScheduleSection';
 import { OpportunityDetailsView } from '../../components/opportunities/OpportunityDetailsView';
 import { ConfirmModal } from '../../components/modals/ConfirmModal';
 import { colors } from '../../styles/tokens';
@@ -328,6 +329,9 @@ export function OpportunityDetailPage() {
               briefing={(opp.briefing as Record<string, unknown>) ?? null}
             />
           )}
+
+          {/* Funding schedule — only for track='apply' (#7) · flows into Calendar */}
+          {opp.track === 'apply' && <FundingScheduleSection opp={opp} />}
 
           {/* Budget tracking — relevant for events + trips */}
           {(opp.track === 'event' || opp.track === 'trip') && <TripBudgetCard opp={opp} />}

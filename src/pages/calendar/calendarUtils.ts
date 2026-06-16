@@ -21,6 +21,8 @@ export type CalendarItemKind =
   | 'registration_deadline'  // registration cutoff for an event
   | 'apply_deadline'         // grant application due
   | 'decision_date'          // grant decision expected
+  | 'funding_submit'         // grant: a submission / report round (วันยื่น)
+  | 'funding_payout'         // grant: a disbursement round (วันได้เงิน)
   | 'contract_renewal'       // contract renewal date
   | 'contract_effective'     // contract effective date
   | 'due'                    // generic opp.due_date (any track)
@@ -221,6 +223,29 @@ export function aggregateCalendarItems({
           isMine,
         });
       }
+      // Funding schedule (#7) — rounds of submit / payout once in a program.
+      // details.funding = [{ id, label, kind: 'submit'|'payout'|'report'|'other', date, amount }]
+      const funding = Array.isArray(details.funding) ? (details.funding as Record<string, unknown>[]) : [];
+      for (const fe of funding) {
+        const fdate = asString(fe.date);
+        if (!fdate) continue;
+        const isPayout = asString(fe.kind) === 'payout';
+        const amount = asNumber(fe.amount);
+        const label = asString(fe.label) || (isPayout ? 'ได้เงิน' : 'ยื่น');
+        items.push({
+          id: `fund-${opp.id}-${asString(fe.id) || fdate}`,
+          kind: isPayout ? 'funding_payout' : 'funding_submit',
+          date: fdate,
+          title: `${opp.title} · ${label}`,
+          cost: amount != null ? { amount, currency: 'THB' } : null,
+          track: baseTrack,
+          ownerId,
+          status: opp.stage,
+          href,
+          source: { kind: 'opportunity', opp },
+          isMine,
+        });
+      }
     }
 
     // Trip-specific (on-field/farm visits)
@@ -377,7 +402,9 @@ export function aggregateCalendarItems({
   const kindPriority: Record<CalendarItemKind, number> = {
     apply_deadline: 1,
     registration_deadline: 1,
+    funding_submit: 1,
     contract_renewal: 2,
+    funding_payout: 2,
     decision_date: 3,
     event: 4,
     meeting: 5,
@@ -411,6 +438,8 @@ export const KIND_META: Record<
   registration_deadline: { label: 'REGISTER BY',    color: colors.warn, bg: colors.warnBg, border: colors.warnDk, icon: '⏰' },
   apply_deadline:        { label: 'APPLY BY',       color: colors.warn, bg: colors.warnBg, border: colors.warnDk, icon: '📝' },
   decision_date:         { label: 'DECISION',       color: colors.green, bg: colors.greenBg, border: colors.greenDk, icon: '🎯' },
+  funding_submit:        { label: 'ยื่นทุน',          color: colors.warn, bg: colors.warnBg, border: colors.warnDk, icon: '📤' },
+  funding_payout:        { label: 'ได้เงิน',          color: colors.green, bg: colors.greenBg, border: colors.greenDk, icon: '💰' },
   contract_renewal:      { label: 'RENEW',          color: colors.olive, bg: colors.oliveBg, border: colors.oliveDk, icon: '🔄' },
   contract_effective:    { label: 'START',          color: colors.olive, bg: colors.oliveBg, border: colors.oliveDk, icon: '📜' },
   due:                   { label: 'DUE',            color: '#d99a66', bg: '#2a1d10', border: '#6a3f1c', icon: '⏳' },

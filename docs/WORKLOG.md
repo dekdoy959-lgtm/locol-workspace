@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-06-17 · Grant funding schedule + Calendar link (#7)
+
+- **`FundingScheduleSection`** on the apply (ขอทุน) detail page — rounds of submit/payout/report,
+  each with label · kind · date · amount · done; shows ได้แล้ว ฿X / ฿total. Stored in
+  `details.funding` (JSONB) — **no migration**.
+- **Calendar link** — `calendarUtils.aggregateCalendarItems` now reads `details.funding` for apply
+  opps and emits one calendar item per dated round: kind `funding_submit` (📤 ยื่นทุน, warn) or
+  `funding_payout` (💰 ได้เงิน, green). Added both to the exhaustive `kindPriority` + `KIND_META`.
+
+Build green (262 modules). Auth-gated UI — verified via build + review.
+
+---
+
 ## 2026-06-17 · Trip — Domestic/International split (#1) + full Trip Intelligence Briefing (#2)
 
 Ports `LOCOL_Trip_Intelligence_Briefing_v1.docx` (Parts A/B/C) into the app, config-driven.
