@@ -6,6 +6,7 @@ import {
   useUpdateContact,
   useDeleteContact,
 } from '../../hooks/useContacts';
+import { useTeamMembers, teamMemberDropdownLabel } from '../../hooks/useTeamMembers';
 import {
   LCard,
   LH,
@@ -72,6 +73,8 @@ interface FormState {
   met_story: string;
   value_exchange: string;
   tags: string[];
+  owner_id: string;   // LOCOL team member who coordinates this contact
+  backup_id: string;  // secondary coordinator
 }
 
 const emptyForm: FormState = {
@@ -99,6 +102,8 @@ const emptyForm: FormState = {
   met_story: '',
   value_exchange: '',
   tags: [],
+  owner_id: '',
+  backup_id: '',
 };
 
 // Migrate old address shape ({label, value}) to new structured shape on read.
@@ -137,6 +142,11 @@ export function ContactFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const updateMutation = useUpdateContact();
   const deleteMutation = useDeleteContact();
   const confirm = useConfirm();
+  const { data: team = [] } = useTeamMembers();
+  const teamOptions = [
+    { value: '', label: '— ไม่ระบุ —' },
+    ...team.map((m) => ({ value: m.id, label: teamMemberDropdownLabel(m) })),
+  ];
 
   const [form, setForm] = useState<FormState>(emptyForm);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -171,6 +181,8 @@ export function ContactFormPage({ mode }: { mode: 'create' | 'edit' }) {
         met_story: existing.met_story ?? '',
         value_exchange: existing.value_exchange ?? '',
         tags: existing.tags ?? [],
+        owner_id: existing.owner_id ?? '',
+        backup_id: existing.backup_id ?? '',
       });
     }
   }, [mode, existing]);
@@ -213,6 +225,8 @@ export function ContactFormPage({ mode }: { mode: 'create' | 'edit' }) {
       met_story: form.met_story.trim() || null,
       value_exchange: form.value_exchange.trim() || null,
       tags: form.tags,
+      owner_id: form.owner_id || null,
+      backup_id: form.backup_id || null,
     };
 
     try {
@@ -483,6 +497,21 @@ export function ContactFormPage({ mode }: { mode: 'create' | 'edit' }) {
             </Field>
             <Field label="Priority">
               <LSelect value={form.priority} onChange={(v) => set('priority', v)} options={PRIORITY_OPTIONS} placeholder="เลือก Priority" />
+            </Field>
+          </div>
+        </FormSection>
+
+        {/* Ownership — who on the LOCOL team looks after this contact */}
+        <FormSection
+          title="ผู้ดูแล / ผู้ประสาน"
+          description="ใครในทีม LOCOL เป็นคนหลักที่ดูแล/ประสานงานคนนี้ — ระบบจะส่งแจ้งเตือน (cold / วันเกิด) ไปหาผู้ประสานหลัก"
+        >
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            <Field label="ผู้ประสานหลัก (Owner)">
+              <LSelect value={form.owner_id} onChange={(v) => set('owner_id', v)} options={teamOptions} />
+            </Field>
+            <Field label="สำรอง (Backup)">
+              <LSelect value={form.backup_id} onChange={(v) => set('backup_id', v)} options={teamOptions} />
             </Field>
           </div>
         </FormSection>

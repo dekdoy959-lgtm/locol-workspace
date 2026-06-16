@@ -67,7 +67,9 @@ export function TeamAssignmentsSection({ opportunityId }: TeamAssignmentsSection
           <LIcon kind="users" size={11} color={colors.green} /> TEAM · ใครรับผิดชอบอะไร
         </div>
         <div style={{ fontSize: 11.5, color: colors.dimSoft, marginTop: 4, lineHeight: 1.5 }}>
-          1 คนรับได้หลาย role · 1 role มีหลายคนได้ · ใช้สำหรับ Timeline แสดงว่าใครทำอะไร
+          บทบาทเสริม · 1 คนรับได้หลาย role · 1 role มีหลายคนได้
+          <br />
+          <span style={{ color: colors.dim }}>Owner + Reviewer ตั้งในฟอร์ม (2 บทบาทหลัก) · ที่นี่เพิ่มบทบาทอื่น</span>
         </div>
       </div>
 

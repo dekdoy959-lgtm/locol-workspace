@@ -19,9 +19,12 @@ export const TEAM_ROLE_META: Record<TeamRole, { label: string; icon: string; col
   support:        { label: 'Support · ทั่วไป',           icon: '🛟', color: colors.dim },
 };
 
+// Owner + Reviewer are the two "primary" roles — they live on the opportunity
+// itself (owner_id / reviewer_id, set in the form's Owner+Reviewer section with the
+// two-person rule). The Assign Team section below is ONLY for the additional roles,
+// so they don't duplicate. (owner/reviewer stay in TEAM_ROLE_META so any legacy
+// assignment rows still render with a label.)
 export const TEAM_ROLE_ORDER: TeamRole[] = [
-  'owner',
-  'reviewer',
   'document_lead',
   'coordinator',
   'traveler',

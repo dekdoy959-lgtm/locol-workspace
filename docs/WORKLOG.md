@@ -4,6 +4,27 @@
 
 ---
 
+## 2026-06-16 · Quick wins — contact coordinator (#9), last-contact badge (#11), role de-dupe (#4)
+
+Part of the 11-item batch. All three need **no migration** (fields already existed).
+
+- **#9 contact coordinator** — `contacts.owner_id`/`backup_id` existed in the DB but were never
+  surfaced. Added an "ผู้ดูแล / ผู้ประสาน" section to `ContactFormPage` (owner + backup selects from
+  team) and show them under the name on `ContactDetailPage`. The existing notification script already
+  routes cold/birthday alerts to `owner_id`, so #10 is now effectively wired once an owner is set.
+- **#11 days-since-last-contact** — `ContactDetailPage` now shows a header chip "ติดต่อล่าสุด X วันก่อน"
+  computed from `last_contact_date` (auto-bumped on each interaction), coloured vs `freq_days`
+  (ok / watch / overdue), or "ยังไม่เคยบันทึกการติดต่อ" when null.
+- **#4 owner/reviewer de-dupe (Option 1)** — removed `owner`/`reviewer` from `TEAM_ROLE_ORDER`
+  (`useOpportunityTeam.ts`) so the Assign Team section only offers the extra roles
+  (document_lead/coordinator/traveler/support). Owner+Reviewer stay the two primary roles on the
+  opportunity (form, two-person rule). Kept owner/reviewer in `TEAM_ROLE_META` so any legacy
+  assignment rows still render. Updated the section note.
+
+**Decisions:** #4 = Option 1 (keep Owner+Reviewer, trim Assign Team). **Validation:** build green (258).
+
+---
+
 ## 2026-06-16 · Fix card-click black-screen (Rules-of-Hooks) + root ErrorBoundary
 
 **Bug (user #3):** clicking any opportunity card showed a black screen on first open;

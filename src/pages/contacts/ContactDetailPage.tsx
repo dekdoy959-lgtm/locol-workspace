@@ -12,6 +12,7 @@ import { LinkedOpportunities } from '../../components/opportunities/LinkedOpport
 import { DiscordAttachment } from '../../components/discord/DiscordAttachment';
 import { useLinkedOpportunitiesForContact } from '../../hooks/useLinkedOpportunities';
 import { useDiscordInboxForContact } from '../../hooks/useDiscordInbox';
+import { useTeamMembers, teamMemberDisplayName } from '../../hooks/useTeamMembers';
 import { InteractionsSection } from '../../components/interactions/InteractionsSection';
 import { CommitmentsSection } from '../../components/commitments/CommitmentsSection';
 import { ConfirmModal } from '../../components/modals/ConfirmModal';
@@ -49,6 +50,7 @@ export function ContactDetailPage() {
   const [shareOpen, setShareOpen] = useState(false);
   const { data: linkedOpps = [] } = useLinkedOpportunitiesForContact(id);
   const { data: discordSource } = useDiscordInboxForContact(id);
+  const { data: team = [] } = useTeamMembers();
   const queryClient = useQueryClient();
   const [showDeleteDiscord, setShowDeleteDiscord] = useState(false);
 
@@ -84,6 +86,31 @@ export function ContactDetailPage() {
   const socials = (contact.socials as SocialEntry[]) ?? [];
   const orgs = (contact.orgs as OrgEntry[]) ?? [];
   const education = (contact.education as EducationEntry[]) ?? [];
+
+  // #9 — who on the LOCOL team coordinates this contact
+  const owner = contact.owner_id ? team.find((m) => m.id === contact.owner_id) : null;
+  const backup = contact.backup_id ? team.find((m) => m.id === contact.backup_id) : null;
+
+  // #11 — days since we last contacted this person (last_contact_date is bumped
+  // automatically whenever a new interaction is logged). Coloured vs freq_days.
+  const lastContactDays = contact.last_contact_date
+    ? Math.floor((Date.now() - new Date(contact.last_contact_date).getTime()) / 86_400_000)
+    : null;
+  const freqDays = contact.freq_days ?? null;
+  const lastContactTone =
+    lastContactDays === null
+      ? 'none'
+      : freqDays && lastContactDays > freqDays
+        ? 'overdue'
+        : freqDays && lastContactDays > freqDays * 0.7
+          ? 'watch'
+          : 'ok';
+  const lastContactColor =
+    lastContactTone === 'overdue'
+      ? { ink: colors.danger, bg: colors.dangerBg, border: colors.dangerDk }
+      : lastContactTone === 'watch'
+        ? { ink: colors.warn, bg: colors.warnBg, border: colors.warnDk }
+        : { ink: colors.dimSoft, bg: 'transparent', border: colors.lineHi };
 
   return (
     <div style={{ padding: '28px 36px', maxWidth: 1400, margin: '0 auto' }}>
@@ -146,6 +173,15 @@ export function ContactDetailPage() {
                   DISCORD
                 </LChip>
               )}
+              {/* #11 — days since last contact */}
+              {lastContactDays !== null ? (
+                <LChip ink={lastContactColor.ink} bg={lastContactColor.bg} border={lastContactColor.border}>
+                  <LIcon kind="clock" size={10} color={lastContactColor.ink} />
+                  {lastContactDays === 0 ? 'ติดต่อวันนี้' : `ติดต่อล่าสุด ${lastContactDays} วันก่อน`}
+                </LChip>
+              ) : (
+                <LChip ink={colors.dim} border={colors.lineHi}>ยังไม่เคยบันทึกการติดต่อ</LChip>
+              )}
             </div>
 
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 18 }}>
@@ -181,6 +217,17 @@ export function ContactDetailPage() {
                   {orgs.find((o) => o.is_primary)?.role || orgs[0]?.role || '—'}
                   {orgs[0]?.org_name && ` · ${orgs.find((o) => o.is_primary)?.org_name || orgs[0].org_name}`}
                 </div>
+                {/* #9 — LOCOL team coordinator(s) for this contact */}
+                {(owner || backup) && (
+                  <div style={{ fontSize: 12, color: colors.dimSoft, marginTop: 8, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                    {owner && (
+                      <span>ผู้ประสาน · <b style={{ color: colors.text }}>{teamMemberDisplayName(owner)}</b></span>
+                    )}
+                    {backup && (
+                      <span>สำรอง · <b style={{ color: colors.surface }}>{teamMemberDisplayName(backup)}</b></span>
+                    )}
+                  </div>
+                )}
               </div>
               <div style={{ display: 'flex', gap: 6 }}>
                 <LBtn ghost onClick={() => setShareOpen(true)}>
