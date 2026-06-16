@@ -74,6 +74,7 @@ export function InboxPage() {
   const { data: trackSettings = [] } = useTrackSettings();
   const update = useUpdateOpportunity();
   const [tab, setTab] = useState<Tab>('all');
+  const [tripScopeFilter, setTripScopeFilter] = useState<'all' | 'domestic' | 'international'>('all');
   const [dragOverTrack, setDragOverTrack] = useState<TrackKey | null>(null);
   // Id of the card most recently moved via keyboard — used to restore focus to
   // it after it re-renders in the destination column.
@@ -184,12 +185,18 @@ export function InboxPage() {
     });
   }, [filteredOpps, user, trackSettings]);
 
-  const filtered =
+  const baseFiltered =
     tab === 'all'
       ? sortOpps(filteredOpps, sort, trackSettings)
       : tab === 'focus'
         ? focusItems
         : oppsByTrack[tab];
+
+  // Trip scope split (#1) — ในประเทศ vs ต่างประเทศ. Only applies on the trip tab.
+  const filtered =
+    tab === 'trip' && tripScopeFilter !== 'all'
+      ? baseFiltered.filter((o) => (o.trip_scope ?? 'domestic') === tripScopeFilter)
+      : baseFiltered;
 
   const activeFilterCount = (filterPriority ? 1 : 0) + (filterStale ? 1 : 0) + (filterMine ? 1 : 0);
 
@@ -501,6 +508,42 @@ export function InboxPage() {
       ) : (
         /* Single-track list — with optional stage grouping */
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+          {/* Trip scope split (#1) — ในประเทศ / ต่างประเทศ */}
+          {tab === 'trip' && (
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {([
+                { v: 'all', label: 'ทั้งหมด' },
+                { v: 'domestic', label: '🇹🇭 ในประเทศ' },
+                { v: 'international', label: '🌏 ต่างประเทศ' },
+              ] as const).map((c) => {
+                const active = tripScopeFilter === c.v;
+                const count =
+                  c.v === 'all'
+                    ? baseFiltered.length
+                    : baseFiltered.filter((o) => (o.trip_scope ?? 'domestic') === c.v).length;
+                return (
+                  <button
+                    key={c.v}
+                    type="button"
+                    onClick={() => setTripScopeFilter(c.v)}
+                    style={{
+                      fontFamily: 'inherit',
+                      fontSize: 12.5,
+                      fontWeight: active ? 700 : 400,
+                      padding: '6px 14px',
+                      borderRadius: '8px 0 8px 0',
+                      background: active ? colors.greenBg : 'transparent',
+                      color: active ? colors.green : colors.dimSoft,
+                      border: `1px solid ${active ? colors.greenDk : colors.lineHi}`,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {c.label} <span style={{ opacity: 0.7 }}>· {count}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
           {filtered.length === 0 ? (
             <LCard padding={40}>
               <div style={{ textAlign: 'center', color: colors.dim, fontSize: 13 }}>

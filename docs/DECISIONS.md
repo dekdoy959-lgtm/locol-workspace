@@ -57,6 +57,29 @@ canvas feel "inhabited." Solid-hex borders are now disallowed — use the rgba s
 
 ---
 
+## ADR-005 · Trip Intelligence Briefing is config-driven JSONB, not bespoke columns
+
+**Date:** 2026-06-17 · **Status:** Accepted
+
+**Context.** The trip briefing document (Parts A/B/C) has ~20 sections and 100+ fields, many
+repeatable (partners, sites, meetings, hotels, daily logs) and several international-only
+(passport, visa, import regs, embassy). Modelling each as typed columns/tables = a huge, rigid
+migration; every doc tweak = another migration.
+
+**Decision.** Describe the whole document as a **typed config** in `src/types/briefing.ts`
+(parts → sections → fields, each with `intlOnly`), render it with one generic `BriefingEditor`
+over a small set of section *kinds* (`fields / repeatable / checklist / objectives / budget /
+risk`), and store answers in a single `opportunities.briefing` JSONB column. Add `trip_scope`
+('domestic'|'international') as a real column for the Inbox split + indexing. Timeline (B2) reuses
+the existing `trip_stops` table rather than duplicating it.
+
+**Consequences.** Adding/editing a briefing field is a one-line config change, no migration. One
+migration (0019) covers the whole feature. Trade-off: briefing data isn't individually queryable
+in SQL (acceptable — it's per-trip document content, not analytics). The config is also the single
+source of truth for the (future) read-only/print view.
+
+---
+
 ## ADR-004 · Signature-corner accent tick on hero headings (opt-in)
 
 **Date:** 2026-06-14 · **Status:** Accepted

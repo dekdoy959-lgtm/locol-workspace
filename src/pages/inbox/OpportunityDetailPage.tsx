@@ -19,6 +19,7 @@ import { DiscordAttachment } from '../../components/discord/DiscordAttachment';
 import { TeamAssignmentsSection } from '../../components/opportunities/TeamAssignmentsSection';
 import { TripItinerary } from '../../components/trips/TripItinerary';
 import { TripBudgetCard } from '../../components/trips/TripBudgetCard';
+import { TripBriefingPanel } from '../../components/trips/TripBriefingPanel';
 import { OpportunityDetailsView } from '../../components/opportunities/OpportunityDetailsView';
 import { ConfirmModal } from '../../components/modals/ConfirmModal';
 import { colors } from '../../styles/tokens';
@@ -318,6 +319,15 @@ export function OpportunityDetailPage() {
 
           {/* Trip itinerary — only for track='trip' */}
           {opp.track === 'trip' && <TripItinerary opportunityId={opp.id} />}
+
+          {/* Trip Intelligence Briefing (Parts A/B/C) — only for track='trip' */}
+          {opp.track === 'trip' && (
+            <TripBriefingPanel
+              oppId={opp.id}
+              scope={(opp.trip_scope as 'domestic' | 'international' | null) ?? null}
+              briefing={(opp.briefing as Record<string, unknown>) ?? null}
+            />
+          )}
 
           {/* Budget tracking — relevant for events + trips */}
           {(opp.track === 'event' || opp.track === 'trip') && <TripBudgetCard opp={opp} />}

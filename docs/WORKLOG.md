@@ -4,6 +4,32 @@
 
 ---
 
+## 2026-06-17 · Trip — Domestic/International split (#1) + full Trip Intelligence Briefing (#2)
+
+Ports `LOCOL_Trip_Intelligence_Briefing_v1.docx` (Parts A/B/C) into the app, config-driven.
+
+- **Migration 0019** (user runs): adds `opportunities.trip_scope` ('domestic'|'international')
+  + `opportunities.briefing jsonb` + a partial index. ⚠️ writes fail until this is run.
+- **#1 scope split** — `TripBriefingPanel` has a 🇹🇭/🌏 toggle (writes `trip_scope`); the Inbox
+  trip tab gets ทั้งหมด / ในประเทศ / ต่างประเทศ filter chips (with counts) that scope the list
+  (works with both flat + stage-grouped views). Trips with no scope default to domestic.
+- **#2 briefing** — `src/types/briefing.ts` describes the entire document as a typed config
+  (Parts A/B/C → sections → fields, with `intlOnly` flags for passport/visa/import/embassy/visa-budget).
+  `BriefingEditor` renders it generically via section kinds: `fields · repeatable · checklist ·
+  objectives · budget · risk` (budget auto-totals; objectives have status + 3-tier success criteria).
+  `TripBriefingPanel` (on the trip detail page) shows a per-Part filled/total summary and an editor;
+  saves the whole `briefing` JSONB via `useUpdateOpportunity`. Timeline (B2) intentionally reuses the
+  existing `trip_stops` itinerary, not duplicated.
+- Wired into `OpportunityDetailPage` for `track === 'trip'`. `types/database.ts` opportunities Row
+  extended with the two columns (Insert/Update are Partial<Row>).
+
+**Architecture:** see [DECISIONS.md ADR-005]. **Follow-up (easy):** add the scope toggle to the trip
+*create* form too (today scope is set on the detail panel). **Validation:** build green (261 modules);
+briefing UI is auth-gated so not click-verified in preview — reviewed for hook-safety + focus retention
+(extracted `ObjectiveList` to avoid remount/focus loss).
+
+---
+
 ## 2026-06-16 · Quick wins — contact coordinator (#9), last-contact badge (#11), role de-dupe (#4)
 
 Part of the 11-item batch. All three need **no migration** (fields already existed).

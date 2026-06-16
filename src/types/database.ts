@@ -107,6 +107,8 @@ export type Database = {
           reviewer_id: string | null;
           ai_summary: string | null;
           details: Record<string, unknown>;
+          trip_scope: 'domestic' | 'international' | null;
+          briefing: Record<string, unknown> | null;
           last_update_at: string;
           stale_since: string | null;
           archived_at: string | null;

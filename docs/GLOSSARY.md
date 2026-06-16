@@ -21,5 +21,10 @@
   attention (ADR-003). Scale: `lineSubtle/line/lineHi/lineStrong`.
 - **Track** — a kind of opportunity: `apply` (ขอทุน/แข่ง) · `watch` (ติดตามข่าว) · `event` ·
   `trip` (ลงพื้นที่). 4 tracks (was 5; `act`/`contract` removed via migration 0013).
+- **Trip scope** — `trip_scope` on a trip opportunity: `domestic` (ในประเทศ) or `international`
+  (ต่างประเทศ). Drives the Inbox split and which `intlOnly` briefing fields show. (#1, migration 0019)
+- **Trip Intelligence Briefing** — the Part A/B/C trip-prep document, described as a typed config in
+  `types/briefing.ts`, rendered by `BriefingEditor`, stored in the `briefing` JSONB column. Section
+  kinds: fields / repeatable / checklist / objectives / budget / risk. (#2, ADR-005)
 - **Tier** — team-member access level used for visibility (RLS is the security boundary; client
   `canSee()` is a UX hint only).
