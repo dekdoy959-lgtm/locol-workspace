@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-06-18 · Align to official LOCOL Design System — Phase A (dark)
+
+Re-skinned the workspace to the official `LOCOL Design System` (June 2026 spec). The DS validated the
+earlier craft pass (asymmetric signature corner, ALL-CAPS headings, rgba borders, ease-out) — Phase A
+tunes values to the official spec. **Static dark values only — zero SVG risk.** (Phase B = light + toggle.)
+
+- **`tokens.ts` + `global.css`** → DS dark palette: primary **lime `#9BCF25`** (was `#99CE24`),
+  canvas `#0B0D0B`, surfaces `#181B17 / #20241F`, rgba-white borders, neutral-50 text family,
+  + new accents (cacao `#6B4226`, climate teal `#45BBAB`, emerald `#2E9E5B`).
+- **Fonts** → DS split: headings **IBM Plex Sans (Thai)**, body **Noto Sans (Thai)**, data IBM Plex
+  Mono. `LH`/`LBtn` use the heading font; body uses Noto. `@import` updated.
+- **Signature corner** → DS brand corners (round TL+BR, small off-corner). Swept all 252 inline
+  `Npx 0 Npx 0` literals → `Npx Mpx Npx Mpx`; radius tokens + `LCard` numeric template updated.
+- **Hover glow** → official lime glow (`shadow-glow-lime`).
+- **Official logo** → `LOCOL_Logo_White.svg` on Login + app chrome (desktop + mobile), replacing the
+  custom `MiniL` wordmark. Logos copied to `public/brand/`.
+
+**Validation:** build green (262); preview login confirmed `--green #9BCF25`, `--bg #0B0D0B`, body
+Noto Sans Thai, official logo rendering. **Source:** `~/Desktop/Skill MD/Brand Design/LOCOL Design System.zip`.
+**Next (Phase B):** light theme + runtime light/dark toggle (var() refactor + SVG-attribute fixes).
+
+---
+
 ## 2026-06-17 · Team access management — Phase 5a (#5)
 
 Soft access gate + admin backend (no RLS change yet — see ADR-006).

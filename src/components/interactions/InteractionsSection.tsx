@@ -84,7 +84,7 @@ export function InteractionsSection({ contactId }: Props) {
             padding: 14,
             background: colors.bgSoft,
             border: `1px solid ${colors.greenDk}`,
-            borderRadius: '12px 0 12px 0',
+            borderRadius: '12px 3px 12px 3px',
             marginBottom: 14,
             display: 'flex',
             flexDirection: 'column',
@@ -129,7 +129,7 @@ export function InteractionsSection({ contactId }: Props) {
                 padding: 8,
                 background: colors.dangerBg,
                 border: `1px solid ${colors.dangerDk}`,
-                borderRadius: '6px 0 6px 0',
+                borderRadius: '6px 2px 6px 2px',
                 color: colors.danger,
                 fontSize: 12,
               }}
@@ -165,7 +165,7 @@ export function InteractionsSection({ contactId }: Props) {
             padding: 16,
             background: colors.bgSoft,
             border: `1px dashed ${colors.line}`,
-            borderRadius: '10px 0 10px 0',
+            borderRadius: '10px 3px 10px 3px',
             color: colors.dim,
             fontSize: 12,
             textAlign: 'center',
@@ -200,7 +200,7 @@ function InteractionItem({ interaction: it, onDelete }: { interaction: Interacti
         padding: 12,
         background: colors.bgSoft,
         border: `1px solid ${colors.line}`,
-        borderRadius: '10px 0 10px 0',
+        borderRadius: '10px 3px 10px 3px',
         borderLeft: `3px solid ${dirColor}`,
       }}
     >
@@ -222,7 +222,7 @@ function InteractionItem({ interaction: it, onDelete }: { interaction: Interacti
             padding: '1px 6px',
             background: colors.bgCard,
             border: `1px solid ${colors.lineHi}`,
-            borderRadius: '4px 0 4px 0',
+            borderRadius: '4px 1px 4px 1px',
             color: colors.dimSoft,
             letterSpacing: 0.4,
           }}

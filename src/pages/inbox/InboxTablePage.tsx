@@ -378,7 +378,7 @@ export function InboxTablePage() {
                           padding: '2px 7px',
                           background: t.color.soft,
                           border: `1px solid ${t.color.chip}`,
-                          borderRadius: '4px 0 4px 0',
+                          borderRadius: '4px 1px 4px 1px',
                           whiteSpace: 'nowrap',
                         }}
                       >

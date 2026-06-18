@@ -144,7 +144,7 @@ export function BriefingPage() {
               display: 'inline-flex',
               background: colors.bgSoft,
               border: `1px solid ${colors.lineHi}`,
-              borderRadius: '10px 0 10px 0',
+              borderRadius: '10px 3px 10px 3px',
               padding: 2,
             }}
           >
@@ -160,7 +160,7 @@ export function BriefingPage() {
               padding: '10px 14px',
               background: colors.warnBg,
               border: `1px solid ${colors.warnDk}`,
-              borderRadius: '10px 0 10px 0',
+              borderRadius: '10px 3px 10px 3px',
               fontSize: 12,
               color: colors.warn,
               lineHeight: 1.5,
@@ -342,7 +342,7 @@ export function BriefingPage() {
                     padding: '8px 12px',
                     background: colors.bgSoft,
                     border: `1px solid ${colors.line}`,
-                    borderRadius: '8px 0 8px 0',
+                    borderRadius: '8px 2px 8px 2px',
                     cursor: 'pointer',
                   }}
                 >
@@ -383,7 +383,7 @@ function ViewModeBtn({
         background: active ? colors.green : 'transparent',
         color: active ? colors.bg : colors.dimSoft,
         border: 'none',
-        borderRadius: '8px 0 8px 0',
+        borderRadius: '8px 2px 8px 2px',
         cursor: 'pointer',
         fontFamily: 'inherit',
         fontSize: 12.5,
@@ -454,7 +454,7 @@ function EmptyState({ text }: { text: string }) {
         padding: 16,
         background: colors.bgSoft,
         border: `1px dashed ${colors.line}`,
-        borderRadius: '10px 0 10px 0',
+        borderRadius: '10px 3px 10px 3px',
         color: colors.dim,
         fontSize: 12,
         textAlign: 'center',
@@ -490,7 +490,7 @@ function OppRow({
         padding: '8px 10px',
         background: colors.bgSoft,
         border: `1px solid ${colors.line}`,
-        borderRadius: '8px 0 8px 0',
+        borderRadius: '8px 2px 8px 2px',
         cursor: 'pointer',
       }}
       onMouseEnter={(e) => (e.currentTarget.style.borderColor = meta.color.chip)}
@@ -553,7 +553,7 @@ function ContactRowItem({
         padding: '7px 10px',
         background: colors.bgSoft,
         border: `1px solid ${colors.line}`,
-        borderRadius: '8px 0 8px 0',
+        borderRadius: '8px 2px 8px 2px',
         cursor: 'pointer',
       }}
     >
@@ -566,7 +566,7 @@ function ContactRowItem({
             height: 24,
             objectFit: 'cover',
             border: `1px solid ${colors.lineHi}`,
-            borderRadius: '6px 0 6px 0',
+            borderRadius: '6px 2px 6px 2px',
           }}
         />
       ) : (

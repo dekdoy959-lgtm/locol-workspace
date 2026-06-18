@@ -298,7 +298,7 @@ function FilterGroup<T extends string>({
               background: value === o.value ? colors.green : 'transparent',
               color: value === o.value ? colors.bg : colors.dimSoft,
               border: `1px solid ${value === o.value ? colors.green : colors.lineHi}`,
-              borderRadius: '6px 0 6px 0',
+              borderRadius: '6px 2px 6px 2px',
               cursor: 'pointer',
               fontFamily: 'inherit',
               fontSize: 11.5,
@@ -420,7 +420,7 @@ function MilestoneItem({
         padding: 12,
         background: colors.bgSoft,
         border: `1px solid ${isOverdue ? colors.dangerDk : colors.line}`,
-        borderRadius: '10px 0 10px 0',
+        borderRadius: '10px 3px 10px 3px',
         display: 'flex',
         alignItems: 'flex-start',
         gap: 12,
@@ -436,7 +436,7 @@ function MilestoneItem({
               height: 30,
               objectFit: 'cover',
               border: `1px solid ${colors.lineHi}`,
-              borderRadius: '7px 0 7px 0',
+              borderRadius: '7px 2px 7px 2px',
             }}
           />
         ) : (
@@ -452,7 +452,7 @@ function MilestoneItem({
               color: sideColor,
               border: `1px solid ${sideColor}`,
               padding: '1px 5px',
-              borderRadius: '3px 0 3px 0',
+              borderRadius: '3px 1px 3px 1px',
               letterSpacing: 0.5,
               textTransform: 'uppercase',
             }}

@@ -40,7 +40,7 @@ export function RuleEditor({ value, onChange }: RuleEditorProps) {
           padding: '10px 14px',
           background: colors.greenBg,
           border: `1px solid ${colors.greenDk}`,
-          borderRadius: '10px 0 10px 0',
+          borderRadius: '10px 3px 10px 3px',
           display: 'flex',
           alignItems: 'center',
           gap: 8,
@@ -99,13 +99,13 @@ function CombinatorEditor({
         padding: 12,
         background: depth === 0 ? colors.bgSoft : 'transparent',
         border: `1px ${depth === 0 ? 'solid' : 'dashed'} ${accent}`,
-        borderRadius: '12px 0 12px 0',
+        borderRadius: '12px 3px 12px 3px',
         marginLeft: depth * 16,
       }}
     >
       {/* Header: AND/OR toggle */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-        <div style={{ display: 'flex', gap: 0, border: `1px solid ${accent}`, borderRadius: '6px 0 6px 0', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', gap: 0, border: `1px solid ${accent}`, borderRadius: '6px 2px 6px 2px', overflow: 'hidden' }}>
           {(['all', 'any'] as const).map((c) => (
             <button
               key={c}
@@ -158,7 +158,7 @@ function CombinatorEditor({
             padding: 12,
             background: colors.bg,
             border: `1px dashed ${colors.line}`,
-            borderRadius: '8px 0 8px 0',
+            borderRadius: '8px 2px 8px 2px',
             color: colors.dim,
             fontSize: 12,
             textAlign: 'center',
@@ -293,7 +293,7 @@ function LeafEditor({ leaf, onChange }: { leaf: LeafRule; onChange: (next: Rule 
         padding: '8px 10px',
         background: colors.bg,
         border: `1px solid ${colors.line}`,
-        borderRadius: '8px 0 8px 0',
+        borderRadius: '8px 2px 8px 2px',
       }}
     >
       <LSelect

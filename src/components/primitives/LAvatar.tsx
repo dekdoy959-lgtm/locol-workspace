@@ -19,7 +19,7 @@ export function LAvatar({ initials = '?', size = 26, color = colors.surface, rin
         background: colors.bgRaise,
         color,
         border: `1px solid ${ring ? colors.green : colors.lineHi}`,
-        borderRadius: '8px 0 8px 0',
+        borderRadius: '8px 2px 8px 2px',
         fontWeight: 600,
         fontSize: size * 0.4,
         letterSpacing: 0.5,

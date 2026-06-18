@@ -218,7 +218,7 @@ function DayBlock({
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: 0.5,
-            borderRadius: '6px 0 6px 0',
+            borderRadius: '6px 2px 6px 2px',
           }}
         >
           DAY {dayNumber}
@@ -433,7 +433,7 @@ function LocalStopRow({
               background: 'transparent',
               border: `1px solid ${colors.dangerDk}`,
               color: colors.danger,
-              borderRadius: '6px 0 6px 0',
+              borderRadius: '6px 2px 6px 2px',
               fontSize: 11,
               fontWeight: 600,
               letterSpacing: 0.5,
@@ -498,7 +498,7 @@ function LocalStopRow({
               color: colors.dim,
               border: `1px solid ${colors.lineHi}`,
               padding: '1px 6px',
-              borderRadius: '4px 0 4px 0',
+              borderRadius: '4px 1px 4px 1px',
               letterSpacing: 0.4,
               textTransform: 'uppercase',
               fontWeight: 600,

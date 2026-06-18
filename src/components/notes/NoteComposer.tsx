@@ -55,7 +55,7 @@ export function NoteComposer({ scope, targetId, currentUserId }: NoteComposerPro
       style={{
         background: colors.bgSoft,
         border: `1px solid ${colors.line}`,
-        borderRadius: '14px 0 14px 0',
+        borderRadius: '14px 4px 14px 4px',
         padding: 14,
       }}
     >
@@ -93,7 +93,7 @@ export function NoteComposer({ scope, targetId, currentUserId }: NoteComposerPro
                 background: colors.warnBg,
                 border: `1px solid ${colors.warnDk}`,
                 padding: '2px 8px',
-                borderRadius: '6px 0 6px 0',
+                borderRadius: '6px 2px 6px 2px',
                 letterSpacing: 0.5,
                 textTransform: 'uppercase',
               }}
@@ -139,7 +139,7 @@ export function NoteComposer({ scope, targetId, currentUserId }: NoteComposerPro
             padding: 8,
             background: colors.dangerBg,
             border: `1px solid ${colors.dangerDk}`,
-            borderRadius: '6px 0 6px 0',
+            borderRadius: '6px 2px 6px 2px',
             color: colors.danger,
             fontSize: 12,
           }}

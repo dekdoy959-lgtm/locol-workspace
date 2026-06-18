@@ -111,7 +111,7 @@ export function ConfirmModal({
               disabled={isLoading}
               style={{
                 padding: '7px 18px',
-                borderRadius: '8px 0 8px 0',
+                borderRadius: '8px 2px 8px 2px',
                 border: `1px solid ${danger ? colors.dangerDk : colors.greenDk}`,
                 background: danger ? '#3a1010' : colors.greenBg,
                 color: danger ? colors.danger : colors.green,

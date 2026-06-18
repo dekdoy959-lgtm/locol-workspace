@@ -48,7 +48,7 @@ export function TripBriefingPanel({ oppId, scope, briefing }: Props) {
     <div
       style={{
         border: `1px solid ${colors.line}`,
-        borderRadius: '14px 0 14px 0',
+        borderRadius: '14px 4px 14px 4px',
         background: colors.bgCard,
         padding: 18,
       }}
@@ -58,7 +58,7 @@ export function TripBriefingPanel({ oppId, scope, briefing }: Props) {
           <LIcon kind="plane" size={12} color={colors.green} /> Trip Intelligence Briefing
         </div>
         {/* Scope toggle — Domestic / International (#1) */}
-        <div style={{ display: 'inline-flex', border: `1px solid ${colors.lineHi}`, borderRadius: '8px 0 8px 0', overflow: 'hidden' }}>
+        <div style={{ display: 'inline-flex', border: `1px solid ${colors.lineHi}`, borderRadius: '8px 2px 8px 2px', overflow: 'hidden' }}>
           {SCOPES.map((s) => {
             const active = effectiveScope === s.value;
             return (
@@ -104,7 +104,7 @@ export function TripBriefingPanel({ oppId, scope, briefing }: Props) {
             {BRIEFING_PARTS.map((part) => {
               const { filled, total } = filledCount(part, data, effectiveScope);
               return (
-                <div key={part.id} style={{ border: `1px solid ${colors.line}`, borderRadius: '8px 0 8px 0', padding: '10px 12px' }}>
+                <div key={part.id} style={{ border: `1px solid ${colors.line}`, borderRadius: '8px 2px 8px 2px', padding: '10px 12px' }}>
                   <div style={{ fontSize: 11, color: colors.dimSoft }}>Part {part.id} · {part.th}</div>
                   <div style={{ fontSize: 16, fontWeight: 700, color: filled > 0 ? colors.green : colors.dim, marginTop: 2 }}>
                     {filled}/{total}

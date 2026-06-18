@@ -76,7 +76,7 @@ function GroupNode({
           marginLeft: node.depth * 24,
           background: node.depth === 0 ? colors.bgSoft : 'transparent',
           border: node.depth === 0 ? `1px solid ${colors.line}` : 'none',
-          borderRadius: '10px 0 10px 0',
+          borderRadius: '10px 3px 10px 3px',
           marginBottom: 4,
           cursor: 'pointer',
           position: 'relative',
@@ -156,7 +156,7 @@ function GroupNode({
                 background: colors.warnBg,
                 border: `1px solid ${colors.warnDk}`,
                 padding: '1px 5px',
-                borderRadius: '4px 0 4px 0',
+                borderRadius: '4px 1px 4px 1px',
                 letterSpacing: 0.5,
                 textTransform: 'uppercase',
                 fontWeight: 600,
@@ -176,7 +176,7 @@ function GroupNode({
               background: colors.greenBg,
               border: `1px solid ${colors.greenDk}`,
               padding: '2px 8px',
-              borderRadius: '5px 0 5px 0',
+              borderRadius: '5px 2px 5px 2px',
               letterSpacing: 0.3,
             }}
           >

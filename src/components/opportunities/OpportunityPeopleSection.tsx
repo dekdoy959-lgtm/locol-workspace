@@ -191,7 +191,7 @@ function PeopleGroup({
             padding: 12,
             background: colors.bgSoft,
             border: `1px solid ${accent}`,
-            borderRadius: '12px 0 12px 0',
+            borderRadius: '12px 3px 12px 3px',
             marginBottom: 10,
           }}
         >
@@ -261,7 +261,7 @@ function PeopleGroup({
                     display: 'flex',
                     alignItems: 'center',
                     gap: 8,
-                    borderRadius: '6px 0 6px 0',
+                    borderRadius: '6px 2px 6px 2px',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = colors.bgCard)}
                   onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
@@ -278,7 +278,7 @@ function PeopleGroup({
                         color: colors.olive,
                         fontSize: 10,
                         fontWeight: 700,
-                        borderRadius: '5px 0 5px 0',
+                        borderRadius: '5px 2px 5px 2px',
                         display: 'inline-flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -305,7 +305,7 @@ function PeopleGroup({
             padding: 16,
             background: colors.bgSoft,
             border: `1px dashed ${colors.line}`,
-            borderRadius: '10px 0 10px 0',
+            borderRadius: '10px 3px 10px 3px',
             color: colors.dim,
             fontSize: 12,
             textAlign: 'center',
@@ -332,7 +332,7 @@ function PeopleGroup({
                   padding: '8px 12px',
                   background: colors.bgSoft,
                   border: `1px solid ${colors.line}`,
-                  borderRadius: '10px 0 10px 0',
+                  borderRadius: '10px 3px 10px 3px',
                 }}
               >
                 {isContact && contact ? (
@@ -345,7 +345,7 @@ function PeopleGroup({
                         height: 28,
                         objectFit: 'cover',
                         border: `1px solid ${colors.lineHi}`,
-                        borderRadius: '7px 0 7px 0',
+                        borderRadius: '7px 2px 7px 2px',
                       }}
                     />
                   ) : (
@@ -361,7 +361,7 @@ function PeopleGroup({
                       color: colors.olive,
                       fontSize: 11,
                       fontWeight: 700,
-                      borderRadius: '7px 0 7px 0',
+                      borderRadius: '7px 2px 7px 2px',
                       display: 'inline-flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -393,7 +393,7 @@ function PeopleGroup({
                         background: colors.bgCard,
                         color: statusMeta?.color ?? colors.surface,
                         border: `1px solid ${statusMeta?.color ?? colors.lineHi}`,
-                        borderRadius: '6px 0 6px 0',
+                        borderRadius: '6px 2px 6px 2px',
                         padding: '4px 8px',
                         fontSize: 11,
                         fontFamily: 'inherit',

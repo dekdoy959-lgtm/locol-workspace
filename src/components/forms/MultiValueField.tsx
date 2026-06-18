@@ -47,7 +47,7 @@ export function MultiValueField<T>({ items, onChange, emptyItem, renderItem, add
             padding: 10,
             background: colors.bgSoft,
             border: `1px solid ${colors.line}`,
-            borderRadius: '12px 0 12px 0',
+            borderRadius: '12px 3px 12px 3px',
           }}
         >
           <div style={{ flex: 1, minWidth: 0 }}>{renderItem(item, i, (next) => handleUpdate(i, next))}</div>
@@ -59,7 +59,7 @@ export function MultiValueField<T>({ items, onChange, emptyItem, renderItem, add
               background: 'transparent',
               border: `1px solid ${colors.lineHi}`,
               color: colors.dimSoft,
-              borderRadius: '6px 0 6px 0',
+              borderRadius: '6px 2px 6px 2px',
               padding: '4px 8px',
               cursor: 'pointer',
               fontSize: 11,

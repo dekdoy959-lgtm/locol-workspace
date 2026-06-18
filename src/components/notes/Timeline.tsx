@@ -204,7 +204,7 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
             textAlign: 'center',
             background: colors.bgSoft,
             border: `1px dashed ${colors.line}`,
-            borderRadius: '14px 0 14px 0',
+            borderRadius: '14px 4px 14px 4px',
             color: colors.dim,
             fontSize: 12.5,
           }}
@@ -225,7 +225,7 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
             padding: '6px 12px',
             background: externalAuthError ? colors.warnBg : colors.bgSoft,
             border: `1px solid ${externalAuthError ? colors.warnDk : colors.line}`,
-            borderRadius: '6px 0 6px 0',
+            borderRadius: '6px 2px 6px 2px',
             fontSize: 11,
             color: externalAuthError ? colors.warn : colors.dim,
             letterSpacing: 0.3,
@@ -253,7 +253,7 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
             padding: '10px 14px',
             background: colors.greenBg,
             border: `1px solid ${colors.greenDk}`,
-            borderRadius: '10px 0 10px 0',
+            borderRadius: '10px 3px 10px 3px',
             display: 'flex',
             alignItems: 'center',
             gap: 12,
@@ -280,7 +280,7 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
               background: colors.green,
               color: colors.bg,
               border: 'none',
-              borderRadius: '8px 0 8px 0',
+              borderRadius: '8px 2px 8px 2px',
               cursor: promoteBulk.isPending ? 'not-allowed' : 'pointer',
               fontFamily: 'inherit',
               fontSize: 11.5,
@@ -350,7 +350,7 @@ export function Timeline({ scope, targetId, calendarEmails = [], linkedOpportuni
                   letterSpacing: 1,
                   textTransform: 'uppercase',
                   fontWeight: 700,
-                  borderRadius: '6px 0 6px 0',
+                  borderRadius: '6px 2px 6px 2px',
                 }}
               >
                 TODAY
@@ -514,7 +514,7 @@ function BulkConfirmModal({
         style={{
           background: colors.bgCard,
           border: `1px solid ${colors.lineHi}`,
-          borderRadius: '14px 0 14px 0',
+          borderRadius: '14px 4px 14px 4px',
           padding: 24,
           maxWidth: 460,
           width: '100%',
@@ -545,7 +545,7 @@ function BulkConfirmModal({
               background: 'transparent',
               border: `1px solid ${colors.lineHi}`,
               color: colors.dimSoft,
-              borderRadius: '8px 0 8px 0',
+              borderRadius: '8px 2px 8px 2px',
               cursor: 'pointer',
               fontFamily: 'inherit',
               fontSize: 12,
@@ -565,7 +565,7 @@ function BulkConfirmModal({
               background: colors.green,
               border: 'none',
               color: colors.bg,
-              borderRadius: '8px 0 8px 0',
+              borderRadius: '8px 2px 8px 2px',
               cursor: isPending ? 'not-allowed' : 'pointer',
               fontFamily: 'inherit',
               fontSize: 12,
@@ -591,7 +591,7 @@ function ExternalAuthNotice() {
         padding: '8px 12px',
         background: colors.warnBg,
         border: `1px solid ${colors.warnDk}`,
-        borderRadius: '6px 0 6px 0',
+        borderRadius: '6px 2px 6px 2px',
         fontSize: 11,
         color: colors.warn,
       }}
@@ -626,7 +626,7 @@ function NoteRowItem({
           minWidth: 0,
           background: colors.bgSoft,
           border: `1px solid ${colors.line}`,
-          borderRadius: '12px 0 12px 0',
+          borderRadius: '12px 3px 12px 3px',
           padding: '10px 14px',
         }}
       >
@@ -693,7 +693,7 @@ function NoteRowItem({
                   color: colors.dimSoft,
                   padding: '1px 6px',
                   border: `1px solid ${colors.line}`,
-                  borderRadius: '4px 0 4px 0',
+                  borderRadius: '4px 1px 4px 1px',
                 }}
               >
                 #{t}
@@ -738,7 +738,7 @@ function MeetingRow({
           minWidth: 0,
           background: '#1a1010',
           border: `1px solid #3a1818`,
-          borderRadius: '12px 0 12px 0',
+          borderRadius: '12px 3px 12px 3px',
           padding: '10px 14px',
         }}
       >
@@ -817,7 +817,7 @@ function MeetingRow({
                   color: a.responseStatus === 'accepted' ? colors.green : colors.dimSoft,
                   padding: '1px 6px',
                   border: `1px solid ${colors.line}`,
-                  borderRadius: '4px 0 4px 0',
+                  borderRadius: '4px 1px 4px 1px',
                   background: a.organizer ? colors.greenBg : 'transparent',
                 }}
               >
@@ -902,7 +902,7 @@ function EmailRow({
           minWidth: 0,
           background: '#161812',
           border: `1px solid #2a2d1f`,
-          borderRadius: '12px 0 12px 0',
+          borderRadius: '12px 3px 12px 3px',
           padding: '10px 14px',
         }}
       >
@@ -1005,7 +1005,7 @@ function OpportunityRow({
           minWidth: 0,
           background: meta.color.soft,
           border: `1px solid ${meta.color.chip}`,
-          borderRadius: '12px 0 12px 0',
+          borderRadius: '12px 3px 12px 3px',
           padding: '10px 14px',
           cursor: 'pointer',
           transition: 'border-color 150ms',
@@ -1096,7 +1096,7 @@ function KindChip({
         background: bg,
         color,
         border: `1px ${dashed ? 'dashed' : 'solid'} ${border}`,
-        borderRadius: '4px 0 4px 0',
+        borderRadius: '4px 1px 4px 1px',
         textTransform: 'uppercase',
       }}
     >
@@ -1149,7 +1149,7 @@ function InteractionRowView({
           minWidth: 0,
           background: sourceMeta.bg,
           border: `1px solid ${sourceMeta.border}`,
-          borderRadius: '12px 0 12px 0',
+          borderRadius: '12px 3px 12px 3px',
           padding: '10px 14px',
         }}
       >
@@ -1236,7 +1236,7 @@ function ShareButton({
           padding: '2px 6px',
           background: colors.greenBg,
           border: `1px solid ${colors.greenDk}`,
-          borderRadius: '4px 0 4px 0',
+          borderRadius: '4px 1px 4px 1px',
           whiteSpace: 'nowrap',
         }}
       >
@@ -1259,7 +1259,7 @@ function ShareButton({
         padding: '2px 7px',
         background: 'transparent',
         border: `1px dashed ${colors.lineHi}`,
-        borderRadius: '4px 0 4px 0',
+        borderRadius: '4px 1px 4px 1px',
         cursor: pending ? 'not-allowed' : 'pointer',
         fontFamily: 'inherit',
         whiteSpace: 'nowrap',

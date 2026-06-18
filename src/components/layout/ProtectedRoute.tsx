@@ -30,7 +30,7 @@ function GateCard({ tone, title, body }: { tone: string; title: string; body: st
           width: '100%',
           background: colors.bgCard,
           border: `1px solid ${colors.lineHi}`,
-          borderRadius: '16px 0 16px 0',
+          borderRadius: '16px 4px 16px 4px',
           padding: 28,
           textAlign: 'center',
         }}
@@ -50,7 +50,7 @@ function GateCard({ tone, title, body }: { tone: string; title: string; body: st
             letterSpacing: 0.3,
             textTransform: 'uppercase',
             padding: '8px 16px',
-            borderRadius: '10px 0 10px 0',
+            borderRadius: '10px 3px 10px 3px',
             background: 'transparent',
             color: colors.dimSoft,
             border: `1px solid ${colors.lineHi}`,

@@ -229,7 +229,7 @@ export function NotificationBell() {
             maxHeight: '70vh',
             background: colors.bgOverlay,
             border: `1px solid ${colors.lineHi}`,
-            borderRadius: '14px 0 14px 0',
+            borderRadius: '14px 4px 14px 4px',
             boxShadow: '0 12px 32px rgba(0,0,0,0.55)',
             zIndex: z.dropdown,
             display: 'flex',

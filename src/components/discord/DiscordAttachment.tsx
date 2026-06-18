@@ -49,7 +49,7 @@ export function DiscordAttachment({ storagePath, filename, width = 100, height =
   const box = {
     width,
     height,
-    borderRadius: '6px 0 6px 0',
+    borderRadius: '6px 2px 6px 2px',
     border: `1px solid ${colors.lineHi}`,
   } as const;
 

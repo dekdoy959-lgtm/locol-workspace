@@ -1,49 +1,56 @@
 // LOCOL Design Tokens — single source of truth
 // Ported from prototype locol-components.jsx
 
+// Aligned to the official LOCOL Design System (June 2026) — dark theme values.
+// Primary = Logo Lime #9BCF25 · canvas near-black #0B0D0B · charcoal surfaces.
+// (Phase B will layer the light theme + a runtime toggle on top of these.)
 export const colors = {
-  // ── Surface elevation ladder ──────────────────────────────────────
-  // Each rung is a whisper-quiet step lighter (and a hair warmer) so depth
-  // reads as "soil / wood at night", not flat screen-black. Stack order:
-  // canvas → soft → card → raised/hover → overlay. Higher = lighter.
-  bg: '#101010',        // L0 · canvas (brand black) — page background
-  bgSoft: '#171614',    // L1 · inset / section bands · sits just above canvas
-  bgCard: '#1d1c19',    // L2 · cards (the default resting surface)
-  bgRaise: '#252320',   // L3 · raised / hover / active card
-  bgOverlay: '#2c2a26', // L4 · dropdowns · popovers · modals (one rung above cards)
-  bgInput: '#141311',   // input inset — darker than card → reads "type here"
-  // ── Border progression (rgba whispers, not harsh hex) ─────────────
-  // Low-opacity white blends with whatever it sits on → edges define
-  // structure without demanding attention. Intensity ↑ with importance.
-  lineSubtle: 'rgba(255,255,255,0.05)', // inner dividers · faintest
-  line: 'rgba(255,255,255,0.09)',       // standard border (was #2a2a2a)
-  lineHi: 'rgba(255,255,255,0.15)',     // emphasis border (was #3a3a3a)
-  lineStrong: 'rgba(255,255,255,0.22)', // max emphasis · hover firm-up
-  // ── Text hierarchy (warm-neutral · all ≥ AA on canvas) ────────────
-  text: '#FFFFFF',      // primary — headings, key values
-  surface: '#D9D9D9',   // bright — surface elements / strong body
-  dimSoft: '#a6a39e',   // secondary — labels, supporting copy (~6:1)
-  dim: '#8a8782',       // muted — metadata, hints (~4.7:1, now AA-pass)
-  green: '#99CE24',
-  greenDk: '#6e9618',
-  greenBg: '#19250a',
-  // Semantic accents (previously hardcoded across the app)
-  danger: '#d96a66',
-  dangerDk: '#5a1a18',
-  dangerBg: '#241010',
-  warn: '#E8B923',
-  warnDk: '#5a3f10',
-  warnBg: '#241a06',
-  olive: '#9aa56a',
+  // ── Surface elevation ladder (DS dark theme) ──────────────────────
+  bg: '#0B0D0B',        // L0 · canvas (neutral-950) — page background
+  bgSoft: '#101310',    // L1 · sunken / inset bands
+  bgCard: '#181B17',    // L2 · cards (surface-card)
+  bgRaise: '#20241F',   // L3 · raised / hover / active (surface-raised)
+  bgOverlay: '#262B24', // L4 · dropdowns · popovers · modals (one rung above)
+  bgInput: '#0E110D',   // input inset — darker than card → reads "type here"
+  // ── Border progression (DS rgba whites on dark) ───────────────────
+  lineSubtle: 'rgba(247,248,246,0.10)', // inner dividers · faintest
+  line: 'rgba(247,248,246,0.16)',       // standard border (DS border-default)
+  lineHi: 'rgba(247,248,246,0.28)',     // emphasis border (DS border-strong)
+  lineStrong: 'rgba(247,248,246,0.40)', // max emphasis · hover firm-up
+  // ── Text hierarchy (DS neutral-50 family) ─────────────────────────
+  text: '#F7F8F6',      // primary (neutral-50)
+  surface: '#E2E5DF',   // bright — strong body / surface elements (neutral-200)
+  dimSoft: 'rgba(247,248,246,0.74)', // secondary — labels (DS text-secondary)
+  dim: 'rgba(247,248,246,0.52)',     // muted — metadata (DS text-muted)
+  // ── Brand — Logo Lime #9BCF25 ─────────────────────────────────────
+  green: '#9BCF25',     // PRIMARY (lime-500) — brand lime
+  greenDk: '#7FAF1C',   // lime-600 (readable for status / borders)
+  greenBg: 'rgba(155,207,37,0.14)', // surface-brand-soft (dark)
+  // ── Status / semantic (DS) ────────────────────────────────────────
+  danger: '#E5484D',    // error-500
+  dangerDk: '#7a2327',
+  dangerBg: 'rgba(229,72,77,0.13)',
+  warn: '#F2A541',      // warning-500
+  warnDk: '#6a4a16',
+  warnBg: 'rgba(242,165,65,0.13)',
+  // ── Supporting accents (DS) ───────────────────────────────────────
+  cacao: '#6B4226',     // cocoa-waste origin accent
+  cacaoSoft: '#B08A6E',
+  climate: '#45BBAB',   // methane / tech data (teal)
+  emerald: '#2E9E5B',   // secondary green data series
+  olive: '#9aa56a',     // retained for role chips (document_lead etc.)
   oliveDk: '#3a3f1f',
-  oliveBg: '#1d1f12',
+  oliveBg: 'rgba(154,165,106,0.14)',
   discord: '#5865F2',
 } as const;
 
 
 export const fonts = {
-  sans: "'IBM Plex Sans Thai', sans-serif",
-  mono: "'IBM Plex Mono', monospace",
+  // DS: headings = IBM Plex Sans (Thai); body = Noto Sans (Thai); data = IBM Plex Mono.
+  heading: "'IBM Plex Sans Thai', 'IBM Plex Sans', system-ui, sans-serif",
+  body: "'Noto Sans Thai', 'Noto Sans', system-ui, sans-serif",
+  sans: "'Noto Sans Thai', 'Noto Sans', system-ui, sans-serif", // back-compat alias = body
+  mono: "'IBM Plex Mono', ui-monospace, monospace",
 } as const;
 
 export const fontSize = {
@@ -58,14 +65,16 @@ export const fontSize = {
   microSm: 10,
 } as const;
 
+// DS signature corners: round TOP-LEFT + BOTTOM-RIGHT, small off-corner
+// (echoes the interlocking logo mark). Format: TL TR BR BL.
 export const radius = {
-  card: '24px 0 24px 0',
-  cardSm: '14px 0 14px 0',
-  cardXs: '12px 0 12px 0',
-  chip: '8px 0 8px 0',
-  chipSm: '5px 0 5px 0',
-  chipXs: '4px 0 4px 0',
-  btn: '10px 0 10px 0',
+  card: '22px 5px 22px 5px',   // brand-lg
+  cardSm: '16px 4px 16px 4px', // brand-md
+  cardXs: '12px 3px 12px 3px',
+  chip: '10px 3px 10px 3px',   // brand-sm
+  chipSm: '8px 2px 8px 2px',
+  chipXs: '6px 2px 6px 2px',
+  btn: '12px 3px 12px 3px',
 } as const;
 
 export const space = {

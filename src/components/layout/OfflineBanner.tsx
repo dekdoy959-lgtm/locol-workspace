@@ -56,7 +56,7 @@ export function OfflineBanner() {
         background: bg,
         color: fg,
         border: `1px solid ${border}`,
-        borderRadius: '10px 0 10px 0',
+        borderRadius: '10px 3px 10px 3px',
         padding: '8px 14px',
         fontSize: 12,
         fontWeight: 600,

@@ -85,7 +85,7 @@ export function ShareContactModal({ contact, onClose }: ShareContactModalProps) 
             style={{
               background: colors.bgSoft,
               border: `1px solid ${colors.line}`,
-              borderRadius: '10px 0 10px 0',
+              borderRadius: '10px 3px 10px 3px',
               padding: 14,
               fontSize: 11.5,
               fontFamily: "'IBM Plex Mono', monospace",

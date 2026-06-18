@@ -128,7 +128,7 @@ export function TeamAssignmentsSection({ opportunityId }: TeamAssignmentsSection
                           padding: '3px 4px 3px 8px',
                           background: colors.bgRaise,
                           border: `1px solid ${colors.lineHi}`,
-                          borderRadius: '6px 0 6px 0',
+                          borderRadius: '6px 2px 6px 2px',
                           fontSize: 11.5,
                         }}
                       >

@@ -70,7 +70,7 @@ export function BriefingEditor({ scope, value, saving, onSave, onCancel }: Props
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       {BRIEFING_PARTS.map((part) => (
-        <details key={part.id} open={part.id === 'A'} style={{ border: `1px solid ${colors.line}`, borderRadius: '12px 0 12px 0', overflow: 'hidden' }}>
+        <details key={part.id} open={part.id === 'A'} style={{ border: `1px solid ${colors.line}`, borderRadius: '12px 3px 12px 3px', overflow: 'hidden' }}>
           <summary
             style={{
               cursor: 'pointer',
@@ -134,7 +134,7 @@ function SectionTitle({ section }: { section: BriefingSection }) {
 
 const cardStyle: React.CSSProperties = {
   border: `1px solid ${colors.line}`,
-  borderRadius: '10px 0 10px 0',
+  borderRadius: '10px 3px 10px 3px',
   padding: 14,
   background: colors.bgCard,
 };
@@ -270,7 +270,7 @@ function RepeatableKind({ section, scope, data, onChange }: { section: BriefingS
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       {blocks.map((block, i) => (
-        <div key={i} style={{ border: `1px solid ${colors.line}`, borderRadius: '8px 0 8px 0', padding: 12, background: colors.bgSoft }}>
+        <div key={i} style={{ border: `1px solid ${colors.line}`, borderRadius: '8px 2px 8px 2px', padding: 12, background: colors.bgSoft }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
             <span style={{ fontSize: 11, fontWeight: 600, color: colors.olive }}>{section.blockLabel} #{i + 1}</span>
             <LBtn small ghost onClick={() => onChange({ blocks: blocks.filter((_, j) => j !== i) })}>✕ ลบ</LBtn>

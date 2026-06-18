@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { LCard, LH, LBtn, LFrame, MiniL } from '../components/primitives';
+import { LCard, LH, LBtn, LFrame } from '../components/primitives';
 import { colors } from '../styles/tokens';
 
 export function LoginPage() {
@@ -31,17 +31,10 @@ export function LoginPage() {
         }}
       >
         <LCard padding={44} style={{ maxWidth: 480, width: '100%' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 32 }}>
-            <MiniL size={24} color={colors.green} />
-            <span
-              style={{
-                fontWeight: 700,
-                letterSpacing: 3,
-                fontSize: 16,
-                color: colors.text,
-              }}
-            >
-              LOCOL · OPS
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 32 }}>
+            <img src="/brand/LOCOL_Logo_White.svg" alt="LOCOL" style={{ height: 28, width: 'auto' }} />
+            <span style={{ fontWeight: 600, letterSpacing: 1, fontSize: 13, color: colors.dimSoft }}>
+              · Workspace
             </span>
           </div>
 
@@ -70,7 +63,7 @@ export function LoginPage() {
                 padding: 12,
                 background: colors.dangerBg,
                 border: `1px solid ${colors.dangerDk}`,
-                borderRadius: '10px 0 10px 0',
+                borderRadius: '10px 3px 10px 3px',
                 color: colors.danger,
                 fontSize: 13,
               }}

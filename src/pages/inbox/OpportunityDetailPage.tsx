@@ -223,7 +223,7 @@ export function OpportunityDetailPage() {
                 onClick={() => setShowCancelConfirm(true)}
                 style={{
                   padding: '7px 16px',
-                  borderRadius: '8px 0 8px 0',
+                  borderRadius: '8px 2px 8px 2px',
                   border: `1px solid ${colors.dangerDk}`,
                   background: '#1e0a0a',
                   color: colors.danger,
@@ -283,7 +283,7 @@ export function OpportunityDetailPage() {
                     lineHeight: 1.55,
                     background: colors.bgSoft,
                     border: `1px solid ${colors.lineHi}`,
-                    borderRadius: '8px 0 8px 0',
+                    borderRadius: '8px 2px 8px 2px',
                     padding: '10px 14px',
                     whiteSpace: 'pre-wrap',
                     wordBreak: 'break-word',

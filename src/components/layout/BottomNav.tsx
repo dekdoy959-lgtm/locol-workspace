@@ -286,7 +286,7 @@ export function BottomNav({ onSearchOpen }: BottomNavProps) {
                   padding: '10px 14px',
                   background: 'transparent',
                   border: `1px solid ${colors.lineHi}`,
-                  borderRadius: '10px 0 10px 0',
+                  borderRadius: '10px 3px 10px 3px',
                   color: colors.dimSoft,
                   fontSize: 13,
                   fontWeight: 600,

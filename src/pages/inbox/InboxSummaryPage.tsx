@@ -238,7 +238,7 @@ export function InboxSummaryPage() {
                   padding: '14px 12px',
                   background: t.color.soft,
                   border: `1px solid ${t.color.chip}`,
-                  borderRadius: '12px 0 12px 0',
+                  borderRadius: '12px 3px 12px 3px',
                   cursor: 'pointer',
                 }}
               >
@@ -416,7 +416,7 @@ function MiniOppRow({
         padding: '7px 9px',
         background: colors.bgSoft,
         border: `1px solid ${colors.line}`,
-        borderRadius: '8px 0 8px 0',
+        borderRadius: '8px 2px 8px 2px',
         cursor: 'pointer',
         transition: 'border-color 150ms',
       }}

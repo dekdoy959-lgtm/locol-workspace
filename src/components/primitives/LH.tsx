@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { colors, radius as radiusTokens } from '../../styles/tokens';
+import { colors, fonts, radius as radiusTokens } from '../../styles/tokens';
 
 interface LHProps {
   children: ReactNode;
@@ -36,6 +36,7 @@ export function LH({ children, level = 2, sub, accent = true, color, tick = fals
         )}
         <div
           style={{
+            fontFamily: fonts.heading,
             fontWeight: 700,
             textTransform: 'uppercase',
             fontSize: sizes[level],

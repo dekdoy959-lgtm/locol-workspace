@@ -121,7 +121,7 @@ export function OrgDetailPage() {
                   height: 64,
                   background: colors.oliveBg,
                   border: `1px solid ${colors.oliveDk}`,
-                  borderRadius: '12px 0 12px 0',
+                  borderRadius: '12px 3px 12px 3px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -199,7 +199,7 @@ export function OrgDetailPage() {
                   padding: 20,
                   background: colors.bgSoft,
                   border: `1px dashed ${colors.line}`,
-                  borderRadius: '12px 0 12px 0',
+                  borderRadius: '12px 3px 12px 3px',
                   color: colors.dim,
                   fontSize: 12.5,
                   textAlign: 'center',
@@ -224,7 +224,7 @@ export function OrgDetailPage() {
                         padding: '10px 14px',
                         background: colors.bgSoft,
                         border: `1px solid ${myOrg?.is_primary ? colors.greenDk : colors.line}`,
-                        borderRadius: '10px 0 10px 0',
+                        borderRadius: '10px 3px 10px 3px',
                         cursor: 'pointer',
                         transition: 'background 150ms',
                       }}
@@ -240,7 +240,7 @@ export function OrgDetailPage() {
                             height: 36,
                             objectFit: 'cover',
                             border: `1px solid ${myOrg?.is_primary ? colors.green : colors.lineHi}`,
-                            borderRadius: '8px 0 8px 0',
+                            borderRadius: '8px 2px 8px 2px',
                           }}
                         />
                       ) : (

@@ -13,7 +13,7 @@ export function LNote({ children, accent = false, style = {} }: LNoteProps) {
       style={{
         display: 'inline-block',
         padding: '5px 11px',
-        borderRadius: '10px 0 10px 0',
+        borderRadius: '10px 3px 10px 3px',
         background: accent ? colors.green : 'transparent',
         color: accent ? colors.bg : colors.dimSoft,
         border: `1px solid ${accent ? colors.green : colors.lineHi}`,

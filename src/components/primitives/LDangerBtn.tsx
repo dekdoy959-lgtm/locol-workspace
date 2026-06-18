@@ -20,7 +20,7 @@ export function LDangerBtn({ children, onClick, disabled, small }: LDangerBtnPro
         color: colors.danger,
         border: `1px solid ${colors.dangerDk}`,
         padding: small ? '5px 12px' : '8px 16px',
-        borderRadius: '10px 0 10px 0',
+        borderRadius: '10px 3px 10px 3px',
         fontFamily: 'inherit',
         fontSize: small ? 11 : 12,
         fontWeight: 600,

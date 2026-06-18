@@ -58,7 +58,7 @@ export function TagsField({ value, onChange, placeholder = 'พิมพ์เ�
         style={{
           background: colors.bgSoft,
           border: `1px solid ${focused ? colors.green : colors.lineHi}`,
-          borderRadius: '10px 0 10px 0',
+          borderRadius: '10px 3px 10px 3px',
           padding: '6px 8px',
           display: 'flex',
           flexWrap: 'wrap',
@@ -79,7 +79,7 @@ export function TagsField({ value, onChange, placeholder = 'พิมพ์เ�
               background: colors.greenBg,
               border: `1px solid ${colors.greenDk}`,
               color: colors.green,
-              borderRadius: '6px 0 6px 0',
+              borderRadius: '6px 2px 6px 2px',
               fontSize: 11.5,
               fontWeight: 500,
             }}
@@ -133,7 +133,7 @@ export function TagsField({ value, onChange, placeholder = 'พิมพ์เ�
             marginTop: 4,
             background: colors.bgCard,
             border: `1px solid ${colors.lineHi}`,
-            borderRadius: '10px 0 10px 0',
+            borderRadius: '10px 3px 10px 3px',
             maxHeight: 240,
             overflowY: 'auto',
             zIndex: 10,

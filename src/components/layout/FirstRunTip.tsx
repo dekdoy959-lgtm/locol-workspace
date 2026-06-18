@@ -45,7 +45,7 @@ export function FirstRunTip({
         padding: '14px 40px 14px 16px',
         background: `linear-gradient(135deg, ${colors.greenBg}, transparent 70%)`,
         border: `1px solid ${colors.greenDk}`,
-        borderRadius: '14px 0 14px 0',
+        borderRadius: '14px 4px 14px 4px',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>

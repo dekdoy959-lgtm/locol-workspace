@@ -370,7 +370,7 @@ export function RelationshipGraphPage() {
                       letterSpacing: 0.4,
                       textTransform: 'uppercase',
                       padding: '3px 8px',
-                      borderRadius: '5px 0 5px 0',
+                      borderRadius: '5px 2px 5px 2px',
                     }}
                   >
                     ↻ Reset layout
@@ -729,7 +729,7 @@ export function RelationshipGraphPage() {
                   overflowY: 'auto',
                   background: colors.bgSoft,
                   border: `1px solid ${colors.line}`,
-                  borderRadius: '8px 0 8px 0',
+                  borderRadius: '8px 2px 8px 2px',
                 }}
               >
                 {searchResults.map((c) => (
@@ -816,7 +816,7 @@ export function RelationshipGraphPage() {
                           padding: '8px 10px',
                           background: colors.warnBg,
                           border: `1px solid ${colors.warnDk}`,
-                          borderRadius: '8px 0 8px 0',
+                          borderRadius: '8px 2px 8px 2px',
                           display: 'flex',
                           alignItems: 'center',
                           gap: 8,
@@ -871,7 +871,7 @@ export function RelationshipGraphPage() {
                     padding: 16,
                     background: colors.bgSoft,
                     border: `1px dashed ${colors.line}`,
-                    borderRadius: '10px 0 10px 0',
+                    borderRadius: '10px 3px 10px 3px',
                     color: colors.dim,
                     fontSize: 12,
                     textAlign: 'center',
@@ -912,7 +912,7 @@ export function RelationshipGraphPage() {
                             padding: '8px 10px',
                             background: colors.bgSoft,
                             border: `1px solid ${colors.line}`,
-                            borderRadius: '8px 0 8px 0',
+                            borderRadius: '8px 2px 8px 2px',
                           }}
                         >
                           <span
@@ -921,7 +921,7 @@ export function RelationshipGraphPage() {
                               color: e.type.color,
                               border: `1px ${e.type.style === 'dashed' ? 'dashed' : 'solid'} ${e.type.color}`,
                               padding: '1px 5px',
-                              borderRadius: '4px 0 4px 0',
+                              borderRadius: '4px 1px 4px 1px',
                               textTransform: 'uppercase',
                               letterSpacing: 0.5,
                               fontWeight: 600,

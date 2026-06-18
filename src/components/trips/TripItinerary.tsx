@@ -246,7 +246,7 @@ function DaySection({
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: 0.5,
-            borderRadius: '6px 0 6px 0',
+            borderRadius: '6px 2px 6px 2px',
           }}
         >
           DAY {dayNumber}
@@ -264,7 +264,7 @@ function DaySection({
               letterSpacing: 0.4,
               background: '#2a1212',
               border: `1px solid ${colors.dangerDk}`,
-              borderRadius: '5px 0 5px 0',
+              borderRadius: '5px 2px 5px 2px',
               padding: '2px 7px',
             }}
           >
@@ -551,7 +551,7 @@ function StopRow({
               background: 'transparent',
               border: `1px solid ${colors.dangerDk}`,
               color: colors.danger,
-              borderRadius: '6px 0 6px 0',
+              borderRadius: '6px 2px 6px 2px',
               fontSize: 11,
               fontWeight: 600,
               letterSpacing: 0.5,
@@ -615,7 +615,7 @@ function StopRow({
               color: colors.dim,
               border: `1px solid ${colors.lineHi}`,
               padding: '1px 6px',
-              borderRadius: '4px 0 4px 0',
+              borderRadius: '4px 1px 4px 1px',
               letterSpacing: 0.4,
               textTransform: 'uppercase',
               fontWeight: 600,
@@ -636,7 +636,7 @@ function StopRow({
                 padding: '1px 6px',
                 background: colors.oliveBg,
                 border: `1px solid ${colors.oliveDk}`,
-                borderRadius: '4px 0 4px 0',
+                borderRadius: '4px 1px 4px 1px',
                 letterSpacing: 0.4,
                 fontWeight: 600,
               }}
@@ -668,7 +668,7 @@ function StopRow({
               padding: '2px 8px',
               background: colors.oliveBg,
               border: `1px solid ${colors.oliveDk}`,
-              borderRadius: '4px 0 4px 0',
+              borderRadius: '4px 1px 4px 1px',
               display: 'inline-block',
             }}
           >
@@ -733,7 +733,7 @@ function PerStopTravelers({
                 gap: 3,
                 background: colors.bgRaise,
                 border: `1px solid ${colors.lineHi}`,
-                borderRadius: '5px 0 5px 0',
+                borderRadius: '5px 2px 5px 2px',
                 padding: '1px 3px 1px 1px',
                 fontSize: 10,
               }}
@@ -769,7 +769,7 @@ function PerStopTravelers({
               color: colors.dim,
               padding: '1px 5px',
               fontSize: 10,
-              borderRadius: '5px 0 5px 0',
+              borderRadius: '5px 2px 5px 2px',
               cursor: 'pointer',
               fontFamily: 'inherit',
             }}
@@ -804,7 +804,7 @@ function PerStopTravelers({
                   color: colors.text,
                   padding: '2px 6px',
                   fontSize: 10,
-                  borderRadius: '5px 0 5px 0',
+                  borderRadius: '5px 2px 5px 2px',
                   cursor: 'pointer',
                   fontFamily: 'inherit',
                 }}

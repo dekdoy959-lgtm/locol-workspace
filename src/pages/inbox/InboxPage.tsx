@@ -309,7 +309,7 @@ export function InboxPage() {
               display: 'inline-flex',
               background: colors.bgSoft,
               border: `1px solid ${colors.lineHi}`,
-              borderRadius: '8px 0 8px 0',
+              borderRadius: '8px 2px 8px 2px',
               padding: 2,
             }}
           >
@@ -532,7 +532,7 @@ export function InboxPage() {
                       fontSize: 12.5,
                       fontWeight: active ? 700 : 400,
                       padding: '6px 14px',
-                      borderRadius: '8px 0 8px 0',
+                      borderRadius: '8px 2px 8px 2px',
                       background: active ? colors.greenBg : 'transparent',
                       color: active ? colors.green : colors.dimSoft,
                       border: `1px solid ${active ? colors.greenDk : colors.lineHi}`,
@@ -601,7 +601,7 @@ export function InboxPage() {
                     cursor: 'pointer',
                     fontFamily: 'inherit',
                     fontSize: 12,
-                    borderRadius: '8px 0 8px 0',
+                    borderRadius: '8px 2px 8px 2px',
                   }}
                 >
                   {flatExpanded ? '▲ ย่อ' : `▾ แสดงเพิ่มทั้งหมด +${filtered.length - COLUMN_CARD_LIMIT}`}
@@ -652,7 +652,7 @@ function StageSection({
           padding: '8px 12px',
           background: trackSoft,
           border: `1px solid ${trackInk}40`,
-          borderRadius: '10px 0 10px 0',
+          borderRadius: '10px 3px 10px 3px',
           cursor: 'pointer',
           fontFamily: 'inherit',
           textAlign: 'left',
@@ -720,7 +720,7 @@ function StageSection({
                 cursor: 'pointer',
                 fontFamily: 'inherit',
                 fontSize: 11.5,
-                borderRadius: '8px 0 8px 0',
+                borderRadius: '8px 2px 8px 2px',
               }}
             >
               {expanded ? '▲ ย่อ' : `▾ แสดงเพิ่ม +${items.length - COLUMN_CARD_LIMIT}`}
@@ -819,7 +819,7 @@ function DensityBtn({
         background: active ? colors.green : 'transparent',
         color: active ? colors.bg : colors.dimSoft,
         border: 'none',
-        borderRadius: '6px 0 6px 0',
+        borderRadius: '6px 2px 6px 2px',
         cursor: 'pointer',
         fontFamily: 'inherit',
         fontSize: 14,
@@ -854,7 +854,7 @@ function FilterChip({
         background: active ? color : 'transparent',
         color: active ? colors.bg : colors.dimSoft,
         border: `1px solid ${active ? color : colors.lineHi}`,
-        borderRadius: '6px 0 6px 0',
+        borderRadius: '6px 2px 6px 2px',
         cursor: 'pointer',
         fontFamily: 'inherit',
         fontSize: 11,
@@ -910,7 +910,7 @@ function FocusView({
           padding: '10px 14px',
           background: colors.dangerBg,
           border: `1px solid ${colors.dangerDk}`,
-          borderRadius: '12px 0 12px 0',
+          borderRadius: '12px 3px 12px 3px',
           marginBottom: 12,
           fontSize: 12,
           color: colors.danger,
@@ -985,7 +985,7 @@ function TrackColumn({
         minWidth: 0,
         background: isDragOver ? meta.color.soft : 'transparent',
         border: `1px dashed ${isDragOver ? meta.color.ink : 'transparent'}`,
-        borderRadius: '14px 0 14px 0',
+        borderRadius: '14px 4px 14px 4px',
         padding: 4,
         margin: -4,
         transition: 'background 100ms',
@@ -1000,7 +1000,7 @@ function TrackColumn({
           padding: '10px 12px',
           background: meta.color.soft,
           border: `1px solid ${meta.color.chip}`,
-          borderRadius: '12px 0 12px 0',
+          borderRadius: '12px 3px 12px 3px',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1084,7 +1084,7 @@ function TrackColumn({
               cursor: 'pointer',
               fontFamily: 'inherit',
               fontSize: 11,
-              borderRadius: '10px 0 10px 0',
+              borderRadius: '10px 3px 10px 3px',
             }}
           >
             {expanded ? '▲ ย่อ' : `▾ แสดงเพิ่ม +${opps.length - COLUMN_CARD_LIMIT}`}
@@ -1103,7 +1103,7 @@ function TrackColumn({
             fontSize: 11,
             letterSpacing: 0.4,
             textTransform: 'uppercase',
-            borderRadius: '12px 0 12px 0',
+            borderRadius: '12px 3px 12px 3px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1211,7 +1211,7 @@ function OpportunityCard({
           background: colors.bgCard,
           border: `1px solid ${stale ? colors.dangerDk : colors.lineHi}`,
           borderLeft: `3px solid ${stale ? colors.danger : meta.color.ink}`,
-          borderRadius: '6px 0 6px 0',
+          borderRadius: '6px 2px 6px 2px',
           cursor: 'grab',
           transition: 'border-color 150ms',
           fontSize: 12,
@@ -1281,7 +1281,7 @@ function OpportunityCard({
           padding: '8px 10px',
           background: colors.bgCard,
           border: `1px solid ${stale ? colors.dangerDk : colors.lineHi}`,
-          borderRadius: '10px 0 10px 0',
+          borderRadius: '10px 3px 10px 3px',
           cursor: 'grab',
           transition: 'border-color 150ms',
           minWidth: 0,
@@ -1378,7 +1378,7 @@ function OpportunityCard({
         padding: 12,
         background: colors.bgCard,
         border: `1px solid ${stale ? colors.dangerDk : colors.lineHi}`,
-        borderRadius: '14px 0 14px 0',
+        borderRadius: '14px 4px 14px 4px',
         cursor: 'grab',
         transition: 'border-color 150ms',
         position: 'relative',

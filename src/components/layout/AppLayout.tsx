@@ -6,7 +6,6 @@ import { GlobalSearch } from '../search/GlobalSearch';
 import { useRealtimeSync } from '../../hooks/useRealtimeSync';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { colors, layout, z } from '../../styles/tokens';
-import { MiniL } from '../primitives/Decorations';
 import { BottomNav } from './BottomNav';
 import { InstallPrompt } from './InstallPrompt';
 import { UserMenu } from './UserMenu';
@@ -78,17 +77,10 @@ export function AppLayout() {
             WebkitBackdropFilter: 'blur(8px)',
           }}
         >
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-            <MiniL size={14} color={colors.green} />
-            <span
-              style={{
-                fontWeight: 700,
-                letterSpacing: 2.2,
-                fontSize: 12,
-                color: colors.text,
-              }}
-            >
-              LOCOL · OPS
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
+            <img src="/brand/LOCOL_Logo_White.svg" alt="LOCOL" style={{ height: 16, width: 'auto' }} />
+            <span style={{ fontWeight: 600, letterSpacing: 1, fontSize: 11, color: colors.dimSoft }}>
+              · Workspace
             </span>
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -104,7 +96,7 @@ export function AppLayout() {
                 justifyContent: 'center',
                 background: colors.bgSoft,
                 border: `1px solid ${colors.lineHi}`,
-                borderRadius: '10px 0 10px 0',
+                borderRadius: '10px 3px 10px 3px',
                 color: colors.dimSoft,
                 cursor: 'pointer',
                 padding: 0,
@@ -124,7 +116,7 @@ export function AppLayout() {
                 justifyContent: 'center',
                 background: colors.green,
                 border: `1px solid ${colors.greenDk}`,
-                borderRadius: '10px 0 10px 0',
+                borderRadius: '10px 3px 10px 3px',
                 color: colors.bg,
                 cursor: 'pointer',
                 padding: 0,
@@ -170,7 +162,7 @@ export function AppLayout() {
                   gap: 8,
                   background: colors.bgSoft,
                   border: `1px solid ${colors.lineHi}`,
-                  borderRadius: '10px 0 10px 0',
+                  borderRadius: '10px 3px 10px 3px',
                   padding: '5px 10px 5px 12px',
                   color: colors.dimSoft,
                   cursor: 'pointer',

@@ -29,7 +29,7 @@ export function OpportunityDetailsForm({ track, values, onChange }: OpportunityD
           padding: '8px 12px',
           background: meta.color.soft,
           border: `1px solid ${meta.color.chip}`,
-          borderRadius: '8px 0 8px 0',
+          borderRadius: '8px 2px 8px 2px',
           fontSize: 11,
           color: meta.color.ink,
           letterSpacing: 0.5,

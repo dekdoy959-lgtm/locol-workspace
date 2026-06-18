@@ -110,7 +110,7 @@ export function ContactListPage() {
                 background: tierFilter === t ? colors.green : 'transparent',
                 color: tierFilter === t ? colors.bg : colors.dimSoft,
                 border: `1px solid ${tierFilter === t ? colors.green : colors.lineHi}`,
-                borderRadius: '8px 0 8px 0',
+                borderRadius: '8px 2px 8px 2px',
                 cursor: 'pointer',
                 fontFamily: 'inherit',
                 fontSize: 11.5,
@@ -142,7 +142,7 @@ export function ContactListPage() {
                 background: selected ? (meta?.color ?? colors.green) : 'transparent',
                 color: selected ? colors.bg : (meta?.color ?? colors.dimSoft),
                 border: `1px solid ${selected ? (meta?.color ?? colors.green) : colors.lineHi}`,
-                borderRadius: '6px 0 6px 0',
+                borderRadius: '6px 2px 6px 2px',
                 cursor: 'pointer',
                 fontFamily: 'inherit',
                 fontSize: 11,
@@ -249,7 +249,7 @@ export function ContactListPage() {
                               height: 32,
                               objectFit: 'cover',
                               border: `1px solid ${colors.lineHi}`,
-                              borderRadius: '8px 0 8px 0',
+                              borderRadius: '8px 2px 8px 2px',
                               flexShrink: 0,
                             }}
                           />
@@ -325,7 +325,7 @@ export function ContactListPage() {
                             background: health.bg,
                             color: health.fg,
                             border: `1px solid ${health.border}`,
-                            borderRadius: '8px 0 8px 0',
+                            borderRadius: '8px 2px 8px 2px',
                           }}
                         >
                           {c.health}

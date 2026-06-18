@@ -30,6 +30,8 @@ export function LCard({
 }: LCardProps) {
   const surface = bg ?? (raised ? colors.bgRaise : colors.bgCard);
   const cls = [interactive && 'l-lift', className].filter(Boolean).join(' ') || undefined;
+  // DS signature corner: round TL + BR, small off-corner (~20%) echoing the logo mark.
+  const off = Math.max(3, Math.round(radius * 0.2));
   return (
     <div
       onClick={onClick}
@@ -37,7 +39,7 @@ export function LCard({
       style={{
         background: surface,
         border: `1px solid ${border}`,
-        borderRadius: `${radius}px 0 ${radius}px 0`,
+        borderRadius: `${radius}px ${off}px ${radius}px ${off}px`,
         padding,
         position: 'relative',
         cursor: interactive || onClick ? 'pointer' : undefined,

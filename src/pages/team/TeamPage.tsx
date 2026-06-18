@@ -249,7 +249,7 @@ function MemberRow({
                 width: 32,
                 height: 32,
                 objectFit: 'cover',
-                borderRadius: '8px 0 8px 0',
+                borderRadius: '8px 2px 8px 2px',
                 border: `1px solid ${colors.lineHi}`,
               }}
             />
@@ -340,7 +340,7 @@ function StatusBadge({ status }: { status: AccessStatus }) {
         background: meta.bg,
         border: `1px solid ${meta.border}`,
         padding: '2px 7px',
-        borderRadius: '5px 0 5px 0',
+        borderRadius: '5px 2px 5px 2px',
         fontWeight: 600,
         letterSpacing: 0.4,
         textTransform: 'uppercase',
@@ -366,7 +366,7 @@ function RoleBadge({ role }: { role: 'admin' | 'member' }) {
         background: meta.bg,
         border: `1px solid ${meta.border}`,
         padding: '2px 8px',
-        borderRadius: '5px 0 5px 0',
+        borderRadius: '5px 2px 5px 2px',
         fontWeight: 600,
         letterSpacing: 0.5,
         textTransform: 'uppercase',

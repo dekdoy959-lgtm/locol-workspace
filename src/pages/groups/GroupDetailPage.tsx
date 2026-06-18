@@ -122,7 +122,7 @@ export function GroupDetailPage() {
             padding: 14,
             background: colors.warnBg,
             border: `1px solid ${colors.warnDk}`,
-            borderRadius: '12px 0 12px 0',
+            borderRadius: '12px 3px 12px 3px',
           }}
         >
           <div style={{ fontSize: 10, letterSpacing: 1.2, color: colors.warn, fontWeight: 700, marginBottom: 6 }}>
@@ -157,7 +157,7 @@ export function GroupDetailPage() {
                 padding: 12,
                 background: colors.bgSoft,
                 border: `1px solid ${colors.line}`,
-                borderRadius: '12px 0 12px 0',
+                borderRadius: '12px 3px 12px 3px',
                 marginBottom: 14,
               }}
             >
@@ -188,7 +188,7 @@ export function GroupDetailPage() {
                         display: 'flex',
                         alignItems: 'center',
                         gap: 8,
-                        borderRadius: '6px 0 6px 0',
+                        borderRadius: '6px 2px 6px 2px',
                       }}
                       onMouseEnter={(e) => (e.currentTarget.style.background = colors.bgCard)}
                       onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
@@ -213,7 +213,7 @@ export function GroupDetailPage() {
                 padding: 24,
                 background: colors.bgSoft,
                 border: `1px dashed ${colors.line}`,
-                borderRadius: '12px 0 12px 0',
+                borderRadius: '12px 3px 12px 3px',
                 color: colors.dim,
                 fontSize: 12.5,
                 textAlign: 'center',
@@ -233,7 +233,7 @@ export function GroupDetailPage() {
                     padding: '8px 10px',
                     background: colors.bgSoft,
                     border: `1px solid ${colors.line}`,
-                    borderRadius: '10px 0 10px 0',
+                    borderRadius: '10px 3px 10px 3px',
                   }}
                 >
                   {m.avatar_url ? (
@@ -245,7 +245,7 @@ export function GroupDetailPage() {
                         height: 28,
                         objectFit: 'cover',
                         border: `1px solid ${colors.lineHi}`,
-                        borderRadius: '7px 0 7px 0',
+                        borderRadius: '7px 2px 7px 2px',
                       }}
                     />
                   ) : (
@@ -332,7 +332,7 @@ export function GroupDetailPage() {
                       textAlign: 'left',
                       background: colors.bgSoft,
                       border: `1px solid ${colors.line}`,
-                      borderRadius: '10px 0 10px 0',
+                      borderRadius: '10px 3px 10px 3px',
                       padding: '8px 12px',
                       cursor: 'pointer',
                       color: colors.text,

@@ -31,7 +31,7 @@ export function LChip({
         color: ink,
         background: bg,
         border: `1px solid ${border || ink}`,
-        borderRadius: '8px 0 8px 0',
+        borderRadius: '8px 2px 8px 2px',
         whiteSpace: 'nowrap',
         ...style,
       }}

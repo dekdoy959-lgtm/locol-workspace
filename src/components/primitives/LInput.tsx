@@ -24,7 +24,7 @@ export function LInput({ value, onChange, style = {}, ...rest }: LInputProps) {
         background: colors.bgSoft,
         color: colors.text,
         border: `1px solid ${colors.lineHi}`,
-        borderRadius: '10px 0 10px 0',
+        borderRadius: '10px 3px 10px 3px',
         padding: '9px 12px',
         fontSize: 13.5,
         fontFamily: 'inherit',

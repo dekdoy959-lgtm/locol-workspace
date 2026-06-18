@@ -91,7 +91,7 @@ function SidePick({
         padding: '10px 12px',
         background: selected ? `${accent}15` : colors.bgSoft,
         border: `1px solid ${selected ? accent : colors.line}`,
-        borderRadius: '10px 0 10px 0',
+        borderRadius: '10px 3px 10px 3px',
         color: disabled ? colors.dim : colors.text,
         cursor: disabled ? 'default' : 'pointer',
         fontFamily: 'inherit',
@@ -425,7 +425,7 @@ export function MergeContactsPage() {
             padding: 12,
             background: colors.dangerBg,
             border: `1px solid ${colors.dangerDk}`,
-            borderRadius: '10px 0 10px 0',
+            borderRadius: '10px 3px 10px 3px',
             color: colors.danger,
             fontSize: 13,
             marginBottom: 16,
@@ -515,7 +515,7 @@ export function MergeContactsPage() {
           onPick={(s) => set('avatar_url', s)}
           render={(v) =>
             v ? (
-              <img src={v as string} alt="" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: '8px 0 8px 0' }} />
+              <img src={v as string} alt="" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: '8px 2px 8px 2px' }} />
             ) : (
               <span style={{ color: colors.dim }}>—</span>
             )
@@ -578,7 +578,7 @@ export function MergeContactsPage() {
             padding: 14,
             background: '#1f2a08',
             border: `1px dashed ${colors.greenDk}`,
-            borderRadius: '10px 0 10px 0',
+            borderRadius: '10px 3px 10px 3px',
             fontSize: 12,
             color: colors.surface,
             lineHeight: 1.55,
@@ -604,7 +604,7 @@ function ContactHeader({ contact, tone, label }: { contact: ContactRow; tone: Si
           <img
             src={contact.avatar_url}
             alt=""
-            style={{ width: 40, height: 40, objectFit: 'cover', border: `1px solid ${accent}`, borderRadius: '8px 0 8px 0' }}
+            style={{ width: 40, height: 40, objectFit: 'cover', border: `1px solid ${accent}`, borderRadius: '8px 2px 8px 2px' }}
           />
         ) : (
           <LAvatar initials={contactInitials(contact)} size={36} ring={tone === 'A'} />
@@ -668,7 +668,7 @@ function ArrayPicker({
                   background: selected ? colors.green : 'transparent',
                   color: selected ? colors.bg : colors.dimSoft,
                   border: `1px solid ${selected ? colors.green : colors.lineHi}`,
-                  borderRadius: '4px 0 4px 0',
+                  borderRadius: '4px 1px 4px 1px',
                   cursor: 'pointer',
                   fontFamily: 'inherit',
                   fontSize: 10,
@@ -689,7 +689,7 @@ function ArrayPicker({
             padding: '10px 12px',
             background: colors.bgSoft,
             border: `1px solid ${mode === 'A' || mode === 'union' ? colors.green : colors.line}`,
-            borderRadius: '10px 0 10px 0',
+            borderRadius: '10px 3px 10px 3px',
             opacity: mode === 'B' ? 0.4 : 1,
           }}
         >
@@ -700,7 +700,7 @@ function ArrayPicker({
             padding: '10px 12px',
             background: colors.bgSoft,
             border: `1px solid ${mode === 'B' || mode === 'union' ? colors.warn : colors.line}`,
-            borderRadius: '10px 0 10px 0',
+            borderRadius: '10px 3px 10px 3px',
             opacity: mode === 'A' ? 0.4 : 1,
           }}
         >

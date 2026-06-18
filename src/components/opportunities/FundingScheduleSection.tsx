@@ -57,7 +57,7 @@ export function FundingScheduleSection({ opp }: { opp: OpportunityRow }) {
   const receivedPayout = rows.filter((r) => r.kind === 'payout' && r.done).reduce((s, r) => s + num(r.amount), 0);
 
   return (
-    <div style={{ border: `1px solid ${colors.line}`, borderRadius: '14px 0 14px 0', background: colors.bgCard, padding: 18 }}>
+    <div style={{ border: `1px solid ${colors.line}`, borderRadius: '14px 4px 14px 4px', background: colors.bgCard, padding: 18 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
         <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.2, textTransform: 'uppercase', color: colors.warn, display: 'flex', alignItems: 'center', gap: 6 }}>
           <LIcon kind="money" size={12} color={colors.warn} /> รอบเงินทุน · Funding Schedule

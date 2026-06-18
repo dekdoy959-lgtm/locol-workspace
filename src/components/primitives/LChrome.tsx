@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { colors } from '../../styles/tokens';
-import { MiniL } from './Decorations';
 
 interface LChromeProps {
   title: string;
@@ -24,16 +23,9 @@ export function LChrome({ title, breadcrumbs, right }: LChromeProps) {
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-          <MiniL size={16} color={colors.green} />
-          <span
-            style={{
-              fontWeight: 700,
-              letterSpacing: 2.5,
-              fontSize: 13,
-              color: colors.text,
-            }}
-          >
-            LOCOL · OPS
+          <img src="/brand/LOCOL_Logo_White.svg" alt="LOCOL" style={{ height: 18, width: 'auto' }} />
+          <span style={{ fontWeight: 600, letterSpacing: 1, fontSize: 11.5, color: colors.dimSoft }}>
+            · Workspace
           </span>
         </span>
         <span style={{ color: colors.dim, fontSize: 13 }}>/</span>

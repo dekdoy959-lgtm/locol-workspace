@@ -153,7 +153,7 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
             padding: 14,
             background: colors.bgSoft,
             border: `1px solid ${colors.greenDk}`,
-            borderRadius: '12px 0 12px 0',
+            borderRadius: '12px 3px 12px 3px',
             marginBottom: 14,
             display: 'flex',
             flexDirection: 'column',
@@ -178,7 +178,7 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
                     background: targetKind === k ? colors.green : 'transparent',
                     color: targetKind === k ? colors.bg : colors.dimSoft,
                     border: `1px solid ${targetKind === k ? colors.green : colors.lineHi}`,
-                    borderRadius: '6px 0 6px 0',
+                    borderRadius: '6px 2px 6px 2px',
                     cursor: 'pointer',
                     fontFamily: 'inherit',
                     fontSize: 11,
@@ -204,7 +204,7 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
                   overflowY: 'auto',
                   background: colors.bgCard,
                   border: `1px solid ${colors.lineHi}`,
-                  borderRadius: '6px 0 6px 0',
+                  borderRadius: '6px 2px 6px 2px',
                 }}
               >
                 {searchResults.length === 0 ? (
@@ -280,7 +280,7 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
             padding: 16,
             background: colors.bgSoft,
             border: `1px dashed ${colors.line}`,
-            borderRadius: '10px 0 10px 0',
+            borderRadius: '10px 3px 10px 3px',
             color: colors.dim,
             fontSize: 12.5,
             textAlign: 'center',
@@ -320,7 +320,7 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
                   padding: '8px 12px',
                   background: colors.bgSoft,
                   border: `1px solid ${colors.line}`,
-                  borderRadius: '10px 0 10px 0',
+                  borderRadius: '10px 3px 10px 3px',
                 }}
               >
                 <span
@@ -331,7 +331,7 @@ export function RelationsSection({ contactId }: RelationsSectionProps) {
                     padding: '2px 7px',
                     color: rt.color,
                     border: `1px ${rt.style === 'dashed' ? 'dashed' : 'solid'} ${rt.color}`,
-                    borderRadius: '5px 0 5px 0',
+                    borderRadius: '5px 2px 5px 2px',
                     flexShrink: 0,
                     fontWeight: 600,
                   }}
@@ -405,7 +405,7 @@ function TargetIcon({ kind, data }: { kind: TargetKind; data?: ContactRow | OrgR
           height: 26,
           objectFit: 'cover',
           border: `1px solid ${colors.lineHi}`,
-          borderRadius: '6px 0 6px 0',
+          borderRadius: '6px 2px 6px 2px',
           flexShrink: 0,
         }}
       />
@@ -424,7 +424,7 @@ function TargetIcon({ kind, data }: { kind: TargetKind; data?: ContactRow | OrgR
           color: colors.olive,
           fontSize: 10,
           fontWeight: 700,
-          borderRadius: '6px 0 6px 0',
+          borderRadius: '6px 2px 6px 2px',
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -446,7 +446,7 @@ function TargetIcon({ kind, data }: { kind: TargetKind; data?: ContactRow | OrgR
         border: `1px solid ${meta.color.chip}`,
         color: meta.color.ink,
         fontSize: 12,
-        borderRadius: '6px 0 6px 0',
+        borderRadius: '6px 2px 6px 2px',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',

@@ -5,7 +5,7 @@ import type { CSSProperties } from 'react';
 export function LSkeleton({
   w = '100%',
   h = 14,
-  radius = '8px 0 8px 0',
+  radius = '8px 2px 8px 2px',
   style = {},
 }: {
   w?: string | number;
@@ -26,7 +26,7 @@ export function LSkeletonCard() {
         gap: 8,
         padding: 12,
         border: '1px solid #2a2a2a',
-        borderRadius: '10px 0 10px 0',
+        borderRadius: '10px 3px 10px 3px',
         background: '#1c1c1c',
       }}
     >
