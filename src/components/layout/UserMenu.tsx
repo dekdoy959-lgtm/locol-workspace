@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import { LAvatar, LIcon } from '../primitives';
 import { colors, z } from '../../styles/tokens';
 
@@ -11,6 +12,7 @@ interface UserMenuProps {
 export function UserMenu({ initials }: UserMenuProps) {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+  const { theme, toggle } = useTheme();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -134,6 +136,13 @@ export function UserMenu({ initials }: UserMenuProps) {
           />
           <div style={{ height: 1, background: colors.line, margin: '4px 0' }} />
           <MenuItem
+            icon="palette"
+            label={theme === 'dark' ? 'ธีม · สลับเป็นสว่าง (Light)' : 'ธีม · สลับเป็นมืด (Dark)'}
+            sub={theme === 'dark' ? 'ตอนนี้: มืด (Dark)' : 'ตอนนี้: สว่าง (Light)'}
+            onClick={toggle}
+          />
+          <div style={{ height: 1, background: colors.line, margin: '4px 0' }} />
+          <MenuItem
             icon="close"
             label="Sign out"
             danger
@@ -152,7 +161,7 @@ function MenuItem({
   onClick,
   danger = false,
 }: {
-  icon: 'settings' | 'user' | 'users' | 'close';
+  icon: 'settings' | 'user' | 'users' | 'close' | 'palette';
   label: string;
   sub?: string;
   onClick: () => void;

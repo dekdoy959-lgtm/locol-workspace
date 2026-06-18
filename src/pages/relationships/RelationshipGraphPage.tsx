@@ -10,6 +10,7 @@ import { findTrack, type OpportunityRow } from '../../types/opportunity';
 import { findRelationType, RELATION_TYPES, type RelationType } from '../../types/relation';
 import { LCard, LH, LBtn, LIcon, LInput, LNote, LAvatar } from '../../components/primitives';
 import { colors } from '../../styles/tokens';
+import { useTheme } from '../../contexts/ThemeContext';
 
 type EntityKind = 'contact' | 'org' | 'opportunity';
 
@@ -317,6 +318,24 @@ export function RelationshipGraphPage() {
   const nodeById: Record<string, Node> = {};
   for (const n of positionedNodes) nodeById[n.id] = n;
 
+  // SVG presentation attributes (fill/stroke) don't resolve CSS var(), so resolve
+  // the theme-reactive tokens to concrete hex here and re-resolve on theme change.
+  const { theme } = useTheme();
+  const gc = useMemo(() => {
+    const cs = getComputedStyle(document.documentElement);
+    const v = (n: string, fallback: string) => cs.getPropertyValue(n).trim() || fallback;
+    return {
+      bg: v('--bg', '#0B0D0B'),
+      bgRaise: v('--bg-raise', '#20241F'),
+      line: v('--line', 'rgba(247,248,246,0.16)'),
+      lineHi: v('--line-hi', 'rgba(247,248,246,0.28)'),
+      surface: v('--surface', '#E2E5DF'),
+      dim: v('--dim', 'rgba(247,248,246,0.52)'),
+      dimSoft: v('--dim-soft', 'rgba(247,248,246,0.74)'),
+      green: v('--green', '#9BCF25'),
+    };
+  }, [theme]);
+
   return (
     <div style={{ padding: '28px 36px', maxWidth: 1500, margin: '0 auto' }}>
       <div style={{ marginBottom: 24 }}>
@@ -410,9 +429,9 @@ export function RelationshipGraphPage() {
             {/* Concentric rings */}
             {focusContact && (
               <g opacity={0.12}>
-                <circle cx={CANVAS_W / 2} cy={CANVAS_H / 2} r={R1} fill="none" stroke={colors.lineHi} strokeWidth={1} />
+                <circle cx={CANVAS_W / 2} cy={CANVAS_H / 2} r={R1} fill="none" stroke={gc.lineHi} strokeWidth={1} />
                 {showTwoHop && (
-                  <circle cx={CANVAS_W / 2} cy={CANVAS_H / 2} r={R2} fill="none" stroke={colors.lineHi} strokeWidth={1} strokeDasharray="3 6" />
+                  <circle cx={CANVAS_W / 2} cy={CANVAS_H / 2} r={R2} fill="none" stroke={gc.lineHi} strokeWidth={1} strokeDasharray="3 6" />
                 )}
               </g>
             )}
@@ -424,7 +443,7 @@ export function RelationshipGraphPage() {
                   x={CANVAS_W / 2}
                   y={CANVAS_H / 2 - R1 - 10}
                   textAnchor="middle"
-                  fill={colors.dim}
+                  fill={gc.dim}
                   fontSize="9"
                   letterSpacing="1"
                   style={{ textTransform: 'uppercase' }}
@@ -498,7 +517,7 @@ export function RelationshipGraphPage() {
                           y={-8}
                           width={72}
                           height={16}
-                          fill={colors.bg}
+                          fill={gc.bg}
                           stroke={e.type.color}
                           strokeWidth={0.5}
                           rx={2}
@@ -536,9 +555,9 @@ export function RelationshipGraphPage() {
                 // Compute label + initials + colors based on entity kind
                 let label = '';
                 let initials = '';
-                let fillColor: string = colors.bgRaise;
-                let strokeColor: string = colors.lineHi;
-                let labelColor: string = colors.surface;
+                let fillColor: string = gc.bgRaise;
+                let strokeColor: string = gc.lineHi;
+                let labelColor: string = gc.surface;
                 let avatarUrl: string | null = null;
                 let typeBadge: string | null = null;
 
@@ -546,9 +565,9 @@ export function RelationshipGraphPage() {
                   label = contactDisplayName(n.contact);
                   initials = contactInitials(n.contact);
                   avatarUrl = n.contact.avatar_url;
-                  fillColor = n.ring === 'focus' ? colors.green : colors.bgRaise;
-                  strokeColor = n.ring === 'focus' ? colors.green : n.ring === 'two-hop' ? colors.line : colors.lineHi;
-                  labelColor = n.ring === 'focus' ? colors.green : n.ring === 'two-hop' ? colors.dimSoft : colors.surface;
+                  fillColor = n.ring === 'focus' ? gc.green : gc.bgRaise;
+                  strokeColor = n.ring === 'focus' ? gc.green : n.ring === 'two-hop' ? gc.line : gc.lineHi;
+                  labelColor = n.ring === 'focus' ? gc.green : n.ring === 'two-hop' ? gc.dimSoft : gc.surface;
                 } else if (n.entityKind === 'org' && n.org) {
                   label = n.org.name;
                   initials = orgInitials(n.org.name);
@@ -645,7 +664,7 @@ export function RelationshipGraphPage() {
                         x={0}
                         y={n.ring === 'focus' ? 5 : n.ring === 'direct' ? 4 : 3}
                         textAnchor="middle"
-                        fill={n.ring === 'focus' ? colors.bg : labelColor}
+                        fill={n.ring === 'focus' ? gc.bg : labelColor}
                         fontSize={n.ring === 'focus' ? 14 : n.ring === 'direct' ? 11 : 9}
                         fontWeight="700"
                         fontFamily="IBM Plex Sans Thai, sans-serif"
@@ -691,7 +710,7 @@ export function RelationshipGraphPage() {
                   x={CANVAS_W / 2}
                   y={CANVAS_H / 2 - 12}
                   textAnchor="middle"
-                  fill={colors.dim}
+                  fill={gc.dim}
                   fontSize="14"
                   fontWeight="500"
                   fontFamily="IBM Plex Sans Thai, sans-serif"
@@ -702,7 +721,7 @@ export function RelationshipGraphPage() {
                   x={CANVAS_W / 2}
                   y={CANVAS_H / 2 + 14}
                   textAnchor="middle"
-                  fill={colors.dim}
+                  fill={gc.dim}
                   fontSize="11"
                   fontFamily="IBM Plex Sans Thai, sans-serif"
                 >

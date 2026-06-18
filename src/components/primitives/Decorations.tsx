@@ -31,8 +31,9 @@ export function ZigzagStrip({
         const fill = accentEvery && i % accentEvery === 0 ? colors.green : color;
         return (
           <g key={i} transform={`translate(${(i % 2) * 6}, ${y})`}>
-            <rect x="4" y="2" width="6" height="22" fill={fill} />
-            <rect x="4" y="18" width="22" height="6" fill={fill} />
+            {/* style (not the fill attr) so CSS var() colors resolve */}
+            <rect x="4" y="2" width="6" height="22" style={{ fill }} />
+            <rect x="4" y="18" width="22" height="6" style={{ fill }} />
           </g>
         );
       })}
@@ -53,8 +54,8 @@ export function MiniL({ size = 14, color = colors.green }: MiniLProps) {
       viewBox="0 0 14 14"
       style={{ display: 'inline-block', verticalAlign: 'middle' }}
     >
-      <rect x="3" y="1" width="3" height="10" fill={color} />
-      <rect x="3" y="9" width="9" height="3" fill={color} />
+      <rect x="3" y="1" width="3" height="10" style={{ fill: color }} />
+      <rect x="3" y="9" width="9" height="3" style={{ fill: color }} />
     </svg>
   );
 }

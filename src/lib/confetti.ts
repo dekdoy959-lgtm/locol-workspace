@@ -4,7 +4,8 @@
  *
  * Respects prefers-reduced-motion (no-op) and is safe to call repeatedly.
  */
-const COLORS = ['#99CE24', '#E8B923', '#d96a66', '#9aa56a', '#FFFFFF'];
+// DS accent palette (canvas can't read CSS vars — static hex is fine here).
+const COLORS = ['#9BCF25', '#F2A541', '#E5484D', '#45BBAB', '#FFFFFF'];
 
 export function fireConfetti(count = 90): void {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;

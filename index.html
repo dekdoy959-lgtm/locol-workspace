@@ -11,6 +11,17 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
     <title>LOCOL · Workspace</title>
+    <!-- Set theme before paint to avoid a flash. Defaults to dark. -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('locol-theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

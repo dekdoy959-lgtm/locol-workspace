@@ -3,6 +3,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { ConfirmProvider } from './components/modals/ConfirmProvider';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { ErrorBoundary } from './components/layout/ErrorBoundary';
@@ -84,6 +85,7 @@ export function App() {
         },
       }}
     >
+      <ThemeProvider>
       <AuthProvider>
         <ConfirmProvider>
         <BrowserRouter>
@@ -135,6 +137,7 @@ export function App() {
         </BrowserRouter>
         </ConfirmProvider>
       </AuthProvider>
+      </ThemeProvider>
     </PersistQueryClientProvider>
   );
 }

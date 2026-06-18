@@ -4,6 +4,30 @@
 
 ---
 
+## 2026-06-18 · Design System — Phase B (light/dark theme toggle)
+
+Runtime light + dark theme per the DS (ships both). Default stays **dark** (internal ops tool).
+
+- **Theme model:** surfaces / text / borders / `green` are CSS vars that flip — `:root` = light,
+  `[data-theme="dark"]` = dark (`global.css`). Accents (status, cacao, teal, emerald) stay constant
+  per DS. `green` flips (dark `#9BCF25` / light readable lime `#5F8513`) so headings + buttons read
+  on both. `tokens.ts` surface/text/border/green tokens → `var(--…)`.
+- **Toggle:** `ThemeContext` (localStorage `locol-theme`, default dark) + an inline script in
+  `index.html` sets `data-theme` before paint (no flash). Toggle UI in the profile menu.
+- **SVG var-safety** (the hard part — `var()` doesn't resolve in SVG presentation attributes):
+  `LIcon` now uses `currentColor` inside a color-bearing span; `Decorations`/`GroupsList`/
+  `PullToRefresh` SVG fills moved to `style`; the Relationship **graph** resolves theme tokens to
+  hex via `getComputedStyle` (re-run on theme change) for its `fill`/`stroke` attributes; confetti
+  uses static DS hex (canvas can't read vars). Grep-verified: 0 remaining `fill/stroke={colors.<var>}`.
+- **Logo** is theme-aware (`BrandLogo`): white on dark, primary on light.
+
+**Validation:** build green (264); login verified in BOTH themes via computed styles
+(`--bg`/`--text`/`--green` flip; logo src swaps White↔Primary). ADR-007.
+**⚠️ User spot-check after deploy:** authed surfaces (icons, kanban, **relationship graph**) in both
+themes — they couldn't be visually verified in preview (login-gated).
+
+---
+
 ## 2026-06-18 · Align to official LOCOL Design System — Phase A (dark)
 
 Re-skinned the workspace to the official `LOCOL Design System` (June 2026 spec). The DS validated the

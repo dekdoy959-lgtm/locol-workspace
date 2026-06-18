@@ -6,6 +6,7 @@ import { GlobalSearch } from '../search/GlobalSearch';
 import { useRealtimeSync } from '../../hooks/useRealtimeSync';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { colors, layout, z } from '../../styles/tokens';
+import { BrandLogo } from './BrandLogo';
 import { BottomNav } from './BottomNav';
 import { InstallPrompt } from './InstallPrompt';
 import { UserMenu } from './UserMenu';
@@ -78,7 +79,7 @@ export function AppLayout() {
           }}
         >
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
-            <img src="/brand/LOCOL_Logo_White.svg" alt="LOCOL" style={{ height: 16, width: 'auto' }} />
+            <BrandLogo height={16} />
             <span style={{ fontWeight: 600, letterSpacing: 1, fontSize: 11, color: colors.dimSoft }}>
               · Workspace
             </span>

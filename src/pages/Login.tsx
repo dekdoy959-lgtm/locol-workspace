@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { LCard, LH, LBtn, LFrame } from '../components/primitives';
+import { BrandLogo } from '../components/layout/BrandLogo';
 import { colors } from '../styles/tokens';
 
 export function LoginPage() {
@@ -32,7 +33,7 @@ export function LoginPage() {
       >
         <LCard padding={44} style={{ maxWidth: 480, width: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 32 }}>
-            <img src="/brand/LOCOL_Logo_White.svg" alt="LOCOL" style={{ height: 28, width: 'auto' }} />
+            <BrandLogo height={28} />
             <span style={{ fontWeight: 600, letterSpacing: 1, fontSize: 13, color: colors.dimSoft }}>
               · Workspace
             </span>

@@ -1,44 +1,46 @@
 // LOCOL Design Tokens — single source of truth
 // Ported from prototype locol-components.jsx
 
-// Aligned to the official LOCOL Design System (June 2026) — dark theme values.
-// Primary = Logo Lime #9BCF25 · canvas near-black #0B0D0B · charcoal surfaces.
-// (Phase B will layer the light theme + a runtime toggle on top of these.)
+// Aligned to the official LOCOL Design System (June 2026).
+// THEME MODEL: surfaces / text / borders are CSS vars that flip per theme
+// (light = :root, dark = [data-theme="dark"] — both defined in global.css).
+// ACCENTS (lime, status, cacao, teal…) stay constant across themes per the DS
+// ("Lime stays constant"), so they're literal hex — safe in SVG attributes too.
 export const colors = {
-  // ── Surface elevation ladder (DS dark theme) ──────────────────────
-  bg: '#0B0D0B',        // L0 · canvas (neutral-950) — page background
-  bgSoft: '#101310',    // L1 · sunken / inset bands
-  bgCard: '#181B17',    // L2 · cards (surface-card)
-  bgRaise: '#20241F',   // L3 · raised / hover / active (surface-raised)
-  bgOverlay: '#262B24', // L4 · dropdowns · popovers · modals (one rung above)
-  bgInput: '#0E110D',   // input inset — darker than card → reads "type here"
-  // ── Border progression (DS rgba whites on dark) ───────────────────
-  lineSubtle: 'rgba(247,248,246,0.10)', // inner dividers · faintest
-  line: 'rgba(247,248,246,0.16)',       // standard border (DS border-default)
-  lineHi: 'rgba(247,248,246,0.28)',     // emphasis border (DS border-strong)
-  lineStrong: 'rgba(247,248,246,0.40)', // max emphasis · hover firm-up
-  // ── Text hierarchy (DS neutral-50 family) ─────────────────────────
-  text: '#F7F8F6',      // primary (neutral-50)
-  surface: '#E2E5DF',   // bright — strong body / surface elements (neutral-200)
-  dimSoft: 'rgba(247,248,246,0.74)', // secondary — labels (DS text-secondary)
-  dim: 'rgba(247,248,246,0.52)',     // muted — metadata (DS text-muted)
-  // ── Brand — Logo Lime #9BCF25 ─────────────────────────────────────
-  green: '#9BCF25',     // PRIMARY (lime-500) — brand lime
-  greenDk: '#7FAF1C',   // lime-600 (readable for status / borders)
-  greenBg: 'rgba(155,207,37,0.14)', // surface-brand-soft (dark)
-  // ── Status / semantic (DS) ────────────────────────────────────────
-  danger: '#E5484D',    // error-500
+  // ── Surface elevation ladder (theme-reactive) ─────────────────────
+  bg: 'var(--bg)',           // L0 · canvas
+  bgSoft: 'var(--bg-soft)',  // L1 · sunken / inset bands
+  bgCard: 'var(--bg-card)',  // L2 · cards
+  bgRaise: 'var(--bg-raise)',// L3 · raised / hover / active
+  bgOverlay: 'var(--bg-overlay)', // L4 · dropdowns · modals
+  bgInput: 'var(--bg-input)',// input inset
+  // ── Border progression (theme-reactive) ───────────────────────────
+  lineSubtle: 'var(--line-subtle)',
+  line: 'var(--line)',
+  lineHi: 'var(--line-hi)',
+  lineStrong: 'var(--line-strong)',
+  // ── Text hierarchy (theme-reactive) ───────────────────────────────
+  text: 'var(--text)',
+  surface: 'var(--surface)',
+  dimSoft: 'var(--dim-soft)',
+  dim: 'var(--dim)',
+  // ── Brand — Logo Lime #9BCF25 (constant both themes) ──────────────
+  green: '#9BCF25',     // PRIMARY (lime-500)
+  greenDk: '#7FAF1C',   // lime-600
+  greenBg: 'rgba(155,207,37,0.14)', // surface-brand-soft
+  // ── Status / semantic (constant) ──────────────────────────────────
+  danger: '#E5484D',
   dangerDk: '#7a2327',
   dangerBg: 'rgba(229,72,77,0.13)',
-  warn: '#F2A541',      // warning-500
+  warn: '#F2A541',
   warnDk: '#6a4a16',
   warnBg: 'rgba(242,165,65,0.13)',
-  // ── Supporting accents (DS) ───────────────────────────────────────
-  cacao: '#6B4226',     // cocoa-waste origin accent
+  // ── Supporting accents (constant) ─────────────────────────────────
+  cacao: '#6B4226',
   cacaoSoft: '#B08A6E',
-  climate: '#45BBAB',   // methane / tech data (teal)
-  emerald: '#2E9E5B',   // secondary green data series
-  olive: '#9aa56a',     // retained for role chips (document_lead etc.)
+  climate: '#45BBAB',
+  emerald: '#2E9E5B',
+  olive: '#9aa56a',
   oliveDk: '#3a3f1f',
   oliveBg: 'rgba(154,165,106,0.14)',
   discord: '#5865F2',

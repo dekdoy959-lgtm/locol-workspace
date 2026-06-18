@@ -98,7 +98,7 @@ function GroupNode({
             viewBox="0 0 14 14"
             style={{ flexShrink: 0, position: 'relative', left: -16, opacity: 0.5 }}
           >
-            <path d="M3,-4 V8 H12" stroke={colors.dim} strokeWidth="1" fill="none" />
+            <path d="M3,-4 V8 H12" strokeWidth="1" fill="none" style={{ stroke: colors.dim }} />
           </svg>
         )}
 

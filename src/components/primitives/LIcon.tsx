@@ -40,14 +40,18 @@ interface LIconProps {
 
 export function LIcon({ kind, size = 14, color = colors.text }: LIconProps) {
   const s = size;
+  // Use currentColor so the icon works whether `color` is a hex OR a CSS var
+  // (var() doesn't resolve in SVG presentation attributes, but DOES via the
+  // inherited CSS `color` on the wrapping span below).
   const st = {
-    stroke: color,
+    stroke: 'currentColor',
     strokeWidth: 1.5,
     fill: 'none' as const,
     strokeLinecap: 'square' as const,
     strokeLinejoin: 'miter' as const,
   };
 
+  const el = (() => {
   switch (kind) {
     case 'arrow-r':
       return (
@@ -117,7 +121,7 @@ export function LIcon({ kind, size = 14, color = colors.text }: LIconProps) {
         <svg width={s} height={s} viewBox="0 0 24 24">
           <path d="M12,4 L22,20 H2 Z" {...st} />
           <line x1="12" y1="10" x2="12" y2="15" {...st} />
-          <circle cx="12" cy="17.5" r="0.8" fill={color} stroke="none" />
+          <circle cx="12" cy="17.5" r="0.8" fill="currentColor" stroke="none" />
         </svg>
       );
     case 'filter':
@@ -220,7 +224,7 @@ export function LIcon({ kind, size = 14, color = colors.text }: LIconProps) {
         <svg width={s} height={s} viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="9" {...st} />
           <circle cx="12" cy="12" r="5" {...st} />
-          <circle cx="12" cy="12" r="1.5" fill={color} stroke="none" />
+          <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
         </svg>
       );
     case 'menu':
@@ -276,4 +280,6 @@ export function LIcon({ kind, size = 14, color = colors.text }: LIconProps) {
         </svg>
       );
   }
+  })();
+  return <span style={{ color, display: 'inline-flex', lineHeight: 0 }}>{el}</span>;
 }

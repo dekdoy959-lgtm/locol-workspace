@@ -57,6 +57,30 @@ canvas feel "inhabited." Solid-hex borders are now disallowed — use the rgba s
 
 ---
 
+## ADR-007 · Theming via CSS vars + data-theme; SVG resolves vars to hex
+
+**Date:** 2026-06-18 · **Status:** Accepted
+
+**Context.** The official DS ships light + dark. The app was dark-only with a TS `colors` object of
+static hex used in inline styles AND SVG presentation attributes.
+
+**Decision.** Theme via CSS custom properties: `:root` = light, `[data-theme="dark"]` = dark; default
+dark (set in `index.html` before paint). Only **surfaces / text / borders / green** flip — other
+accents are constant per the DS, which keeps them safe as literal hex in SVG. `colors.*` for the
+flipping tokens become `var(--…)` so every inline style is theme-reactive with no per-component work.
+
+**The SVG catch & rule.** `var()` does NOT resolve in SVG presentation attributes (`fill=`/`stroke=`).
+So: (1) icons use `currentColor` under a color-bearing wrapper; (2) one-off SVG fills use `style=`
+not the attribute; (3) the data-viz graph resolves theme tokens to concrete hex via `getComputedStyle`
+(re-run on theme change). **Forward rule:** never put a CSS-var color in an SVG `fill`/`stroke`
+*attribute* — use `currentColor`, `style={{fill}}`, or a getComputedStyle-resolved hex.
+
+**Consequences.** One toggle flips the whole app. The one place that needs care forever is SVG color.
+Accents not flipping is an intentional DS simplification (lime stays lime). Light-theme lime uses
+lime-700 for contrast; a future refinement could split brand-bg vs brand-text tokens if needed.
+
+---
+
 ## ADR-006 · Team access — soft gate first (5a), hard RLS deferred (5b)
 
 **Date:** 2026-06-17 · **Status:** Accepted (5a) · Proposed (5b)

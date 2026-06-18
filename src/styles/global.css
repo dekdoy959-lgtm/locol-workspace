@@ -1,28 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap');
 
+/* ── LOCOL Design System — themes ──────────────────────────────────────
+   :root = LIGHT (DS default) · [data-theme="dark"] = DARK.
+   The app defaults to dark (set on <html> in index.html); a toggle flips it.
+   Only surfaces/text/borders/green flip — other accents are constant (tokens.ts). */
 :root {
-  /* Aligned to LOCOL Design System — dark theme (lockstep with tokens.ts) */
+  color-scheme: light;
+  --bg: #F7F8F6;          /* surface-page */
+  --bg-soft: #EFF1ED;     /* sunken / bands */
+  --bg-card: #FFFFFF;     /* cards */
+  --bg-raise: #F0F2EE;    /* raised / hover */
+  --bg-overlay: #FFFFFF;  /* dropdowns · modals (shadow separates) */
+  --bg-input: #FFFFFF;    /* inputs (border defines) */
+  --line-subtle: rgba(20,23,20,0.06);
+  --line: rgba(20,23,20,0.12);
+  --line-hi: rgba(20,23,20,0.20);
+  --line-strong: rgba(20,23,20,0.30);
+  --text: #202522;        /* neutral-800 */
+  --surface: #2E322C;     /* neutral-700 */
+  --dim-soft: #4A4E47;    /* neutral-600 */
+  --dim: #6E726B;         /* neutral-500 */
+  --green: #5F8513;       /* lime-700 — readable lime on light (text + button bg) */
+  --green-dk: #46630F;    /* lime-800 */
+  --font-heading: 'IBM Plex Sans Thai', 'IBM Plex Sans', system-ui, sans-serif;
+  --font-body: 'Noto Sans Thai', 'Noto Sans', system-ui, sans-serif;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
   --bg: #0B0D0B;
   --bg-soft: #101310;
   --bg-card: #181B17;
   --bg-raise: #20241F;
   --bg-overlay: #262B24;
   --bg-input: #0E110D;
-  /* Border progression — DS rgba whites on dark */
   --line-subtle: rgba(247,248,246,0.10);
   --line: rgba(247,248,246,0.16);
   --line-hi: rgba(247,248,246,0.28);
   --line-strong: rgba(247,248,246,0.40);
-  /* Text hierarchy (DS neutral-50 family) */
   --text: #F7F8F6;
   --surface: #E2E5DF;
   --dim-soft: rgba(247,248,246,0.74);
   --dim: rgba(247,248,246,0.52);
-  --green: #9BCF25;
+  --green: #9BCF25;       /* bright logo lime on dark */
   --green-dk: #7FAF1C;
-  /* DS font families */
-  --font-heading: 'IBM Plex Sans Thai', 'IBM Plex Sans', system-ui, sans-serif;
-  --font-body: 'Noto Sans Thai', 'Noto Sans', system-ui, sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }

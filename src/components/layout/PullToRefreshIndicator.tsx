@@ -60,7 +60,7 @@ export function PullToRefreshIndicator({ distance, refreshing, ready }: Props) {
 function Spinner() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" style={{ animation: 'l-spin 800ms linear infinite' }}>
-      <circle cx="12" cy="12" r="9" stroke={colors.green} strokeWidth="2" fill="none" strokeDasharray="40 60" />
+      <circle cx="12" cy="12" r="9" strokeWidth="2" fill="none" strokeDasharray="40 60" style={{ stroke: colors.green }} />
       <style>{`@keyframes l-spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }`}</style>
     </svg>
   );

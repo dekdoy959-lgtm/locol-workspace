@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { colors } from '../../styles/tokens';
+import { BrandLogo } from '../layout/BrandLogo';
 
 interface LChromeProps {
   title: string;
@@ -23,7 +24,7 @@ export function LChrome({ title, breadcrumbs, right }: LChromeProps) {
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-          <img src="/brand/LOCOL_Logo_White.svg" alt="LOCOL" style={{ height: 18, width: 'auto' }} />
+          <BrandLogo height={18} />
           <span style={{ fontWeight: 600, letterSpacing: 1, fontSize: 11.5, color: colors.dimSoft }}>
             · Workspace
           </span>
