@@ -12,7 +12,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { TRACKS, findTrack, formatDueRelative, isStale, type TrackKey, type OpportunityRow } from '../../types/opportunity';
 import { LCard, LBtn, LIcon, LPri, LAvatar, LH, LNote, LSelect, LSkeletonCard } from '../../components/primitives';
 import { PullToRefreshIndicator } from '../../components/layout/PullToRefreshIndicator';
-import { colors } from '../../styles/tokens';
+import { colors, z } from '../../styles/tokens';
 
 type Tab = 'focus' | 'all' | TrackKey;
 type Density = 'spacious' | 'compact' | 'dense';
@@ -88,6 +88,13 @@ export function InboxPage() {
   const [filterPriority, setFilterPriority] = useState(false);
   const [filterStale, setFilterStale] = useState(false);
   const [filterMine, setFilterMine] = useState(false);
+  // Toast after a track move (drag or keyboard) with an undo affordance (#harden).
+  const [moveToast, setMoveToast] = useState<{ id: string; from: TrackKey; to: TrackKey } | null>(null);
+  useEffect(() => {
+    if (!moveToast) return;
+    const t = setTimeout(() => setMoveToast(null), 4500);
+    return () => clearTimeout(t);
+  }, [moveToast]);
 
   // Pull-to-refresh on mobile
   const ptr = usePullToRefresh(
@@ -104,13 +111,18 @@ export function InboxPage() {
     { disabled: !isMobile },
   );
 
+  // Single source of truth for a track move → mutate + raise an undo toast.
+  const moveTrack = (oppId: string, from: TrackKey, to: TrackKey) => {
+    if (from === to) return;
+    update.mutate({ id: oppId, patch: { track: to, stage: findTrack(to).defaultStage } });
+    setMoveToast({ id: oppId, from, to });
+  };
+
   const handleDropOn = (newTrack: TrackKey, oppId: string) => {
     setDragOverTrack(null);
     const opp = opps.find((o) => o.id === oppId);
     if (!opp || opp.track === newTrack) return;
-    // Move to new track → reset stage to that track's default
-    const newStage = findTrack(newTrack).defaultStage;
-    update.mutate({ id: oppId, patch: { track: newTrack, stage: newStage } });
+    moveTrack(oppId, opp.track as TrackKey, newTrack);
   };
 
   // Keyboard equivalent of the drag: move a card to the adjacent track column.
@@ -120,9 +132,14 @@ export function InboxPage() {
     const idx = TRACKS.findIndex((t) => t.key === opp.track);
     const nextIdx = idx + dir;
     if (nextIdx < 0 || nextIdx >= TRACKS.length) return;
-    const newTrack = TRACKS[nextIdx].key;
     setLastMovedId(oppId);
-    update.mutate({ id: oppId, patch: { track: newTrack, stage: findTrack(newTrack).defaultStage } });
+    moveTrack(oppId, opp.track as TrackKey, TRACKS[nextIdx].key);
+  };
+
+  const undoMove = () => {
+    if (!moveToast) return;
+    update.mutate({ id: moveToast.id, patch: { track: moveToast.from, stage: findTrack(moveToast.from).defaultStage } });
+    setMoveToast(null);
   };
 
   const teamById = useMemo(() => {
@@ -295,47 +312,60 @@ export function InboxPage() {
           flexWrap: 'wrap',
         }}
       >
-        {/* Sort */}
-        <ToolGroup label="Sort">
-          <div style={{ minWidth: 150 }}>
-            <LSelect value={sort} onChange={(v) => setSort(v as SortKey)} options={SORT_OPTIONS} />
-          </div>
-        </ToolGroup>
-
-        {/* Density toggle (A) */}
-        <ToolGroup label="Density">
-          <div
+        {/* View options (sort + density) — folded into a popover so the toolbar
+            stays light and the board breathes (#layout). Native <details> avoids
+            the clipped-dropdown trap. */}
+        <details className="l-viewopts" style={{ position: 'relative' }}>
+          <summary
             style={{
+              listStyle: 'none',
+              cursor: 'pointer',
+              userSelect: 'none',
               display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '7px 12px',
+              fontFamily: 'inherit',
+              fontSize: 12,
+              color: colors.dimSoft,
               background: colors.bgSoft,
               border: `1px solid ${colors.lineHi}`,
               borderRadius: '8px 2px 8px 2px',
-              padding: 2,
             }}
           >
-            <DensityBtn
-              active={density === 'spacious'}
-              onClick={() => setDensity('spacious')}
-              title="Spacious — รายการใหญ่ ดูสบายตา"
-            >
-              ▦
-            </DensityBtn>
-            <DensityBtn
-              active={density === 'compact'}
-              onClick={() => setDensity('compact')}
-              title="Compact — รายการเล็กลง"
-            >
-              ▤
-            </DensityBtn>
-            <DensityBtn
-              active={density === 'dense'}
-              onClick={() => setDensity('dense')}
-              title="Dense — รายการแบบ list"
-            >
-              ≡
-            </DensityBtn>
+            <LIcon kind="settings" size={12} color={colors.dimSoft} /> View options
+          </summary>
+          <div
+            style={{
+              position: 'absolute',
+              top: 'calc(100% + 6px)',
+              left: 0,
+              zIndex: z.dropdown,
+              minWidth: 240,
+              padding: 14,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+              background: colors.bgOverlay,
+              border: `1px solid ${colors.lineHi}`,
+              borderRadius: '12px 3px 12px 3px',
+              boxShadow: '0 12px 32px rgba(0,0,0,0.4)',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', color: colors.dim, marginBottom: 6 }}>Sort</div>
+              <LSelect value={sort} onChange={(v) => setSort(v as SortKey)} options={SORT_OPTIONS} />
+            </div>
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', color: colors.dim, marginBottom: 6 }}>Density</div>
+              <div style={{ display: 'inline-flex', background: colors.bgSoft, border: `1px solid ${colors.lineHi}`, borderRadius: '8px 2px 8px 2px', padding: 2 }}>
+                <DensityBtn active={density === 'spacious'} onClick={() => setDensity('spacious')} title="Spacious — รายการใหญ่ ดูสบายตา">▦</DensityBtn>
+                <DensityBtn active={density === 'compact'} onClick={() => setDensity('compact')} title="Compact — รายการเล็กลง">▤</DensityBtn>
+                <DensityBtn active={density === 'dense'} onClick={() => setDensity('dense')} title="Dense — รายการแบบ list">≡</DensityBtn>
+              </div>
+            </div>
           </div>
-        </ToolGroup>
+        </details>
 
         {/* Quick filters (D) */}
         <ToolGroup label={`Filters${activeFilterCount > 0 ? ` · ${activeFilterCount}` : ''}`}>
@@ -609,6 +639,52 @@ export function InboxPage() {
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Move toast (#harden) — confirm a track move + offer undo */}
+      {moveToast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="l-slide-up"
+          style={{
+            position: 'fixed',
+            left: '50%',
+            bottom: 80,
+            transform: 'translateX(-50%)',
+            zIndex: z.toast,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 14,
+            padding: '10px 16px',
+            background: colors.bgOverlay,
+            border: `1px solid ${colors.lineHi}`,
+            borderRadius: '12px 3px 12px 3px',
+            boxShadow: '0 12px 32px rgba(0,0,0,0.5)',
+            maxWidth: '90vw',
+          }}
+        >
+          <span style={{ fontSize: 13, color: colors.text, whiteSpace: 'nowrap' }}>
+            ย้ายไป <b style={{ color: findTrack(moveToast.to).color.ink }}>{findTrack(moveToast.to).name}</b>
+          </span>
+          <button
+            type="button"
+            onClick={undoMove}
+            style={{
+              fontFamily: 'inherit',
+              fontSize: 12.5,
+              fontWeight: 700,
+              color: colors.green,
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              letterSpacing: 0.3,
+            }}
+          >
+            เลิกทำ
+          </button>
         </div>
       )}
     </div>

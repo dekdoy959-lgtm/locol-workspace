@@ -18,9 +18,15 @@ Fixed (detector + regression-backed):
 - **P2 — side-stripe border (absolute ban).** Dense-card `borderLeft: 3px` → a leading track **dot** +
   full 1px border. Detector re-run: clean (`[]`).
 
-Deferred (visual/interaction — best done eyes-on via `/impeccable live` while authed): P2 control-bar
-density (→ `/impeccable layout`), P2 move-confirmation toast (→ `/impeccable harden`), P3 bulk select.
-Build green (264).
+Then completed the remaining two P2s:
+- **P2 — control-bar density (`/impeccable layout`).** Folded Sort + Density into a `⚙ View options`
+  popover (native `<details>`, marker hidden, escapes the clipped-dropdown trap). Toolbar now =
+  Filters + View options only; the board breathes. Addresses the cluttered-enterprise anti-ref.
+- **P2 — move-confirmation toast (`/impeccable harden`).** One `moveTrack()` source of truth for
+  drag + keyboard moves → a bottom toast "ย้ายไป {track} · เลิกทำ" with working **undo** (re-mutates
+  to the prior track), auto-dismiss 4.5s, `l-slide-up`, above the mobile nav.
+
+Deferred: P3 bulk select. Build green (264). Re-run `/impeccable critique inbox` to see the score move.
 
 ---
 
