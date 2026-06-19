@@ -4,6 +4,26 @@
 
 ---
 
+## 2026-06-19 · impeccable critique inbox → P1/P2 fixes
+
+`/impeccable init` wrote PRODUCT.md + DESIGN.md + live config (register=product). `/impeccable
+critique inbox` scored **28/40 (Good)**; snapshot in `.impeccable/critique/`.
+
+Fixed (detector + regression-backed):
+- **P1 — track colors theme-aware (system-wide).** `TRACKS[].color` had dark-hex `soft` blobs +
+  `var()` ink/chip on the watch track → broke on the new light theme and in the SVG graph. Now each
+  track is a constant accent `ink` + **rgba-tint `soft`** + constant `chip` — theme-agnostic and
+  SVG-attribute-safe. Fixes inbox columns/chips, calendar, graph, summary in both themes. Dropped the
+  now-unused `colors` import from `types/opportunity.ts`.
+- **P2 — side-stripe border (absolute ban).** Dense-card `borderLeft: 3px` → a leading track **dot** +
+  full 1px border. Detector re-run: clean (`[]`).
+
+Deferred (visual/interaction — best done eyes-on via `/impeccable live` while authed): P2 control-bar
+density (→ `/impeccable layout`), P2 move-confirmation toast (→ `/impeccable harden`), P3 bulk select.
+Build green (264).
+
+---
+
 ## 2026-06-18 · Design System — Phase B (light/dark theme toggle)
 
 Runtime light + dark theme per the DS (ships both). Default stays **dark** (internal ops tool).

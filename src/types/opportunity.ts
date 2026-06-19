@@ -1,4 +1,3 @@
-import { colors } from '../styles/tokens';
 import type { Database } from './database';
 import { daysFromTodayISO } from '../lib/dateUtil';
 
@@ -43,7 +42,7 @@ export const TRACKS: TrackMeta[] = [
     cadence: 'ตาม deadline',
     stages: ['Spotted', 'Fit check', 'Drafting', 'Submitted', 'Won', 'Lost'],
     defaultStage: 'Spotted',
-    color: { ink: colors.warn, soft: '#3a2a0a', chip: '#BD8E23' },
+    color: { ink: '#F2A541', soft: 'rgba(242,165,65,0.14)', chip: '#BD8E23' },
     examples: ['Climate Curve $200k', 'NIA Open Innovation', 'Banpu Champions for Change'],
   },
   {
@@ -54,7 +53,7 @@ export const TRACKS: TrackMeta[] = [
     cadence: 'อ่านสัปดาห์ละครั้ง',
     stages: ['New', 'Read', 'Filed', 'Promote'],
     defaultStage: 'New',
-    color: { ink: colors.surface, soft: '#1f1f1f', chip: colors.dim },
+    color: { ink: '#8A93A6', soft: 'rgba(138,147,166,0.14)', chip: '#6E7686' },
     examples: ['ข่าวคู่แข่งเปิดตัวสินค้า', 'งานวิจัย methane reduction ใหม่', 'industry report'],
     noReviewerRequired: true,
   },
@@ -66,7 +65,7 @@ export const TRACKS: TrackMeta[] = [
     cadence: 'ตามวันที่งาน',
     stages: ['Spotted', 'Decide attend', 'Registered', 'Attended', 'Follow-ups'],
     defaultStage: 'Spotted',
-    color: { ink: colors.danger, soft: '#2a1212', chip: '#A12F2D' },
+    color: { ink: '#E5484D', soft: 'rgba(229,72,77,0.14)', chip: '#A12F2D' },
     examples: ['SIAL Asia 2026', 'ASEAN Climate Summit', 'Thaifex 2026'],
   },
   {
@@ -77,7 +76,7 @@ export const TRACKS: TrackMeta[] = [
     cadence: 'ตามแผนทริป',
     stages: ['Planned', 'Confirmed', 'Departed', 'Completed', 'Follow-ups'],
     defaultStage: 'Planned',
-    color: { ink: colors.olive, soft: colors.oliveBg, chip: '#695935' },
+    color: { ink: '#9aa56a', soft: 'rgba(154,165,106,0.14)', chip: '#695935' },
     examples: ['ไปฟาร์ม ก. เชียงราย', 'ตรวจคุณภาพโคที่ พิจิตร', 'ดู supply chain แม่ฮ่องสอน'],
   },
 ];

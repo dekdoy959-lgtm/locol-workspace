@@ -1210,7 +1210,6 @@ function OpportunityCard({
           padding: '6px 10px',
           background: colors.bgCard,
           border: `1px solid ${stale ? colors.dangerDk : colors.lineHi}`,
-          borderLeft: `3px solid ${stale ? colors.danger : meta.color.ink}`,
           borderRadius: '6px 2px 6px 2px',
           cursor: 'grab',
           transition: 'border-color 150ms',
@@ -1224,6 +1223,8 @@ function OpportunityCard({
           e.currentTarget.style.borderColor = stale ? colors.dangerDk : colors.lineHi;
         }}
       >
+        {/* leading track dot (replaces the side-stripe accent border) */}
+        <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: 99, background: stale ? colors.danger : meta.color.ink, flexShrink: 0 }} />
         <LPri level={pri as 'hi' | 'med' | 'low'} />
         <span
           style={{
