@@ -35,6 +35,11 @@ React Router 7 · Vercel (auto-deploy from `main`). Package manager: **npm**.
 `SOP.md` · `PROCESS.md` · `RECONCILIATION.md` · `GLOSSARY.md` · `DESIGN-REFINEMENT.md` (design spec).
 Setup: `SETUP-DEV.md` / `SETUP-NON.md`. Past review: `REVIEW-FINDINGS.md`.
 
+## Design context (impeccable)
+- [`PRODUCT.md`](./PRODUCT.md) — register (product) · users · purpose · brand personality · design principles · a11y
+- [`DESIGN.md`](./DESIGN.md) — visual system: themes, color tokens, typography, components, motion (mirrors `src/styles/tokens.ts`)
+- `.impeccable/live/config.json` — `/impeccable live` is pre-configured (Vite SPA, `index.html`)
+
 ## Common tasks
 | Task | How |
 |---|---|
