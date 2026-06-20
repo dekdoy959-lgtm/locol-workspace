@@ -4,6 +4,30 @@
 
 ---
 
+## 2026-06-20 · impeccable critique inbox run #2 → P3 bulk-select
+
+Re-ran `/impeccable critique inbox` after the P1/P2 fixes → **31/40 (+3)** (Visibility 4, Consistency
+4, Aesthetic 3 ↑; detector clean `[]`). Trend `28 → 31` persisted in `.impeccable/critique/`. Top
+remaining issue was **[P2] no bulk actions**, so built it (user: "ทำเลย — full").
+
+**Bulk-select (multi-select → batch move / archive / priority)** in `src/pages/inbox/InboxPage.tsx`:
+- **Select-mode toggle** in the toolbar ("เลือกหลายรายการ" → "กำลังเลือก", lime when active). Chose a
+  mode toggle over per-card checkboxes or ⌘-click — universal (works on touch + keyboard), discoverable,
+  and minimal-risk (no fragile per-density checkbox element). See ADR-008.
+- In select-mode a card click **toggles selection** instead of navigating (`handleCardClick`); selected
+  cards get a lime **ring (`boxShadow`) + tint** — `boxShadow` not `outline`, so it never fights the
+  keyboard focus ring. Applied across all 3 densities (dense / compact / spacious).
+- Threaded `selectedIds: Set<string>` through `TrackColumn`, `StageSection`, `FocusView`, and the flat
+  list → works in **every** inbox view (all-tracks kanban, single-track staged + flat, Focus).
+- **Batch-action bar** (fixed bottom, `l-slide-up`, above mobile nav): live count · **ย้ายไป** (4 track
+  pills) · **Priority** (High/Med/Low) · **Archive** (two-step inline confirm "ยืนยัน Archive {n}" — no
+  native `confirm()`, on-brand) · **เสร็จ**. New `BatchBtn` + `BatchDivider` helpers. Each batch op
+  fires per-row `update.mutate` then exits select-mode.
+
+Type-check green (`tsc --noEmit` exit 0); no new lint findings in InboxPage (the `:223` Date.now() hit
+is pre-existing `focusItems`). Authed inbox not browser-verifiable without a Supabase session → verified
+by type-check + push to Vercel; **user spot-check** on live recommended (batch archive especially).
+
 ## 2026-06-19 · impeccable critique inbox → P1/P2 fixes
 
 `/impeccable init` wrote PRODUCT.md + DESIGN.md + live config (register=product). `/impeccable

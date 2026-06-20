@@ -136,3 +136,34 @@ asymmetric corner radius, placed before the heading. Applied to page heroes (Bri
 default, to avoid noise on every heading.
 
 **Consequences.** Heroes get a distinctive on-brand flourish; the rest of the app stays calm.
+
+---
+
+## ADR-008 · Inbox bulk-select uses a select-mode toggle, not per-card checkboxes or ⌘-click
+
+**Date:** 2026-06-20 · **Status:** Accepted
+
+**Context.** The inbox cards render in 3 densities (dense / compact / spacious) across 4 surfaces
+(all-tracks kanban, single-track staged, single-track flat, Focus). Adding multi-select for batch
+move/archive/priority needs a selection affordance that works in all of them. Three options:
+(a) a checkbox element inside every card variant, (b) ⌘/Ctrl-click on the existing card, (c) a
+toolbar **select-mode toggle** that re-purposes the card click to toggle selection.
+
+**Decision.** Option (c). A "เลือกหลายรายการ" toggle enters select-mode; in that mode a card click
+toggles selection instead of opening the card (`handleCardClick`), and selected cards show a lime
+**`boxShadow` ring + tint**. Selection state (`Set<string>`) lives in `InboxPage` and is threaded as
+`selectedIds` into `TrackColumn` / `StageSection` / `FocusView` / the flat list. A fixed bottom
+**batch-action bar** carries the count + move/priority/archive actions; archive is a two-step inline
+confirm (no native `confirm()`).
+
+**Why not (a)/(b).** (a) means a fragile checkbox element duplicated and positioned per density —
+high surface area, easy to break one variant. (b) is invisible on touch (no modifier key) and
+undiscoverable — fails the mobile users and the "where do I click?" test. (c) is universal (touch +
+keyboard, since card click is already keyboard-operable via Enter/Space), discoverable (a labelled
+toggle), and low-risk (one shared click path, one ring style). Ring uses `boxShadow` not `outline`
+so it never collides with the keyboard focus outline the cards already paint on focus.
+
+**Consequences.** One selection path for every view; adding a batch action = one button in the bar.
+Trade-off: you must enter select-mode first (one extra click) rather than ⌘-clicking ad-hoc — an
+acceptable cost for touch-parity and zero per-card complexity. Batch ops fire N independent
+`update.mutate` calls (fine for the handful of rows a user selects); no bulk RPC was added.

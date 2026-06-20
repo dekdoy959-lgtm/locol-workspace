@@ -142,6 +142,47 @@ export function InboxPage() {
     setMoveToast(null);
   };
 
+  // ─── Bulk select (P3) — multi-select → batch move / archive / priority ──
+  const [selectMode, setSelectMode] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [pendingArchive, setPendingArchive] = useState(false);
+  const toggleSelect = (id: string) =>
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  const exitSelectMode = () => {
+    setSelectMode(false);
+    setSelected(new Set());
+    setPendingArchive(false);
+  };
+  // In select-mode a card click toggles selection; otherwise it opens the card.
+  const handleCardClick = (id: string) =>
+    selectMode ? toggleSelect(id) : withViewTransition(() => navigate(`/inbox/${id}`));
+
+  const batchMove = (to: TrackKey) => {
+    selected.forEach((id) => {
+      const opp = opps.find((o) => o.id === id);
+      if (opp && opp.track !== to) {
+        update.mutate({ id, patch: { track: to, stage: findTrack(to).defaultStage } });
+      }
+    });
+    exitSelectMode();
+  };
+  const batchPriority = (p: 'High' | 'Medium' | 'Low') => {
+    selected.forEach((id) => update.mutate({ id, patch: { priority: p } }));
+    exitSelectMode();
+  };
+  const batchArchive = () => {
+    const now = new Date().toISOString();
+    selected.forEach((id) =>
+      update.mutate({ id, patch: { archived_at: now, archived_reason: 'Bulk archive' } }),
+    );
+    exitSelectMode();
+  };
+
   const teamById = useMemo(() => {
     const m: Record<string, typeof team[0]> = {};
     for (const t of team) m[t.id] = t;
@@ -367,6 +408,29 @@ export function InboxPage() {
           </div>
         </details>
 
+        {/* Bulk-select toggle (P3) — enter select-mode to act on many cards at once */}
+        <button
+          type="button"
+          onClick={() => (selectMode ? exitSelectMode() : setSelectMode(true))}
+          aria-pressed={selectMode}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '7px 12px',
+            fontFamily: 'inherit',
+            fontSize: 12,
+            cursor: 'pointer',
+            color: selectMode ? colors.green : colors.dimSoft,
+            background: selectMode ? colors.greenBg : colors.bgSoft,
+            border: `1px solid ${selectMode ? colors.greenDk : colors.lineHi}`,
+            borderRadius: '8px 2px 8px 2px',
+          }}
+        >
+          <LIcon kind="check" size={12} color={selectMode ? colors.green : colors.dimSoft} />
+          {selectMode ? 'กำลังเลือก' : 'เลือกหลายรายการ'}
+        </button>
+
         {/* Quick filters (D) */}
         <ToolGroup label={`Filters${activeFilterCount > 0 ? ` · ${activeFilterCount}` : ''}`}>
           <div style={{ display: 'inline-flex', gap: 4 }}>
@@ -475,7 +539,8 @@ export function InboxPage() {
           teamById={teamById}
           trackSettings={trackSettings}
           density={density}
-          onCardClick={(id) => withViewTransition(() => navigate(`/inbox/${id}`))}
+          selectedIds={selected}
+          onCardClick={handleCardClick}
         />
       ) : tab === 'all' ? (
         /* All-tracks kanban: 4-col grid on desktop, horizontal snap-scroll on mobile */
@@ -515,7 +580,8 @@ export function InboxPage() {
                 staleThreshold={getStaleThreshold(trackSettings, t.key)}
                 density={density}
                 isMobile={isMobile}
-                onCardClick={(id) => withViewTransition(() => navigate(`/inbox/${id}`))}
+                selectedIds={selected}
+                onCardClick={handleCardClick}
                 onAddClick={() => navigate(`/inbox/new?track=${t.key}`)}
                 onMoveCard={handleMoveCard}
                 movedId={lastMovedId}
@@ -601,7 +667,8 @@ export function InboxPage() {
                   staleThreshold={getStaleThreshold(trackSettings, tab as TrackKey)}
                   density={density}
                   defaultCollapsed={DONE_STAGES.has(g.stage)}
-                  onCardClick={(id) => withViewTransition(() => navigate(`/inbox/${id}`))}
+                  selectedIds={selected}
+                  onCardClick={handleCardClick}
                 />
               ))
           ) : (
@@ -614,7 +681,8 @@ export function InboxPage() {
                   teamById={teamById}
                   staleThreshold={getStaleThreshold(trackSettings, o.track as TrackKey)}
                   density={density}
-                  onClick={() => navigate(`/inbox/${o.id}`)}
+                  selected={selected.has(o.id)}
+                  onClick={() => handleCardClick(o.id)}
                   wide
                 />
               ))}
@@ -639,6 +707,115 @@ export function InboxPage() {
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Bulk-select action bar (P3) — batch move / priority / archive */}
+      {selectMode && (
+        <div
+          role="toolbar"
+          aria-label="Bulk actions"
+          className="l-slide-up"
+          style={{
+            position: 'fixed',
+            left: '50%',
+            bottom: isMobile ? 76 : 24,
+            transform: 'translateX(-50%)',
+            zIndex: z.toast,
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: 8,
+            padding: '10px 14px',
+            background: colors.bgOverlay,
+            border: `1px solid ${colors.lineHi}`,
+            borderRadius: '14px 4px 14px 4px',
+            boxShadow: '0 12px 32px rgba(0,0,0,0.5)',
+            maxWidth: '94vw',
+          }}
+        >
+          <span
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              color: selected.size ? colors.green : colors.dimSoft,
+              whiteSpace: 'nowrap',
+              fontFamily: "'IBM Plex Mono', monospace",
+            }}
+          >
+            {selected.size ? `${selected.size} เลือก` : 'แตะการ์ดเพื่อเลือก'}
+          </span>
+
+          {selected.size > 0 && (
+            <>
+              <BatchDivider />
+              <span style={{ fontSize: 11, color: colors.dim, whiteSpace: 'nowrap' }}>ย้ายไป</span>
+              {TRACKS.map((t) => (
+                <BatchBtn key={t.key} color={t.color.ink} onClick={() => batchMove(t.key)}>
+                  {t.name}
+                </BatchBtn>
+              ))}
+              <BatchDivider />
+              <span style={{ fontSize: 11, color: colors.dim, whiteSpace: 'nowrap' }}>Priority</span>
+              <BatchBtn color={colors.danger} onClick={() => batchPriority('High')}>
+                High
+              </BatchBtn>
+              <BatchBtn color={colors.dimSoft} onClick={() => batchPriority('Medium')}>
+                Med
+              </BatchBtn>
+              <BatchBtn color={colors.dimSoft} onClick={() => batchPriority('Low')}>
+                Low
+              </BatchBtn>
+              <BatchDivider />
+              {pendingArchive ? (
+                <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}>
+                  <BatchBtn color={colors.danger} solid onClick={batchArchive}>
+                    ยืนยัน Archive {selected.size}
+                  </BatchBtn>
+                  <button
+                    type="button"
+                    onClick={() => setPendingArchive(false)}
+                    style={{
+                      fontFamily: 'inherit',
+                      fontSize: 11.5,
+                      color: colors.dim,
+                      background: 'transparent',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ยกเลิก
+                  </button>
+                </span>
+              ) : (
+                <BatchBtn color={colors.danger} onClick={() => setPendingArchive(true)}>
+                  Archive
+                </BatchBtn>
+              )}
+            </>
+          )}
+
+          <BatchDivider />
+          <button
+            type="button"
+            onClick={exitSelectMode}
+            style={{
+              fontFamily: 'inherit',
+              fontSize: 12,
+              fontWeight: 600,
+              color: colors.dimSoft,
+              background: 'transparent',
+              border: `1px solid ${colors.lineHi}`,
+              borderRadius: '8px 2px 8px 2px',
+              padding: '5px 12px',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              letterSpacing: 0.3,
+            }}
+          >
+            เสร็จ
+          </button>
         </div>
       )}
 
@@ -701,6 +878,7 @@ function StageSection({
   density,
   defaultCollapsed = false,
   onCardClick,
+  selectedIds,
 }: {
   stage: string;
   trackInk: string;
@@ -711,6 +889,7 @@ function StageSection({
   density: Density;
   defaultCollapsed?: boolean;
   onCardClick: (id: string) => void;
+  selectedIds?: Set<string>;
 }) {
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
   const [expanded, setExpanded] = useState(false);
@@ -779,6 +958,7 @@ function StageSection({
               teamById={teamById}
               staleThreshold={staleThreshold}
               density={density}
+              selected={selectedIds?.has(o.id)}
               onClick={() => onCardClick(o.id)}
               wide
             />
@@ -853,6 +1033,59 @@ function TabBtn({
 }
 
 // Toolbar group with label + control
+/** Thin separator between groups in the bulk-action bar. */
+function BatchDivider() {
+  return <span style={{ width: 1, height: 18, background: colors.lineHi, flexShrink: 0 }} />;
+}
+
+/** A pill button in the bulk-action bar — outlined by default, solid when `solid`. */
+function BatchBtn({
+  color,
+  solid = false,
+  onClick,
+  children,
+}: {
+  color: string;
+  solid?: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        fontFamily: 'inherit',
+        fontSize: 11.5,
+        fontWeight: 700,
+        letterSpacing: 0.3,
+        whiteSpace: 'nowrap',
+        padding: '5px 11px',
+        cursor: 'pointer',
+        color: solid ? colors.bg : color,
+        background: solid ? color : 'transparent',
+        border: `1px solid ${color}`,
+        borderRadius: '8px 2px 8px 2px',
+        transition: 'background 120ms, color 120ms',
+      }}
+      onMouseEnter={(e) => {
+        if (!solid) {
+          e.currentTarget.style.background = color;
+          e.currentTarget.style.color = colors.bg;
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!solid) {
+          e.currentTarget.style.background = 'transparent';
+          e.currentTarget.style.color = color;
+        }
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
 function ToolGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -955,12 +1188,14 @@ function FocusView({
   trackSettings,
   density,
   onCardClick,
+  selectedIds,
 }: {
   items: OpportunityRow[];
   teamById: Record<string, ReturnType<typeof useTeamMembers>['data'] extends (infer T)[] | undefined ? T : never>;
   trackSettings: ReturnType<typeof useTrackSettings>['data'] extends infer T ? T : never;
   density: Density;
   onCardClick: (id: string) => void;
+  selectedIds?: Set<string>;
 }) {
   if (items.length === 0) {
     return (
@@ -1004,6 +1239,7 @@ function FocusView({
             teamById={teamById}
             staleThreshold={getStaleThreshold(trackSettings ?? [], o.track as TrackKey)}
             density={density}
+            selected={selectedIds?.has(o.id)}
             onClick={() => onCardClick(o.id)}
             wide
           />
@@ -1031,6 +1267,7 @@ function TrackColumn({
   onDragOver,
   onDragLeave,
   onDrop,
+  selectedIds,
 }: {
   track: TrackKey;
   opps: OpportunityRow[];
@@ -1040,6 +1277,7 @@ function TrackColumn({
   isMobile: boolean;
   onCardClick: (id: string) => void;
   onAddClick: () => void;
+  selectedIds?: Set<string>;
   onMoveCard?: (id: string, dir: -1 | 1) => void;
   movedId?: string | null;
   isDragOver?: boolean;
@@ -1143,6 +1381,7 @@ function TrackColumn({
             teamById={teamById}
             staleThreshold={staleThreshold}
             density={density}
+            selected={selectedIds?.has(o.id)}
             onClick={() => onCardClick(o.id)}
             onMove={onMoveCard ? (dir) => onMoveCard(o.id, dir) : undefined}
             autoFocus={o.id === movedId}
@@ -1212,6 +1451,7 @@ function OpportunityCard({
   wide = false,
   onMove,
   autoFocus,
+  selected = false,
 }: {
   opp: OpportunityRow;
   teamById: Record<string, ReturnType<typeof useTeamMembers>['data'] extends (infer T)[] | undefined ? T : never>;
@@ -1219,6 +1459,8 @@ function OpportunityCard({
   density?: Density;
   onClick: () => void;
   wide?: boolean;
+  /** Bulk-select: render this card as selected (ring + tint). */
+  selected?: boolean;
   /** Move this card to the previous (-1) / next (+1) track column via keyboard. */
   onMove?: (dir: -1 | 1) => void;
   /** Restore focus to this card after a keyboard move re-renders it. */
@@ -1284,9 +1526,10 @@ function OpportunityCard({
           alignItems: 'center',
           gap: 8,
           padding: '6px 10px',
-          background: colors.bgCard,
+          background: selected ? colors.greenBg : colors.bgCard,
           border: `1px solid ${stale ? colors.dangerDk : colors.lineHi}`,
           borderRadius: '6px 2px 6px 2px',
+          boxShadow: selected ? `0 0 0 2px ${colors.green}` : undefined,
           cursor: 'grab',
           transition: 'border-color 150ms',
           fontSize: 12,
@@ -1356,9 +1599,10 @@ function OpportunityCard({
         }}
         style={{
           padding: '8px 10px',
-          background: colors.bgCard,
+          background: selected ? colors.greenBg : colors.bgCard,
           border: `1px solid ${stale ? colors.dangerDk : colors.lineHi}`,
           borderRadius: '10px 3px 10px 3px',
+          boxShadow: selected ? `0 0 0 2px ${colors.green}` : undefined,
           cursor: 'grab',
           transition: 'border-color 150ms',
           minWidth: 0,
@@ -1453,9 +1697,10 @@ function OpportunityCard({
       }}
       style={{
         padding: 12,
-        background: colors.bgCard,
+        background: selected ? colors.greenBg : colors.bgCard,
         border: `1px solid ${stale ? colors.dangerDk : colors.lineHi}`,
         borderRadius: '14px 4px 14px 4px',
+        boxShadow: selected ? `0 0 0 2px ${colors.green}` : undefined,
         cursor: 'grab',
         transition: 'border-color 150ms',
         position: 'relative',
